@@ -325,7 +325,7 @@ def build_network_2d(ppi, gene):
         xaxis=dict(visible=False), yaxis=dict(visible=False),
         legend=dict(
             font=dict(size=10, color="#00e5ff"),
-            bgcolor="rgba(4,24,32,0.9)", bordercolor="#00e5ff22", borderwidth=1,
+            bgcolor="rgba(4,24,32,0.9)", bordercolor="rgba(0,229,255,0.13)", borderwidth=1,
         ),
         title=dict(text=f"<b>{gene}</b>  ·  Cytoscape 2D Network  ·  {len(G.nodes())} nodes  ·  {len(G.edges())} edges",
                    font=dict(size=12, color="#4a9aaa")),
@@ -580,8 +580,8 @@ with T1:
                         paper_bgcolor="rgba(0,0,0,0)",
                         polar=dict(
                             bgcolor="rgba(4,24,32,0.8)",
-                            radialaxis=dict(visible=True, range=[0,1], color="#4a9aaa", gridcolor="#00e5ff18"),
-                            angularaxis=dict(color="#00e5ff", gridcolor="#00e5ff18"),
+                            radialaxis=dict(visible=True, range=[0,1], color="#4a9aaa", gridcolor="rgba(0,229,255,0.09)"),
+                            angularaxis=dict(color="#00e5ff", gridcolor="rgba(0,229,255,0.09)"),
                         ),
                         font=dict(color="#00e5ff", family="Space Mono", size=9),
                         margin=dict(l=30,r=30,t=30,b=30), height=280,
@@ -659,7 +659,7 @@ with T2:
                 color=vls,
                 colorscale=[[0,"#002535"],[0.4,"#005566"],[0.7,"#00e5ff"],[1,"#ff3d5a"]],
                 colorbar=dict(title="log2(TPM)", thickness=12,
-                              tickfont=dict(color="#00e5ff", size=9), outlinecolor="#00e5ff22"),
+                              tickfont=dict(color="#00e5ff", size=9), outlinecolor="rgba(0,229,255,0.13)"),
                 line=dict(color="rgba(0,229,255,0.4)", width=0.8),
             ),
             text=[str(round(v,1)) for v in vls], textposition="outside",
@@ -682,7 +682,7 @@ with T2:
         fig_heat = go.Figure(go.Heatmap(
             z=heat_mat, x=all_cts, y=all_genes,
             colorscale=[[0,"#020c10"],[0.3,"#004455"],[0.6,"#00e5ff"],[1,"#ff3d5a"]],
-            colorbar=dict(title="log2(TPM)", tickfont=dict(color="#00e5ff", size=9), outlinecolor="#00e5ff22"),
+            colorbar=dict(title="log2(TPM)", tickfont=dict(color="#00e5ff", size=9), outlinecolor="rgba(0,229,255,0.13)"),
             hovertemplate="Gene: %{y}<br>Cancer: %{x}<br>Expression: %{z:.1f}<extra></extra>",
         ))
         fig_heat.update_layout(**DK(
@@ -902,7 +902,7 @@ with T5:
                 size=df5["Size"],
                 color=df5[cv], colorscale=cscl, opacity=0.85,
                 colorbar=dict(title=dim5, thickness=14, tickfont=dict(color="#00e5ff", size=9),
-                              outlinecolor="#00e5ff22"),
+                              outlinecolor="rgba(0,229,255,0.13)"),
                 line=dict(color="rgba(255,255,255,0.15)", width=0.3),
             ),
         ))
