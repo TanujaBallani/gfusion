@@ -112,16 +112,9 @@ def sec(title,sub=""):
     return f'<div style="font-family:Orbitron,sans-serif;font-size:.6rem;letter-spacing:4px;color:#00e5ff;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(0,229,255,0.13);margin:16px 0 12px;">{title}{"<span style=color:#4a9aaa;font-size:.45rem;margin-left:10px;>"+sub+"</span>" if sub else ""}</div>'
 
 def molstar_viewer(pdb_id, height=500):
-    """RCSB Molstar official embed - works everywhere, no CSP issues"""
-    url = f"https://www.rcsb.org/3d-view/{pdb_id}"
-    return f"""
-    <div style="background:#020c10;border:1px solid rgba(0,229,255,0.2);border-radius:10px;overflow:hidden;">
-    <div style="background:#041820;padding:6px 14px;font-family:Space Mono,monospace;font-size:.6rem;color:#4a9aaa;display:flex;justify-content:space-between;">
-        <span style="color:#00e5ff;font-weight:700;">MOLSTAR VIEWER · PDB: {pdb_id}</span>
-        <span>Drag=Rotate · Scroll=Zoom · Right-click=Pan</span>
-    </div>
-    <iframe src="{url}" width="100%" height="{height}px" style="border:none;display:block;" allowfullscreen loading="lazy"></iframe>
-    </div>"""
+    """Pure Molstar embed - only molecule, no website chrome"""
+    url = f"https://molstar.org/viewer/?pdb={pdb_id}"
+    return f"""<div style="background:#020c10;border:1px solid rgba(0,229,255,0.2);border-radius:10px;overflow:hidden;"><div style="background:#041820;padding:6px 14px;font-family:Space Mono,monospace;font-size:.6rem;color:#4a9aaa;display:flex;justify-content:space-between;align-items:center;"><span style="color:#00e5ff;font-weight:700;">MOLSTAR · PDB: {pdb_id}</span><span>Drag=Rotate · Scroll=Zoom · Right-click=Pan</span></div><iframe src="{url}" width="100%" height="{height}px" style="border:none;display:block;" allowfullscreen loading="lazy"></iframe></div>"""
 
 def net3d(ppi,gene):
     G=nx.Graph()
@@ -416,8 +409,8 @@ with T4:
 # ══ TAB 5 — 5D VISUALIZATION ══════════════════════════════════════════
 with T5:
     st.markdown(sec("5D Visualization & MD Trajectory","Manifold · RMSD · RMSF · Rg · H-Bonds"),unsafe_allow_html=True)
-    V1,V2=st.tabs(["5D Manifold + MD Analysis","Structure Views"])
-    with V1:
+    v5mode = st.radio("View",["5D Manifold","RMSD","RMSF","Radius of Gyration","H-Bond Count","Structure Views"],horizontal=True,key="v5mode")
+    if v5mode == "5D Manifold":
         vA,vB,vC=st.columns(3)
         with vA: npts=st.slider("Points",50,400,150,key="v5n")
         with vB: dim5=st.selectbox("Color by",["Mutational Burden","Expression Level","Therapeutic Index","Genomic Instability"],key="v5d")
@@ -426,68 +419,85 @@ with T5:
         df5=pd.DataFrame({"X":np.random.randn(npts),"Y":np.random.randn(npts),"Z":np.random.randn(npts),"Size":np.random.rand(npts)*10+3,"Mut":np.abs(np.random.randn(npts))*60,"Expr":np.random.randn(npts)*3+6,"TI":np.random.uniform(0,100,npts),"GI":np.random.exponential(20,npts),"Cancer":np.random.choice(cl2,npts)})
         cv={"Mutational Burden":"Mut","Expression Level":"Expr","Therapeutic Index":"TI","Genomic Instability":"GI"}.get(dim5,"Mut")
         f5=go.Figure(go.Scatter3d(x=df5["X"],y=df5["Y"],z=df5["Z"],mode="markers",hovertext=[f"{r['Cancer']}<br>{dim5}:{round(r[cv],1)}" for _,r in df5.iterrows()],hoverinfo="text",marker=dict(size=df5["Size"],color=df5[cv],colorscale=cscl,opacity=0.85,colorbar=dict(title=dim5,thickness=14,tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(255,255,255,0.15)",width=0.3))))
-        f5.update_layout(**DK(scene=dict(xaxis=dict(title="Genomic Freq",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),yaxis=dict(title="Pathway Stability",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),zaxis=dict(title="Expression Energy",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),bgcolor="rgba(2,12,18,0.9)"),title=dict(text=f"<b>{query}</b> {dim5} 5D Manifold",font=dict(size=12,color="#4a9aaa")),height=500))
+        f5.update_layout(**DK(scene=dict(xaxis=dict(title="Genomic Freq",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),yaxis=dict(title="Pathway Stability",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),zaxis=dict(title="Expression Energy",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),bgcolor="rgba(2,12,18,0.9)"),title=dict(text=f"<b>{query}</b> {dim5} 5D Manifold",font=dict(size=12,color="#4a9aaa")),height=520))
         st.plotly_chart(f5,use_container_width=True)
-        st.markdown(sec("MD Trajectory Analysis","RMSD · RMSF · Rg · H-Bonds"),unsafe_allow_html=True)
+        dc=df5["Cancer"].value_counts()
+        fd=go.Figure(go.Pie(labels=dc.index,values=dc.values,hole=0.60,marker=dict(colors=["#00e5ff","#ff3d5a","#ffc107","#00ff9d","#b44fff","#ff6600","#ff9933","#00aaff"],line=dict(color="#030f14",width=2)),textfont=dict(color="#c8f0f8",size=11)))
+        fd.update_layout(**DK(title=dict(text="Cancer Distribution",font=dict(size=11,color="#4a9aaa")),legend=dict(font=dict(color="#00e5ff",size=10),bgcolor="rgba(0,0,0,0)"),height=300))
+        st.plotly_chart(fd,use_container_width=True)
+    elif v5mode == "RMSD":
         np.random.seed(10);fr2=np.arange(200)
-        mt1,mt2,mt3,mt4=st.tabs(["RMSD","RMSF","Radius of Gyration","H-Bond Count"])
-        with mt1:
-            rmsd=np.clip(np.cumsum(np.random.normal(0,0.02,200))+1.0,0.8,4.0)
-            frm=go.Figure(go.Scatter(x=fr2,y=rmsd,mode="lines",line=dict(color="#00e5ff",width=2.5),fill="tozeroy",fillcolor="rgba(0,229,255,0.06)"))
-            frm.add_hline(y=float(np.mean(rmsd)),line_dash="dash",line_color="#ffc107",annotation_text=f"Mean:{round(float(np.mean(rmsd)),2)}A",annotation_font_color="#ffc107")
-            frm.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="RMSD (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Backbone RMSD",font=dict(size=12,color="#4a9aaa")),height=300))
-            st.plotly_chart(frm,use_container_width=True)
-            c1,c2,c3=st.columns(3)
-            with c1: st.markdown(card("MEAN RMSD",str(round(float(np.mean(rmsd)),2)),"A","#00e5ff"),unsafe_allow_html=True)
-            with c2: st.markdown(card("MAX RMSD",str(round(float(np.max(rmsd)),2)),"A","#ffc107"),unsafe_allow_html=True)
-            with c3: st.markdown(card("MIN RMSD",str(round(float(np.min(rmsd)),2)),"A","#00ff9d"),unsafe_allow_html=True)
-        with mt2:
-            rmsf=np.abs(np.random.normal(0.9,0.5,100))+0.2
-            for h in hs: idx=min(h["pos"]%100,99);rmsf[idx]+=2.0*h["freq"]*8
-            frf=go.Figure(go.Bar(x=np.arange(1,101),y=rmsf,marker=dict(color=rmsf,colorscale=[[0,"#002535"],[0.4,"#00e5ff"],[1,"#ff3d5a"]],line=dict(color="rgba(0,0,0,0)",width=0))))
-            for h in hs[:4]: frf.add_vline(x=min(h["pos"]%100,99)+1,line_dash="dash",line_color="#ff3d5a",annotation_text=h["aa"],annotation_font_color="#ff3d5a",annotation_font_size=9)
-            frf.update_layout(**DK(xaxis=dict(title="Residue",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="RMSF (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> RMSF · Red=hotspots",font=dict(size=12,color="#4a9aaa")),height=300))
-            st.plotly_chart(frf,use_container_width=True)
-        with mt3:
-            rg=np.clip(18+np.cumsum(np.random.normal(0,0.05,200)),16,22)
-            frg=go.Figure(go.Scatter(x=fr2,y=rg,mode="lines",line=dict(color="#00ff9d",width=2.5),fill="tozeroy",fillcolor="rgba(0,255,157,0.05)"))
-            frg.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="Rg (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Radius of Gyration",font=dict(size=12,color="#4a9aaa")),height=300))
-            st.plotly_chart(frg,use_container_width=True)
-        with mt4:
-            hb=np.abs(np.random.normal(45,9,200)).astype(int)
-            fhb=go.Figure(go.Scatter(x=fr2,y=hb,mode="lines",line=dict(color="#b44fff",width=2.5),fill="tozeroy",fillcolor="rgba(180,79,255,0.05)"))
-            fhb.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="H-Bond Count",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Hydrogen Bond Count",font=dict(size=12,color="#4a9aaa")),height=300))
-            st.plotly_chart(fhb,use_container_width=True)
-    with V2:
-        st.markdown(sec("Structure Views","RCSB Molstar · 4 Presets"),unsafe_allow_html=True)
-        vt1,vt2=st.columns(2)
-        with vt1:
-            st.markdown(f'<div style="color:#4a9aaa;font-size:.6rem;margin-bottom:6px;">{badge("NGL-style")} Cartoon · Chain color</div>',unsafe_allow_html=True)
-            components.html(molstar_viewer(pdb,400),height=420)
-        with vt2:
-            st.markdown(f'<div style="color:#4a9aaa;font-size:.6rem;margin-bottom:6px;">{badge("PyMOL-style","#00ff9d")} Surface · Use ☰→Preset→Surface inside viewer</div>',unsafe_allow_html=True)
-            components.html(molstar_viewer(pdb,400),height=420)
+        rmsd=np.clip(np.cumsum(np.random.normal(0,0.02,200))+1.0,0.8,4.0)
+        frm=go.Figure(go.Scatter(x=fr2,y=rmsd,mode="lines",line=dict(color="#00e5ff",width=2.5),fill="tozeroy",fillcolor="rgba(0,229,255,0.06)"))
+        frm.add_hline(y=float(np.mean(rmsd)),line_dash="dash",line_color="#ffc107",annotation_text=f"Mean:{round(float(np.mean(rmsd)),2)}A",annotation_font_color="#ffc107")
+        frm.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="RMSD (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Backbone RMSD 200 frames",font=dict(size=12,color="#4a9aaa")),height=400))
+        st.plotly_chart(frm,use_container_width=True)
+        c1,c2,c3=st.columns(3)
+        with c1: st.markdown(card("MEAN RMSD",str(round(float(np.mean(rmsd)),2)),"A","#00e5ff"),unsafe_allow_html=True)
+        with c2: st.markdown(card("MAX RMSD",str(round(float(np.max(rmsd)),2)),"A","#ffc107"),unsafe_allow_html=True)
+        with c3: st.markdown(card("MIN RMSD",str(round(float(np.min(rmsd)),2)),"A","#00ff9d"),unsafe_allow_html=True)
+    elif v5mode == "RMSF":
+        np.random.seed(10)
+        rmsf=np.abs(np.random.normal(0.9,0.5,100))+0.2
+        for h in hs: idx=min(h["pos"]%100,99);rmsf[idx]+=2.0*h["freq"]*8
+        frf=go.Figure(go.Bar(x=np.arange(1,101),y=rmsf,marker=dict(color=rmsf,colorscale=[[0,"#002535"],[0.4,"#00e5ff"],[1,"#ff3d5a"]],line=dict(color="rgba(0,0,0,0)",width=0)),hovertemplate="Res %{x}<br>RMSF:%{y:.2f}A<extra></extra>"))
+        for h in hs[:4]: frf.add_vline(x=min(h["pos"]%100,99)+1,line_dash="dash",line_color="#ff3d5a",annotation_text=h["aa"],annotation_font_color="#ff3d5a",annotation_font_size=9)
+        frf.update_layout(**DK(xaxis=dict(title="Residue",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="RMSF (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Per-Residue RMSF · Red=mutation hotspots",font=dict(size=12,color="#4a9aaa")),height=400))
+        st.plotly_chart(frf,use_container_width=True)
+    elif v5mode == "Radius of Gyration":
+        np.random.seed(10);fr2=np.arange(200)
+        rg=np.clip(18+np.cumsum(np.random.normal(0,0.05,200)),16,22)
+        frg=go.Figure(go.Scatter(x=fr2,y=rg,mode="lines",line=dict(color="#00ff9d",width=2.5),fill="tozeroy",fillcolor="rgba(0,255,157,0.05)"))
+        frg.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="Rg (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Radius of Gyration · Protein Compactness",font=dict(size=12,color="#4a9aaa")),height=400))
+        st.plotly_chart(frg,use_container_width=True)
+    elif v5mode == "H-Bond Count":
+        np.random.seed(10);fr2=np.arange(200)
+        hb=np.abs(np.random.normal(45,9,200)).astype(int)
+        fhb=go.Figure(go.Scatter(x=fr2,y=hb,mode="lines",line=dict(color="#b44fff",width=2.5),fill="tozeroy",fillcolor="rgba(180,79,255,0.05)"))
+        fhb.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="H-Bond Count",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Hydrogen Bond Count · Stability",font=dict(size=12,color="#4a9aaa")),height=400))
+        st.plotly_chart(fhb,use_container_width=True)
+    elif v5mode == "Structure Views":
+        st.markdown(sec("Structure Views","Molstar · NGL · PyMOL · Py3Dmol · VMD equivalent"),unsafe_allow_html=True)
+        sv_choice = st.radio("Style",["NGL-style (Cartoon)","PyMOL-style (Surface)","Py3Dmol (Ball+Stick)","VMD (Ribbon)"],horizontal=True,key="svchoice")
+        components.html(molstar_viewer(pdb, 480), height=500)
+        style_tips = {
+            "NGL-style (Cartoon)": "Default view = NGL Cartoon. Chain colors shown automatically.",
+            "PyMOL-style (Surface)": "Inside viewer: click ☰ top-right → Preset → Molecular Surface",
+            "Py3Dmol (Ball+Stick)": "Inside viewer: click ☰ top-right → Preset → Ball and Stick",
+            "VMD (Ribbon)": "Inside viewer: click ☰ top-right → Preset → Backbone"
+        }
+        st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.15);border-radius:6px;padding:10px 14px;font-size:.68rem;color:#4a9aaa;margin-top:6px;">💡 <b style="color:#00e5ff;">{sv_choice}:</b> {style_tips[sv_choice]}</div>',unsafe_allow_html=True)
 
 # ══ TAB 6 — DATABASES ════════════════════════════════════════════════
 with T6:
     st.markdown(sec("Cancer Genomics Database Panel","GDC · ICGC · cBioPortal · OpenTargets · ClinVar · COSMIC · STRING · UniProt · OMIM"),unsafe_allow_html=True)
-    st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.15);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#4a9aaa;margin-bottom:16px;">All databases below are pre-queried for <b style="color:#00e5ff;">{query}</b>. Click any link to open directly.</div>',unsafe_allow_html=True)
-    db_cols=st.columns(3)
-    for i,db in enumerate(DATABASES):
-        gene_url_map={
-            "GDC":f"https://portal.gdc.cancer.gov/genes/{query}",
-            "ICGC":f"https://dcc.icgc.org/genes/{query}",
-            "cBioPortal":f"https://www.cbioportal.org/results/mutations?gene_list={query}",
-            "OpenTargets":f"https://platform.opentargets.org/target/{query}",
-            "ClinVar":f"https://www.ncbi.nlm.nih.gov/clinvar/?term={query}[gene]",
-            "COSMIC":f"https://cancer.sanger.ac.uk/cosmic/gene/analysis?ln={query}",
-            "STRING DB":f"https://string-db.org/network/{query}",
-            "UniProt":f"https://www.uniprot.org/uniprotkb?query={query}+human",
-            "OMIM":f"https://omim.org/search?search={query}",
-        }
-        url=gene_url_map.get(db["name"],db["url"])
-        with db_cols[i%3]:
-            st.markdown(f'<div style="background:#041820;border:1px solid {db["color"]}22;border-top:3px solid {db["color"]};border-radius:8px;padding:14px;margin-bottom:12px;"><div style="font-family:Orbitron,sans-serif;color:{db["color"]};font-size:.75rem;margin-bottom:4px;">{db["name"]}</div><div style="color:#4a9aaa;font-size:.55rem;margin-bottom:4px;">{db["full"]}</div><div style="color:#c8f0f8;font-size:.62rem;line-height:1.7;margin-bottom:10px;">{db["desc"]}</div><a href="{url}" target="_blank" style="background:{db["color"]}18;border:1px solid {db["color"]};color:{db["color"]};padding:5px 12px;border-radius:4px;font-size:.55rem;font-family:Orbitron,sans-serif;letter-spacing:2px;text-decoration:none;">OPEN {query} →</a></div>',unsafe_allow_html=True)
+    st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.15);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#4a9aaa;margin-bottom:16px;">Databases pre-queried for <b style="color:#00e5ff;">{query}</b> · Click any button to open in new tab</div>',unsafe_allow_html=True)
+    gene_url_map = {
+        "GDC": f"https://portal.gdc.cancer.gov/genes/{query}",
+        "ICGC": f"https://dcc.icgc.org/genes/{query}",
+        "cBioPortal": f"https://www.cbioportal.org/results/mutations?gene_list={query}",
+        "OpenTargets": f"https://platform.opentargets.org/target/{query}",
+        "ClinVar": f"https://www.ncbi.nlm.nih.gov/clinvar/?term={query}[gene]",
+        "COSMIC": f"https://cancer.sanger.ac.uk/cosmic/gene/analysis?ln={query}",
+        "STRING DB": f"https://string-db.org/network/{query}",
+        "UniProt": f"https://www.uniprot.org/uniprotkb?query={query}+human",
+        "OMIM": f"https://omim.org/search?search={query}",
+    }
+    rows = [DATABASES[i:i+3] for i in range(0,len(DATABASES),3)]
+    for row in rows:
+        cols = st.columns(len(row))
+        for ci, db in enumerate(row):
+            url = gene_url_map.get(db["name"], db["url"])
+            with cols[ci]:
+                st.markdown(
+                    f'<div style="background:#041820;border:1px solid {db["color"]}22;border-top:3px solid {db["color"]};border-radius:8px;padding:14px;margin-bottom:12px;">' +
+                    f'<div style="font-family:Orbitron,sans-serif;color:{db["color"]};font-size:.75rem;margin-bottom:4px;">{db["name"]}</div>' +
+                    f'<div style="color:#4a9aaa;font-size:.55rem;margin-bottom:4px;">{db["full"]}</div>' +
+                    f'<div style="color:#c8f0f8;font-size:.62rem;line-height:1.7;margin-bottom:10px;">{db["desc"]}</div>' +
+                    f'<a href="{url}" target="_blank" style="background:{db["color"]}18;border:1px solid {db["color"]};color:{db["color"]};padding:5px 12px;border-radius:4px;font-size:.55rem;font-family:Orbitron,sans-serif;letter-spacing:2px;text-decoration:none;">OPEN {query} →</a>' +
+                    '</div>',
+                    unsafe_allow_html=True
+                )
 
 # ══ TAB 7 — REPORT ════════════════════════════════════════════════════
 with T7:
