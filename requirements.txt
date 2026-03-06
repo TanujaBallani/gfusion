@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+networkx
+plotly
+requests
+py3Dmol
+stmol
+anthropic
+rdkit
