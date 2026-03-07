@@ -608,7 +608,18 @@ with T4:
             colors_r=["#00e5ff","#ff3d5a","#00ff9d","#ffc107","#b44fff","#ff9933","#ff66cc"]
             for idx,d in enumerate(sel_d[:7]):
                 v=[min(d["MW"]/500,1),min(max(d["LogP"],0)/5,1),min(d["HBD"]/5,1),min(d["HBA"]/10,1),min(d["RotB"]/10,1),min(d["TPSA"]/140,1)]
-                fig_multi.add_trace(go.Scatterpolar(r=v+[v[0]],theta=cats+[cats[0]],fill="toself",fillcolor=colors_r[idx%7]+"18",line=dict(color=colors_r[idx%7],width=2),name=d["name"]))
+                # Convert hex color to rgba for fillcolor (Plotly Cloud compatible)
+                hex_to_rgba = {
+                    "#00e5ff": "rgba(0,229,255,0.09)",
+                    "#ff3d5a": "rgba(255,61,90,0.09)",
+                    "#00ff9d": "rgba(0,255,157,0.09)",
+                    "#ffc107": "rgba(255,193,7,0.09)",
+                    "#b44fff": "rgba(180,79,255,0.09)",
+                    "#ff9933": "rgba(255,153,51,0.09)",
+                    "#ff66cc": "rgba(255,102,204,0.09)",
+                }
+                fc = hex_to_rgba.get(colors_r[idx%7], "rgba(0,229,255,0.09)")
+                fig_multi.add_trace(go.Scatterpolar(r=v+[v[0]],theta=cats+[cats[0]],fill="toself",fillcolor=fc,line=dict(color=colors_r[idx%7],width=2),name=d["name"]))
             fig_multi.update_layout(paper_bgcolor="rgba(0,0,0,0)",polar=dict(bgcolor="rgba(4,24,32,0.8)",radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),angularaxis=dict(color="#00e5ff",gridcolor="rgba(0,229,255,0.1)")),font=dict(color="#00e5ff",family="Space Mono",size=9),legend=dict(font=dict(color="#00e5ff",size=10),bgcolor="rgba(4,24,32,0.9)"),margin=dict(l=40,r=40,t=50,b=40),height=420,title=dict(text="Multi-Drug Lipinski Radar Overlay",font=dict(size=12,color="#4a9aaa")))
             st.plotly_chart(fig_multi,use_container_width=True)
         else:
