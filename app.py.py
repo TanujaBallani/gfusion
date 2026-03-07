@@ -245,6 +245,8 @@ _,cc,_=st.columns([1,2,1])
 with cc:
     api_key=st.text_input("",placeholder="Optional: Anthropic API key (sk-ant-...)",key="apik",label_visibility="collapsed")
     query=st.text_input("SEARCH GENE",value="TP53",placeholder="TP53  KRAS  BRCA1  EGFR  BRAF  PTEN  MYC  ALK",key="gq").upper().strip()
+    if not query: query = "TP53"
+    query = ''.join(c for c in query if c.isalnum())[:10] or "TP53"
     st.markdown('<div style="color:#1a4455;font-size:.5rem;text-align:center;letter-spacing:2px;">ANY HUMAN CANCER GENE · TP53 · KRAS · BRCA1 · EGFR · BRAF · PTEN · MYC · ALK · CDK4 · ABL1 · JAK2 · FLT3 · NRAS · HRAS · APC · NOTCH1 · FGFR1 · ERBB2 · and more...</div>',unsafe_allow_html=True)
 
 # Resolve PDB ID - works for ANY gene
@@ -308,13 +310,15 @@ _gene_info = None
 if query not in GINFO:
     with st.spinner(f"Fetching gene data for {query}..."):
         _gene_info = fetch_gene_info(query)
-with st.spinner(""):
-    ann = get_ann(query, api_key if api_key else "")
-    # For unknown genes, supplement with NCBI data
-    if query not in GINFO and _gene_info and not api_key:
-        ncbi_desc = _gene_info.get("summary","") or _gene_info.get("description","")
-        if ncbi_desc:
-            ann = f"[NCBI] {ncbi_desc[:400]}"
+try:
+    with st.spinner(""):
+        ann = get_ann(query, api_key if api_key else "")
+        if query not in GINFO and _gene_info and not api_key:
+            ncbi_desc = _gene_info.get("summary","") or _gene_info.get("description","")
+            if ncbi_desc:
+                ann = f"[NCBI] {ncbi_desc[:400]}"
+except Exception:
+    ann = GINFO.get(query, f"{query} is a cancer-associated gene. Use the tabs below to explore its structure, interactions, and therapeutic targeting options.")
 
 st.markdown(f'<div style="background:linear-gradient(135deg,#041820,#030f14);border:1px solid rgba(0,229,255,0.13);border-left:4px solid #00e5ff;border-radius:8px;padding:16px 20px;margin-bottom:18px;"><div style="display:flex;align-items:flex-start;gap:24px;"><div style="min-width:160px;text-align:center;"><div style="font-family:Orbitron,sans-serif;font-size:2rem;font-weight:900;color:#00e5ff;">{query}</div><div style="margin:8px 0;">{badge("PDB:"+pdb)} {badge("TOP:"+topc,"#00ff9d")} {badge(str(sc.get("oncoscore","?"))+" ONCO","#ff3d5a")}</div></div><div style="flex:1;"><div style="color:#4a9aaa;font-size:.5rem;letter-spacing:3px;margin-bottom:6px;font-family:Orbitron,sans-serif;">MOLECULAR INTELLIGENCE</div><div style="color:#c8f0f8;font-size:.74rem;line-height:1.9;">{ann}</div></div></div></div>',unsafe_allow_html=True)
 
@@ -514,7 +518,7 @@ with T2:
         with nb: msc_v=st.slider("Min STRING score",0.4,1.0,0.65,key="msc")
         with st.spinner("STRING DB..."): pp=get_ppi(query,limit=n_int)
         pf=[(a,b,s) for a,b,s in pp if s>=msc_v] or pp[:6]
-        st.plotly_chart(net3d(pf,query, key="pc03"),use_container_width=True)
+        st.plotly_chart(net3d(pf,query),use_container_width=True, key="pc03")
         pwc=st.columns(len(PCLR)-1)
         for i,(pw,c2) in enumerate(list(PCLR.items())[:-1]):
             with pwc[i]: st.markdown(f'<div style="border-left:3px solid {c2};padding:2px 7px;font-size:.5rem;color:{c2};">{pw}</div>',unsafe_allow_html=True)
