@@ -110,12 +110,6 @@ def badge(text,color="#00e5ff"):
 
 def sec(title,sub=""):
     return f'<div style="font-family:Orbitron,sans-serif;font-size:.6rem;letter-spacing:4px;color:#00e5ff;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(0,229,255,0.13);margin:16px 0 12px;">{title}{"<span style=color:#4a9aaa;font-size:.45rem;margin-left:10px;>"+sub+"</span>" if sub else ""}</div>'
-
-def molstar_viewer(pdb_id, height=500):
-    """Pure Molstar embed - only molecule, no website chrome"""
-    url = f"https://molstar.org/viewer/?pdb={pdb_id}"
-    return f"""<div style="background:#020c10;border:1px solid rgba(0,229,255,0.2);border-radius:10px;overflow:hidden;"><div style="background:#041820;padding:6px 14px;font-family:Space Mono,monospace;font-size:.6rem;color:#4a9aaa;display:flex;justify-content:space-between;align-items:center;"><span style="color:#00e5ff;font-weight:700;">MOLSTAR · PDB: {pdb_id}</span><span>Drag=Rotate · Scroll=Zoom · Right-click=Pan</span></div><iframe src="{url}" width="100%" height="{height}px" style="border:none;display:block;" allowfullscreen loading="lazy"></iframe></div>"""
-
 def net3d(ppi,gene):
     G=nx.Graph()
     for a,b,s in ppi: G.add_edge(a,b,weight=s)
@@ -169,7 +163,7 @@ def get_ann(gene,api_key):
     return GINFO.get(gene,f"{gene} is a clinically relevant cancer gene.")
 
 # ── HEADER ─────────────────────────────────────────────────────────────
-st.markdown('<div style="text-align:center;padding:18px 0 14px;border-bottom:2px solid rgba(0,229,255,0.13);margin-bottom:20px;"><div style="font-family:Orbitron,sans-serif;font-size:2.6rem;font-weight:900;color:#00e5ff;letter-spacing:12px;text-shadow:0 0 40px rgba(0,229,255,0.35);">G-FUSION</div><div style="color:#4a9aaa;font-size:.58rem;letter-spacing:6px;margin-top:6px;text-transform:uppercase;">Quantum Pan-Cancer Genomics · CRISPR · STRING DB · Molstar 3D · v12</div></div>',unsafe_allow_html=True)
+st.markdown('<div style="text-align:center;padding:18px 0 14px;border-bottom:2px solid rgba(0,229,255,0.13);margin-bottom:20px;"><div style="font-family:Orbitron,sans-serif;font-size:2.6rem;font-weight:900;color:#00e5ff;letter-spacing:12px;text-shadow:0 0 40px rgba(0,229,255,0.35);">G-FUSION</div><div style="color:#4a9aaa;font-size:.58rem;letter-spacing:6px;margin-top:6px;text-transform:uppercase;">Quantum Pan-Cancer Genomics · CRISPR · STRING DB · Plotly 3D · v13</div></div>',unsafe_allow_html=True)
 
 _,cc,_=st.columns([1,2,1])
 with cc:
@@ -189,58 +183,183 @@ st.markdown("<br>",unsafe_allow_html=True)
 
 T1,T2,T3,T4,T5,T6,T7=st.tabs(["🧬 3D STRUCTURE","🕸 PATHWAY NETWORK","✂ CRISPR ENGINE","🧪 LIGAND / RDKIT","🗺 5D VISUALIZATION","🗄 DATABASES","📊 REPORT"])
 
-# ══ TAB 1 — 3D STRUCTURE (Molstar RCSB iframes) ══════════════════════
+# ══ TAB 1 — 3D STRUCTURE (Plotly, real PDB coords) ════════════════════
 with T1:
-    st.markdown(sec("3D Protein Structure","Molstar · PyMOL-style · Py3Dmol-style · NGL-style · VMD-style"),unsafe_allow_html=True)
+    st.markdown(sec("3D Protein Structure","Real PDB Coordinates · Plotly · NGL · PyMOL · Py3Dmol · VMD styles"),unsafe_allow_html=True)
+
+    # Hotspot badges
     if hs:
         hc=st.columns(min(5,len(hs)))
         for i,h in enumerate(hs):
             c2="#ff3d5a" if h["freq"]>0.2 else ("#ffc107" if h["freq"]>0.08 else "#00ff9d")
-            with hc[i]: st.markdown(f'<div style="background:#041820;border-left:3px solid {c2};border-radius:6px;padding:10px 12px;margin-bottom:8px;"><div style="color:#4a9aaa;font-size:.5rem;letter-spacing:1px;">POS {h["pos"]}</div><div style="font-family:Orbitron,sans-serif;color:{c2};font-size:.95rem;">{h["aa"]}</div><div style="color:#1a4455;font-size:.52rem;">{h["type"]} · {round(h["freq"]*100)}%</div></div>',unsafe_allow_html=True)
+            with hc[i]:
+                st.markdown(f'<div style="background:#041820;border-left:3px solid {c2};border-radius:6px;padding:10px 12px;margin-bottom:8px;"><div style="color:#4a9aaa;font-size:.5rem;letter-spacing:1px;">POS {h["pos"]}</div><div style="font-family:Orbitron,sans-serif;color:{c2};font-size:.95rem;">{h["aa"]}</div><div style="color:#1a4455;font-size:.52rem;">{h["type"]} · {round(h["freq"]*100)}%</div></div>',unsafe_allow_html=True)
 
-    I1,I2,I3,I4=st.tabs([
-        "🟦 Molstar / NGL-style",
-        "🟢 PyMOL-style (Surface)",
-        "🟠 Py3Dmol-style (Ball+Stick)",
-        "🔴 VMD-style (Ribbon)",
-    ])
+    @st.cache_data(ttl=86400, show_spinner=False)
+    def fetch_pdb(pdb_id):
+        try:
+            r = requests.get(f"https://files.rcsb.org/download/{pdb_id}.pdb", timeout=12)
+            if r.status_code == 200:
+                return r.text
+        except Exception:
+            pass
+        return None
 
-    viewer_note = f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:8px 14px;font-size:.62rem;color:#4a9aaa;margin-top:6px;">{badge("RCSB Molstar")} {badge("PDB: "+pdb,"#ffc107")} · Drag = Rotate · Scroll = Zoom · Right-click = Pan · Fully interactive 3D</div>'
+    def parse_pdb(pdb_text, hotspots):
+        chains = {}
+        hot_coords = []
+        hot_labels = []
+        if not pdb_text:
+            return chains, hot_coords, hot_labels
+        hot_res = {h["pos"]: h["aa"] for h in hotspots}
+        for line in pdb_text.split('\n'):
+            if not line.startswith('ATOM'):
+                continue
+            atom_name = line[12:16].strip()
+            if atom_name != 'CA':
+                continue
+            try:
+                chain = line[21]
+                resnum = int(line[22:26].strip())
+                x = float(line[30:38])
+                y = float(line[38:46])
+                z = float(line[46:54])
+                bfac = float(line[60:66]) if len(line) >= 66 else 30.0
+                resname = line[17:20].strip()
+                if chain not in chains:
+                    chains[chain] = {'x':[],'y':[],'z':[],'res':[],'bfac':[],'resname':[]}
+                chains[chain]['x'].append(x)
+                chains[chain]['y'].append(y)
+                chains[chain]['z'].append(z)
+                chains[chain]['res'].append(resnum)
+                chains[chain]['bfac'].append(bfac)
+                chains[chain]['resname'].append(resname)
+                if resnum in hot_res:
+                    hot_coords.append((x,y,z,hot_res[resnum],resnum))
+            except Exception:
+                continue
+        return chains, hot_coords, hot_labels
 
-    with I1:
-        st.markdown(f'<div style="color:#4a9aaa;font-size:.62rem;margin-bottom:8px;">Equivalent to <b style="color:#00e5ff;">NGL Viewer</b> — Cartoon representation, chain coloring. Used by RCSB PDB official website.</div>',unsafe_allow_html=True)
-        components.html(molstar_viewer(pdb, 520), height=550)
-        st.markdown(viewer_note,unsafe_allow_html=True)
+    CHAIN_COLORS = ["#00e5ff","#00ff9d","#ffc107","#b44fff","#ff9933","#ff66cc","#ff3d5a","#00aaff"]
 
-    with I2:
-        st.markdown(f'<div style="color:#4a9aaa;font-size:.62rem;margin-bottom:8px;">Equivalent to <b style="color:#00ff9d;">PyMOL</b> — Surface + secondary structure. Use "Surface" toggle inside the viewer (top-right menu → Preset → Molecular Surface).</div>',unsafe_allow_html=True)
-        components.html(molstar_viewer(pdb, 520), height=550)
-        st.markdown(viewer_note,unsafe_allow_html=True)
-        st.markdown('<div style="background:#041820;border:1px solid rgba(0,255,157,0.2);border-radius:6px;padding:10px 14px;font-size:.64rem;color:#4a9aaa;margin-top:6px;">💡 In viewer: click <b style="color:#00ff9d;">☰ top-right</b> → <b style="color:#00ff9d;">Preset</b> → <b style="color:#00ff9d;">Molecular Surface</b> to get PyMOL-style surface</div>',unsafe_allow_html=True)
+    def build_3d_cartoon(chains, hot_coords, style="cartoon", color_by="chain"):
+        fig = go.Figure()
+        for ci,(chain,data) in enumerate(chains.items()):
+            xs,ys,zs = data['x'],data['y'],data['z']
+            bfs = data['bfac']
+            rns = data['res']
+            rnm = data['resname']
+            # Backbone line
+            lx,ly,lz=[],[],[]
+            for j in range(len(xs)-1):
+                lx+=[xs[j],xs[j+1],None]
+                ly+=[ys[j],ys[j+1],None]
+                lz+=[zs[j],zs[j+1],None]
+            if color_by=="chain":
+                lcolor = CHAIN_COLORS[ci % len(CHAIN_COLORS)]
+                mcolor = [CHAIN_COLORS[ci % len(CHAIN_COLORS)]]*len(xs)
+                cbar = None
+            elif color_by=="bfactor":
+                lcolor = "#445566"
+                mcolor = bfs
+                cbar = dict(title="B-factor",thickness=10,tickfont=dict(color="#00e5ff",size=8),outlinecolor="rgba(0,229,255,0.13)")
+            else:  # residue index
+                lcolor = CHAIN_COLORS[ci % len(CHAIN_COLORS)]
+                mcolor = list(range(len(xs)))
+                cbar = dict(title="Residue",thickness=10,tickfont=dict(color="#00e5ff",size=8),outlinecolor="rgba(0,229,255,0.13)")
+            # Line trace (backbone)
+            fig.add_trace(go.Scatter3d(
+                x=lx,y=ly,z=lz,mode="lines",
+                line=dict(color=lcolor,width=4 if style=="cartoon" else 2),
+                hoverinfo="none",showlegend=False,name=f"Chain {chain} backbone"
+            ))
+            # Node trace (residues)
+            msize = 5 if style=="cartoon" else (8 if style=="ball" else 4)
+            mcolor_arg = dict(
+                size=msize,
+                color=mcolor,
+                colorscale="Plasma" if color_by=="bfactor" else None,
+                colorbar=cbar,
+                opacity=0.85,
+                line=dict(color="rgba(255,255,255,0.2)",width=0.5)
+            ) if color_by!="chain" else dict(size=msize,color=CHAIN_COLORS[ci%len(CHAIN_COLORS)],opacity=0.85)
+            ht_text=[f"Chain {chain} · {nm}{rn}" for nm,rn in zip(rnm,rns)]
+            fig.add_trace(go.Scatter3d(
+                x=xs,y=ys,z=zs,mode="markers",
+                marker=mcolor_arg,
+                hovertext=ht_text,hoverinfo="text",
+                name=f"Chain {chain}",showlegend=True
+            ))
+        # Hotspot markers
+        if hot_coords:
+            fig.add_trace(go.Scatter3d(
+                x=[h[0] for h in hot_coords],
+                y=[h[1] for h in hot_coords],
+                z=[h[2] for h in hot_coords],
+                mode="markers+text",
+                text=[h[3] for h in hot_coords],
+                textposition="top center",
+                textfont=dict(color="#ff3d5a",size=12,family="Orbitron"),
+                marker=dict(size=14,color="#ff3d5a",opacity=1.0,
+                    symbol="diamond",
+                    line=dict(color="#ffffff",width=2)),
+                name="Mutation Hotspots",showlegend=True,
+                hovertext=[f"HOTSPOT: {h[3]} (pos {h[4]})" for h in hot_coords],
+                hoverinfo="text"
+            ))
+        fig.update_layout(**DK(
+            scene=dict(
+                xaxis=dict(showgrid=False,zeroline=False,showticklabels=False,backgroundcolor="rgba(2,10,16,0.9)"),
+                yaxis=dict(showgrid=False,zeroline=False,showticklabels=False,backgroundcolor="rgba(2,10,16,0.9)"),
+                zaxis=dict(showgrid=False,zeroline=False,showticklabels=False,backgroundcolor="rgba(2,10,16,0.9)"),
+                bgcolor="rgba(2,10,16,0.95)",
+            ),
+            legend=dict(font=dict(color="#00e5ff",size=10),bgcolor="rgba(4,24,32,0.9)",bordercolor="rgba(0,229,255,0.2)",borderwidth=1),
+            title=dict(text=f"<b>{query}</b> · PDB {pdb} · {sum(len(d['x']) for d in chains.values())} residues · Drag=Rotate · Scroll=Zoom",font=dict(size=12,color="#4a9aaa")),
+            height=580,
+        ))
+        return fig
 
-    with I3:
-        st.markdown(f'<div style="color:#4a9aaa;font-size:.62rem;margin-bottom:8px;">Equivalent to <b style="color:#ff9933;">Py3Dmol</b> — Ball & Stick atomic view. In viewer: click <b style="color:#ff9933;">☰</b> → <b style="color:#ff9933;">Preset</b> → <b style="color:#ff9933;">Ball and Stick</b> to switch representation.</div>',unsafe_allow_html=True)
-        components.html(molstar_viewer(pdb, 520), height=550)
-        st.markdown(viewer_note,unsafe_allow_html=True)
-        st.markdown('<div style="background:#041820;border:1px solid rgba(255,153,51,0.2);border-radius:6px;padding:10px 14px;font-size:.64rem;color:#4a9aaa;margin-top:6px;">💡 In viewer: <b style="color:#ff9933;">☰ → Preset → Ball and Stick</b> for Py3Dmol-equivalent atomic view</div>',unsafe_allow_html=True)
+    # Controls
+    col_a,col_b,col_c,col_d = st.columns(4)
+    with col_a: view_style = st.selectbox("Visualization Style",["NGL-style (Cartoon)","PyMOL-style (Thick)","Py3Dmol (Ball+Stick)","VMD-style (Thin)"],key="vstyle")
+    with col_b: color_by = st.selectbox("Color By",["Chain","B-Factor","Residue Index"],key="vcol")
+    with col_c: st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:10px;font-size:.6rem;color:#4a9aaa;margin-top:4px;"><b style="color:#00e5ff;">{query}</b><br>PDB: {pdb}<br>Source: RCSB REST API<br>Atoms: C-alpha backbone</div>',unsafe_allow_html=True)
+    with col_d: st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:10px;font-size:.6rem;color:#4a9aaa;margin-top:4px;">{badge("Real PDB Coords","#00ff9d")}<br><br>🔴 Red diamonds = mutation hotspots</div>',unsafe_allow_html=True)
 
-    with I4:
-        st.markdown(f'<div style="color:#4a9aaa;font-size:.62rem;margin-bottom:8px;">Equivalent to <b style="color:#b44fff;">VMD</b> — Ribbon/cartoon with B-factor coloring. In viewer: <b style="color:#b44fff;">☰</b> → <b style="color:#b44fff;">Preset</b> → <b style="color:#b44fff;">Backbone</b> for ribbon view.</div>',unsafe_allow_html=True)
-        components.html(molstar_viewer(pdb, 520), height=550)
-        st.markdown(viewer_note,unsafe_allow_html=True)
-        st.markdown('<div style="background:#041820;border:1px solid rgba(180,79,255,0.2);border-radius:6px;padding:10px 14px;font-size:.64rem;color:#4a9aaa;margin-top:6px;">💡 In viewer: <b style="color:#b44fff;">☰ → Preset → Backbone</b> for VMD-style ribbon; <b style="color:#b44fff;">Color → B-factor</b> for thermal motion coloring</div>',unsafe_allow_html=True)
+    style_map = {"NGL-style (Cartoon)":"cartoon","PyMOL-style (Thick)":"thick","Py3Dmol (Ball+Stick)":"ball","VMD-style (Thin)":"thin"}
+    col_map = {"Chain":"chain","B-Factor":"bfactor","Residue Index":"index"}
+    chosen_style = style_map.get(view_style,"cartoon")
+    chosen_col = col_map.get(color_by,"chain")
 
-    # Mutation hotspot chart
+    with st.spinner(f"Loading PDB {pdb} from RCSB..."):
+        pdb_text = fetch_pdb(pdb)
+
+    if pdb_text:
+        chains_data, hot_coords, _ = parse_pdb(pdb_text, hs)
+        n_chains = len(chains_data)
+        n_res = sum(len(d['x']) for d in chains_data.values())
+        m1,m2,m3,m4 = st.columns(4)
+        with m1: st.markdown(card("CHAINS",n_chains,"","#00e5ff"),unsafe_allow_html=True)
+        with m2: st.markdown(card("RESIDUES",n_res,"","#00ff9d"),unsafe_allow_html=True)
+        with m3: st.markdown(card("HOTSPOTS",len(hot_coords),"","#ff3d5a"),unsafe_allow_html=True)
+        with m4: st.markdown(card("PDB ID",pdb,"","#ffc107"),unsafe_allow_html=True)
+        fig3d = build_3d_cartoon(chains_data, hot_coords, chosen_style, chosen_col)
+        st.plotly_chart(fig3d, use_container_width=True)
+        st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:8px 14px;font-size:.64rem;color:#4a9aaa;">{badge("Plotly 3D")} {badge("RCSB REST API","#00ff9d")} {badge(pdb,"#ffc107")} · C-alpha backbone trace · Drag=Rotate · Scroll=Zoom · Double-click=Reset</div>',unsafe_allow_html=True)
+    else:
+        st.warning(f"Could not load PDB {pdb} from RCSB. Check your internet connection.")
+
+    # Hotspot frequency chart always shown
     if hs:
-        st.markdown(sec("Mutation Hotspot Frequency Chart","COSMIC · ClinVar"),unsafe_allow_html=True)
+        st.markdown(sec("Mutation Hotspot Frequency","COSMIC · ClinVar data"),unsafe_allow_html=True)
         fig_hs=go.Figure(go.Bar(
             x=[h["aa"] for h in hs],y=[h["freq"]*100 for h in hs],
             marker_color=["#ff3d5a" if h["freq"]>0.2 else ("#ffc107" if h["freq"]>0.08 else "#00ff9d") for h in hs],
             text=[f'{round(h["freq"]*100)}%' for h in hs],textposition="outside",
             textfont=dict(color="#00e5ff",size=12),
-            hovertemplate="<b>%{x}</b><br>Frequency: %{y:.1f}%<extra></extra>",
         ))
-        fig_hs.update_layout(**DK(xaxis=dict(title="Mutation",color="#4a9aaa"),yaxis=dict(title="Frequency %",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Mutation Hotspot Frequencies",font=dict(size=12,color="#4a9aaa")),height=300))
+        fig_hs.update_layout(**DK(xaxis=dict(title="Mutation",color="#4a9aaa"),yaxis=dict(title="Frequency %",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Mutation Hotspot Frequencies · COSMIC",font=dict(size=12,color="#4a9aaa")),height=300))
         st.plotly_chart(fig_hs,use_container_width=True)
 
 # ══ TAB 2 — PATHWAY NETWORK ═══════════════════════════════════════════
@@ -459,14 +578,16 @@ with T5:
     elif v5mode == "Structure Views":
         st.markdown(sec("Structure Views","Molstar · NGL · PyMOL · Py3Dmol · VMD equivalent"),unsafe_allow_html=True)
         sv_choice = st.radio("Style",["NGL-style (Cartoon)","PyMOL-style (Surface)","Py3Dmol (Ball+Stick)","VMD (Ribbon)"],horizontal=True,key="svchoice")
-        components.html(molstar_viewer(pdb, 480), height=500)
-        style_tips = {
-            "NGL-style (Cartoon)": "Default view = NGL Cartoon. Chain colors shown automatically.",
-            "PyMOL-style (Surface)": "Inside viewer: click ☰ top-right → Preset → Molecular Surface",
-            "Py3Dmol (Ball+Stick)": "Inside viewer: click ☰ top-right → Preset → Ball and Stick",
-            "VMD (Ribbon)": "Inside viewer: click ☰ top-right → Preset → Backbone"
-        }
-        st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.15);border-radius:6px;padding:10px 14px;font-size:.68rem;color:#4a9aaa;margin-top:6px;">💡 <b style="color:#00e5ff;">{sv_choice}:</b> {style_tips[sv_choice]}</div>',unsafe_allow_html=True)
+        with st.spinner(f"Loading structure {pdb}..."):
+            pdb_text2 = fetch_pdb(pdb)
+        if pdb_text2:
+            chains2, hots2, _ = parse_pdb(pdb_text2, hs)
+            smap = {"NGL-style (Cartoon)":"cartoon","PyMOL-style (Thick)":"thick","Py3Dmol (Ball+Stick)":"ball","VMD-style (Thin)":"thin"}
+            cmap2 = {"NGL-style (Cartoon)":"chain","PyMOL-style (Thick)":"bfactor","Py3Dmol (Ball+Stick)":"index","VMD-style (Thin)":"chain"}
+            fig_sv = build_3d_cartoon(chains2, hots2, smap.get(sv_choice,"cartoon"), cmap2.get(sv_choice,"chain"))
+            st.plotly_chart(fig_sv, use_container_width=True)
+        else:
+            st.warning("Could not load PDB structure.")
 
 # ══ TAB 6 — DATABASES ════════════════════════════════════════════════
 with T6:
@@ -477,7 +598,7 @@ with T6:
         "ICGC": f"https://dcc.icgc.org/genes/{query}",
         "cBioPortal": f"https://www.cbioportal.org/results/mutations?gene_list={query}",
         "OpenTargets": f"https://platform.opentargets.org/target/{query}",
-        "ClinVar": f"https://www.ncbi.nlm.nih.gov/clinvar/?term={query}[gene]",
+        "ClinVar": f"https://www.ncbi.nlm.nih.gov/clinvar/?term={query}" + "[gene]",
         "COSMIC": f"https://cancer.sanger.ac.uk/cosmic/gene/analysis?ln={query}",
         "STRING DB": f"https://string-db.org/network/{query}",
         "UniProt": f"https://www.uniprot.org/uniprotkb?query={query}+human",
@@ -506,7 +627,7 @@ with T7:
     rr=[("TARGET GENE",query),("PDB STRUCTURE",pdb),("ONCO SCORE",str(sc.get("oncoscore","N/A"))+"/100"),("DRUGGABILITY",str(sc.get("druggability","N/A"))+"/100"),("MUTATION FREQ",str(sc.get("mutation_freq","N/A"))+"%"),("CLINICAL TRIALS",str(sc.get("clinical_trials","N/A"))+" active"),("TOP CANCER",topc+" "+str(expr.get(topc,"N/A"))+" log2(TPM)"),("HOTSPOTS",", ".join([h["aa"] for h in hs]) if hs else "None"),("TARGET DRUGS",", ".join([d["name"] for d in GENE_DRUGS.get(query,[])][:4]) or "None indexed"),("TOP INTERACTORS",", ".join([b for a,b,s in rp[:5]])),("PIPELINE","G-FUSION v12 COMPLETE")]
     rh="".join([f'<tr style="border-bottom:1px solid rgba(0,229,255,0.04);"><td style="color:#4a9aaa;padding:8px 4px;width:200px;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;">{k}</td><td style="color:#c8f0f8;font-size:.72rem;padding:8px 4px;">{v}</td></tr>' for k,v in rr])
     st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.13);border-radius:8px;padding:18px 20px;"><div style="font-family:Orbitron,sans-serif;font-size:.88rem;color:#00e5ff;letter-spacing:3px;margin-bottom:14px;">IN SILICO PIPELINE REPORT · {query}</div><table style="width:100%;border-collapse:collapse;">{rh}</table></div>',unsafe_allow_html=True)
-    mds=[("3D Structure · Molstar","NGL · PyMOL · Py3Dmol · VMD presets · RCSB PDB","#00e5ff"),("Pathway Network","STRING DB · NetworkX 3D · Cytoscape 2D · Heatmap","#00aaff"),("CRISPR Engine","CHOPCHOP-equiv · SpCas9/Cas12a/Cas13d · PAM map · Off-target","#b44fff"),("Ligand Pharmacophore","18 drugs · Gene search · Comparison chart · Radar","#ffc107"),("5D Visualization","RMSD/RMSF/Rg/H-Bonds · 5D Manifold","#00ff9d"),("Database Panel","GDC · ICGC · cBioPortal · OpenTargets · ClinVar · COSMIC","#ff9933"),("Molecular Intelligence","Real-time Anthropic API annotation","#ff3d5a")]
+    mds=[("3D Structure · Plotly PDB","NGL · PyMOL · Py3Dmol · VMD presets · RCSB PDB","#00e5ff"),("Pathway Network","STRING DB · NetworkX 3D · Cytoscape 2D · Heatmap","#00aaff"),("CRISPR Engine","CHOPCHOP-equiv · SpCas9/Cas12a/Cas13d · PAM map · Off-target","#b44fff"),("Ligand Pharmacophore","18 drugs · Gene search · Comparison chart · Radar","#ffc107"),("5D Visualization","RMSD/RMSF/Rg/H-Bonds · 5D Manifold","#00ff9d"),("Database Panel","GDC · ICGC · cBioPortal · OpenTargets · ClinVar · COSMIC","#ff9933"),("Molecular Intelligence","Real-time Anthropic API annotation","#ff3d5a")]
     mc=st.columns(2)
     for i,(nm,desc,c2) in enumerate(mds):
         with mc[i%2]: st.markdown(f'<div style="background:#041820;border-left:3px solid {c2};border-radius:6px;padding:10px 14px;margin:5px 0;display:flex;justify-content:space-between;align-items:center;"><div><div style="color:{c2};font-family:Orbitron,sans-serif;font-size:.68rem;">{nm}</div><div style="color:#4a9aaa;font-size:.54rem;margin-top:3px;">{desc}</div></div>{badge("ACTIVE",c2)}</div>',unsafe_allow_html=True)
@@ -521,4 +642,4 @@ with T7:
     with d2: st.download_button("DOWNLOAD PPI CSV",data=dfp.to_csv(index=False).encode(),file_name=f"GFUSION_{query}_PPI.csv",mime="text/csv",key="dl2")
     dfe=pd.DataFrame(list(expr.items()),columns=["Cancer","Expression_log2TPM"])
     with d3: st.download_button("DOWNLOAD EXPR CSV",data=dfe.to_csv(index=False).encode(),file_name=f"GFUSION_{query}_expr.csv",mime="text/csv",key="dl3")
-    st.markdown('<div style="text-align:center;color:#0a2a35;font-size:.5rem;letter-spacing:2px;margin-top:18px;">G-FUSION v12 · PAN-CANCER GENOMICS · CRISPR · RCSB Molstar · STRING DB · Plotly · NetworkX · Streamlit</div>',unsafe_allow_html=True)
+    st.markdown('<div style="text-align:center;color:#0a2a35;font-size:.5rem;letter-spacing:2px;margin-top:18px;">G-FUSION v13 · PAN-CANCER GENOMICS · CRISPR · RCSB PDB · STRING DB · Plotly · NetworkX · Streamlit</div>',unsafe_allow_html=True)
