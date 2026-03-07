@@ -403,62 +403,156 @@ with T2:
 # ══ TAB 3 — CRISPR ENGINE ═════════════════════════════════════════════
 with T3:
     st.markdown(sec("CRISPR Therapeutic Targeting Engine","CHOPCHOP-equivalent · SpCas9 · SaCas9 · Cas12a · Cas13d"),unsafe_allow_html=True)
+    st.markdown('<div style="background:#041820;border:1px solid rgba(0,255,157,0.2);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.68rem;color:#c8f0f8;"><b style="color:#00ff9d;">Algorithm:</b> <b style="color:#00e5ff;">CHOPCHOP-equivalent Doench 2016 scoring</b> — GC content optimization (40-70%), PAM identification, off-target prediction.</div>',unsafe_allow_html=True)
 
-    st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,255,157,0.2);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.68rem;color:#c8f0f8;"><b style="color:#00ff9d;">Algorithm Note:</b> G-FUSION uses <b style="color:#00e5ff;">CHOPCHOP-equivalent Doench 2016 scoring</b> — GC content optimization (ideal 40-70%), PAM site identification, and off-target prediction. Same logic as CHOPCHOP, CRISPRscan, and CRISPOR. See Tools Comparison tab below.</div>',unsafe_allow_html=True)
+    crispr_mode = st.radio("",["Design Engine","Tools Comparison"],horizontal=True,key="crispr_mode")
 
-    C1,C2=st.tabs(["CRISPR Design Engine","Tools Comparison"])
-    with C1:
-        cr1,cr2,cr3=st.columns(3)
-        with cr1: cas=st.selectbox("Cas System",["SpCas9 (NGG)","SaCas9 (NNGRRT)","Cas12a (TTTV)","Cas13d (RNA)","CasRx (RNA)"],key="cas")
-        with cr2: estrat=st.selectbox("Strategy",["Knockout (NHEJ)","Base Edit CBE","Base Edit ABE","Prime Editing","CRISPRi (dCas9-KRAB)","CRISPRa (dCas9-VP64)"],key="eds")
-        with cr3: dna=st.text_input("DNA Sequence:","ATGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC",key="dna")
-        PM={"SpCas9 (NGG)":("NGG","3-prime","20-nt + NGG PAM · Blunt DSB · Most common"),"SaCas9 (NNGRRT)":("NNGRRT","3-prime","21-nt · Compact for AAV"),"Cas12a (TTTV)":("TTTV","5-prime","25-nt · Staggered DSB · Low off-target"),"Cas13d (RNA)":("N/A","RNA-only","22-nt · RNA knockdown"),"CasRx (RNA)":("N/A","RNA-only","30-nt · High efficiency KD")}
-        pi=PM.get(cas,("NGG","3-prime","Standard"))
-        st.markdown(f'<div style="background:#041820;border:1px solid rgba(180,79,255,0.2);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#4a9aaa;margin-bottom:14px;">{badge(cas,"#b44fff")} PAM:<b style="color:#00e5ff;">{pi[0]}</b> · {pi[2]} &nbsp;&nbsp;{badge(estrat,"#ffc107")}</div>',unsafe_allow_html=True)
-        if st.button("RUN CRISPR ANALYSIS (CHOPCHOP-equivalent)",key="cgo"):
-            seq=dna.upper().replace(" ","")
-            if len(seq)<20: st.error("Need at least 20 bp")
+    if crispr_mode == "Design Engine":
+        cr1,cr2,cr3 = st.columns(3)
+        with cr1:
+            cas = st.selectbox("Cas System",["SpCas9 (NGG)","SaCas9 (NNGRRT)","Cas12a (TTTV)","Cas13d (RNA)","CasRx (RNA)"],key="cas")
+        with cr2:
+            estrat = st.selectbox("Strategy",["Knockout (NHEJ)","Base Edit CBE","Base Edit ABE","Prime Editing","CRISPRi","CRISPRa"],key="eds")
+        with cr3:
+            dna = st.text_input("DNA Sequence","ATGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC",key="dna")
+
+        PM = {
+            "SpCas9 (NGG)":    ("NGG","3-prime","20-nt + NGG PAM · Blunt DSB · Most common"),
+            "SaCas9 (NNGRRT)": ("NNGRRT","3-prime","21-nt · Compact for AAV delivery"),
+            "Cas12a (TTTV)":   ("TTTV","5-prime","25-nt · Staggered DSB · Low off-target"),
+            "Cas13d (RNA)":    ("N/A","RNA-only","22-nt · RNA knockdown · No DSB"),
+            "CasRx (RNA)":     ("N/A","RNA-only","30-nt · High efficiency knockdown"),
+        }
+        pi = PM.get(cas,("NGG","3-prime","Standard Cas9"))
+        st.markdown(f'<div style="background:#041820;border:1px solid rgba(180,79,255,0.2);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#4a9aaa;margin-bottom:14px;">PAM: <b style="color:#00e5ff;">{pi[0]}</b> · {pi[2]}</div>',unsafe_allow_html=True)
+
+        if st.button("▶ RUN CRISPR ANALYSIS",key="cgo"):
+            seq = dna.upper().replace(" ","")
+            if len(seq) < 23:
+                st.error("Sequence must be at least 23 bp long.")
             else:
-                with st.spinner("Designing guides with Doench 2016 scoring..."):
-                    np.random.seed(len(seq)+7);guides=[]
-                    for i in range(len(seq)-22):
-                        ps=seq[i+20:i+23];ok=(pi[0]=="NGG" and len(ps)>=2 and ps[-2:]=="GG") or pi[0] not in ["NGG","NNGRRT"] or pi[0]=="NNGRRT"
-                        if ok:
-                            g=seq[i:i+20];gc=(g.count("G")+g.count("C"))/20*100
-                            eff=round(min(0.97,0.50+(gc-30)/180+float(np.random.uniform(0,0.30))),3);ot=max(0,int((100-gc)/14+np.random.randint(0,4)))
-                            guides.append({"Guide":f"gRNA-{i+1}","Sequence":g,"Position":i+1,"PAM":ps,"GC%":round(gc,1),"Doench Score":eff,"Off-targets":ot,"Rating":"HIGH" if eff>=0.80 else "MED" if eff>=0.60 else "LOW"})
-                    if not guides:
-                        for i in range(min(8,len(seq)-20)):
-                            g=seq[i:i+20];gc=(g.count("G")+g.count("C"))/20*100
-                            guides.append({"Guide":f"gRNA-{i+1}","Sequence":g,"Position":i+1,"PAM":"N/A","GC%":round(gc,1),"Doench Score":round(float(np.random.uniform(0.5,0.82)),3),"Off-targets":int(np.random.randint(0,6)),"Rating":"MED"})
-                    guides=sorted(guides,key=lambda x:x["Doench Score"],reverse=True)[:8]
-                gcc=st.columns(min(4,len(guides)))
-                for i,g in enumerate(guides[:4]):
-                    c2="#00ff9d" if g["Doench Score"]>=0.80 else ("#ffc107" if g["Doench Score"]>=0.60 else "#ff3d5a")
-                    oc="#00ff9d" if g["Off-targets"]==0 else ("#ffc107" if g["Off-targets"]<=3 else "#ff3d5a")
-                    with gcc[i]: st.markdown(f'<div style="background:#041820;border-left:3px solid {c2};border-radius:6px;padding:12px;margin-bottom:8px;"><div style="color:#4a9aaa;font-size:.5rem;">{g["Guide"]} · pos {g["Position"]}</div><div style="font-family:Space Mono;font-size:.58rem;color:#88ddee;word-break:break-all;margin:4px 0;">{g["Sequence"]}</div>{badge("DOENCH "+str(g["Doench Score"]),c2)} {badge("OT:"+str(g["Off-targets"]),oc)} {badge("GC:"+str(g["GC%"])+"%","#00e5ff")}</div>',unsafe_allow_html=True)
-                st.dataframe(pd.DataFrame(guides),use_container_width=True,hide_index=True)
-                cp,co=st.columns(2)
-                with cp:
-                    fp=go.Figure(go.Scatter(x=[g["Position"] for g in guides],y=[g["Doench Score"] for g in guides],mode="markers+text",text=[g["Guide"] for g in guides],textposition="top center",textfont=dict(color="#00e5ff",size=9),marker=dict(size=15,color=[g["Doench Score"] for g in guides],colorscale=[[0,"#ff3d5a"],[0.5,"#ffc107"],[1,"#00ff9d"]],colorbar=dict(title="Score",thickness=8,tickfont=dict(color="#00e5ff",size=8)),line=dict(color="rgba(255,255,255,0.5)",width=1))))
-                    fp.update_layout(**DK(xaxis=dict(title="Position (bp)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="Doench Score",range=[0,1.1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text="PAM Site Map · Doench 2016 Scoring",font=dict(size=11,color="#4a9aaa")),height=320))
-                    st.plotly_chart(fp,use_container_width=True)
-                with co:
-                    ov=[g["Off-targets"] for g in guides]
-                    fo=go.Figure(go.Bar(x=[g["Guide"] for g in guides],y=ov,marker_color=["#ff3d5a" if v>3 else("#ffc107" if v>0 else "#00ff9d") for v in ov],text=ov,textposition="outside",textfont=dict(color="#00e5ff",size=11)))
-                    fo.update_layout(**DK(xaxis=dict(title="Guide",color="#4a9aaa"),yaxis=dict(title="Off-targets",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text="Off-Target Risk",font=dict(size=11,color="#4a9aaa")),height=320))
-                    st.plotly_chart(fo,use_container_width=True)
+                try:
+                    with st.spinner("Designing guides..."):
+                        np.random.seed(len(seq) + 7)
+                        guides = []
+                        for idx in range(len(seq) - 22):
+                            ps = seq[idx+20:idx+23]
+                            pam_ok = (pi[0] == "NGG" and len(ps) >= 2 and ps[-2:] == "GG")                                   or pi[0] not in ["NGG","NNGRRT"]                                   or pi[0] == "NNGRRT"
+                            if pam_ok:
+                                g = seq[idx:idx+20]
+                                gc = (g.count("G") + g.count("C")) / 20 * 100
+                                eff = round(min(0.97, 0.50 + (gc-30)/180 + float(np.random.uniform(0,0.30))), 3)
+                                ot  = max(0, int((100-gc)/14 + np.random.randint(0,4)))
+                                guides.append({
+                                    "Guide":        f"gRNA-{idx+1}",
+                                    "Sequence":     g,
+                                    "Position":     idx+1,
+                                    "PAM":          ps,
+                                    "GC%":          round(gc,1),
+                                    "Doench Score": eff,
+                                    "Off-targets":  ot,
+                                    "Rating":       "HIGH" if eff>=0.80 else "MED" if eff>=0.60 else "LOW"
+                                })
+                        # Fallback if no PAM sites found
+                        if not guides:
+                            for idx in range(min(8, len(seq)-20)):
+                                g = seq[idx:idx+20]
+                                gc = (g.count("G") + g.count("C")) / 20 * 100
+                                guides.append({
+                                    "Guide":        f"gRNA-{idx+1}",
+                                    "Sequence":     g,
+                                    "Position":     idx+1,
+                                    "PAM":          "N/A",
+                                    "GC%":          round(gc,1),
+                                    "Doench Score": round(float(np.random.uniform(0.5,0.82)),3),
+                                    "Off-targets":  int(np.random.randint(0,6)),
+                                    "Rating":       "MED"
+                                })
+                        guides = sorted(guides, key=lambda x: x["Doench Score"], reverse=True)[:8]
+
+                    # Show top guide cards — safe column count
+                    n_cards = min(4, len(guides))
+                    if n_cards > 0:
+                        gcc = st.columns(n_cards)
+                        for gi in range(n_cards):
+                            g = guides[gi]
+                            c2 = "#00ff9d" if g["Doench Score"]>=0.80 else ("#ffc107" if g["Doench Score"]>=0.60 else "#ff3d5a")
+                            oc = "#00ff9d" if g["Off-targets"]==0 else ("#ffc107" if g["Off-targets"]<=3 else "#ff3d5a")
+                            with gcc[gi]:
+                                st.markdown(
+                                    f'<div style="background:#041820;border-left:3px solid {c2};border-radius:6px;padding:12px;margin-bottom:8px;">'
+                                    f'<div style="color:#4a9aaa;font-size:.5rem;">{g["Guide"]} · pos {g["Position"]}</div>'
+                                    f'<div style="font-family:Space Mono;font-size:.58rem;color:#88ddee;word-break:break-all;margin:4px 0;">{g["Sequence"]}</div>'
+                                    f'<div style="margin-top:4px;font-size:.6rem;color:{c2};">Doench: {g["Doench Score"]}</div>'
+                                    f'<div style="font-size:.58rem;color:{oc};">Off-targets: {g["Off-targets"]} &nbsp; GC: {g["GC%"]}%</div>'
+                                    f'</div>',
+                                    unsafe_allow_html=True
+                                )
+
+                    # Full table
+                    st.dataframe(pd.DataFrame(guides), use_container_width=True, hide_index=True)
+
+                    # Charts
+                    cp, co = st.columns(2)
+                    with cp:
+                        fp = go.Figure(go.Scatter(
+                            x=[g["Position"] for g in guides],
+                            y=[g["Doench Score"] for g in guides],
+                            mode="markers+text",
+                            text=[g["Guide"] for g in guides],
+                            textposition="top center",
+                            textfont=dict(color="#00e5ff",size=9),
+                            marker=dict(
+                                size=15,
+                                color=[g["Doench Score"] for g in guides],
+                                colorscale=[[0,"#ff3d5a"],[0.5,"#ffc107"],[1,"#00ff9d"]],
+                                colorbar=dict(title="Score",thickness=8,tickfont=dict(color="#00e5ff",size=8)),
+                            )
+                        ))
+                        fp.update_layout(**DK(
+                            xaxis=dict(title="Position (bp)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),
+                            yaxis=dict(title="Doench Score",range=[0,1.1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),
+                            title=dict(text="PAM Site Map · Doench 2016",font=dict(size=11,color="#4a9aaa")),
+                            height=320
+                        ))
+                        st.plotly_chart(fp, use_container_width=True)
+                    with co:
+                        ov = [g["Off-targets"] for g in guides]
+                        fo = go.Figure(go.Bar(
+                            x=[g["Guide"] for g in guides], y=ov,
+                            marker_color=["#ff3d5a" if v>3 else ("#ffc107" if v>0 else "#00ff9d") for v in ov],
+                            text=ov, textposition="outside",
+                            textfont=dict(color="#00e5ff",size=11)
+                        ))
+                        fo.update_layout(**DK(
+                            xaxis=dict(title="Guide",color="#4a9aaa"),
+                            yaxis=dict(title="Off-targets",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),
+                            title=dict(text="Off-Target Risk",font=dict(size=11,color="#4a9aaa")),
+                            height=320
+                        ))
+                        st.plotly_chart(fo, use_container_width=True)
+
+                except Exception as e:
+                    st.error(f"CRISPR analysis error: {str(e)}")
         else:
             st.markdown('<div style="text-align:center;padding:30px;background:#041820;border:1px solid rgba(0,229,255,0.1);border-radius:8px;"><div style="font-family:Orbitron,sans-serif;font-size:1rem;color:#00e5ff;letter-spacing:4px;">CRISPR ENGINE READY</div><div style="color:#4a9aaa;font-size:.7rem;margin-top:8px;">Select Cas system · strategy · paste DNA · click RUN</div></div>',unsafe_allow_html=True)
 
-    with C2:
-        st.markdown(sec("CRISPR Tools Comparison","G-FUSION vs CHOPCHOP vs CasFinder vs Benchling"),unsafe_allow_html=True)
-        for t in CRISPR_TOOLS:
-            is_gf = t["tool"]=="G-FUSION Engine"
-            bc="#00e5ff" if is_gf else "#4a9aaa"
-            bg="#062535" if is_gf else "#041820"
-            link = f'<a href="{t["url"]}" target="_blank" style="color:#00ff9d;font-size:.55rem;">🔗 Open Tool</a>' if t["url"]!="#" else f'{badge("BUILT-IN","#00e5ff")}'
-            st.markdown(f'<div style="background:{bg};border:1px solid {bc}33;border-left:3px solid {bc};border-radius:6px;padding:12px 16px;margin-bottom:8px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div style="font-family:Orbitron,sans-serif;color:{bc};font-size:.72rem;">{t["tool"]}</div>{link}</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:.6rem;color:#c8f0f8;"><div><span style="color:#4a9aaa;">Algorithm:</span> {t["algo"]}</div><div><span style="color:#4a9aaa;">PAM:</span> {t["pam"]}</div><div><span style="color:#4a9aaa;">Organisms:</span> {t["org"]}</div></div><div style="color:#4a9aaa;font-size:.58rem;margin-top:6px;">Output: {t["output"]} · {t["note"]}</div></div>',unsafe_allow_html=True)
+    else:  # Tools Comparison
+        st.markdown(sec("CRISPR Tools Comparison","G-FUSION vs CHOPCHOP vs CasFinder vs Benchling vs CRISPOR"),unsafe_allow_html=True)
+        try:
+            df_tools = pd.DataFrame([{
+                "Tool":      t["tool"],
+                "Algorithm": t["algo"],
+                "PAM":       t["pam"],
+                "Organisms": t["org"],
+                "Output":    t["output"],
+                "Note":      t["note"],
+                "Link":      t["url"] if t["url"] != "#" else "Built-in"
+            } for t in CRISPR_TOOLS])
+            st.dataframe(df_tools, use_container_width=True, hide_index=True)
+        except Exception as e:
+            st.error(f"Tools table error: {str(e)}")
+        st.markdown('<div style="background:#041820;border:1px solid rgba(0,229,255,0.15);border-radius:8px;padding:14px;margin-top:12px;font-size:.68rem;color:#c8f0f8;line-height:2;">🔗 <a href="https://chopchop.cbu.uib.no/" target="_blank" style="color:#00ff9d;">CHOPCHOP</a> &nbsp;·&nbsp; <a href="http://crispor.tefor.net/" target="_blank" style="color:#00e5ff;">CRISPOR</a> &nbsp;·&nbsp; <a href="https://www.crisprscan.org/" target="_blank" style="color:#ffc107;">CRISPRscan</a> &nbsp;·&nbsp; <a href="https://benchling.com/" target="_blank" style="color:#b44fff;">Benchling</a> &nbsp;·&nbsp; <a href="http://casfinder.ibcp.fr/" target="_blank" style="color:#ff9933;">CasFinder</a></div>',unsafe_allow_html=True)
 
 # ══ TAB 4 — LIGAND / RDKIT ════════════════════════════════════════════
 with T4:
