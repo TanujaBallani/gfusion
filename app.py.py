@@ -419,17 +419,61 @@ with T1:
 
     def build_3d_cartoon(chains, hot_coords, style="cartoon", color_by="chain"):
         fig = go.Figure()
+
+        # ── Style parameters — each style VISUALLY DISTINCT ──────────
+        style_params = {
+            "cartoon": {
+                "line_width": 6,       # thick ribbon-like backbone
+                "marker_size": 4,      # small nodes — backbone dominates
+                "marker_symbol": "circle",
+                "line_dash": None,
+                "opacity": 0.95,
+                "mode": "lines+markers",
+                "description": "NGL Cartoon — thick backbone ribbon"
+            },
+            "thick": {
+                "line_width": 10,      # very thick tubes like PyMOL
+                "marker_size": 7,      # medium nodes
+                "marker_symbol": "circle",
+                "line_dash": None,
+                "opacity": 1.0,
+                "mode": "lines+markers",
+                "description": "PyMOL Thick — large tube representation"
+            },
+            "ball": {
+                "line_width": 2,       # thin stick connections
+                "marker_size": 10,     # large balls at each residue
+                "marker_symbol": "circle",
+                "line_dash": None,
+                "opacity": 0.9,
+                "mode": "lines+markers",
+                "description": "Ball+Stick — large spheres at each residue"
+            },
+            "thin": {
+                "line_width": 1,       # very thin wireframe
+                "marker_size": 2,      # tiny nodes
+                "marker_symbol": "circle-open",
+                "line_dash": None,
+                "opacity": 0.7,
+                "mode": "lines+markers",
+                "description": "VMD Thin — wireframe skeleton"
+            },
+        }
+        sp = style_params.get(style, style_params["cartoon"])
+
         for ci,(chain,data) in enumerate(chains.items()):
             xs,ys,zs = data['x'],data['y'],data['z']
             bfs = data['bfac']
             rns = data['res']
             rnm = data['resname']
+
             # Backbone line
             lx,ly,lz=[],[],[]
             for j in range(len(xs)-1):
                 lx+=[xs[j],xs[j+1],None]
                 ly+=[ys[j],ys[j+1],None]
                 lz+=[zs[j],zs[j+1],None]
+
             if color_by=="chain":
                 lcolor = CHAIN_COLORS[ci % len(CHAIN_COLORS)]
                 mcolor = [CHAIN_COLORS[ci % len(CHAIN_COLORS)]]*len(xs)
@@ -442,22 +486,35 @@ with T1:
                 lcolor = CHAIN_COLORS[ci % len(CHAIN_COLORS)]
                 mcolor = list(range(len(xs)))
                 cbar = dict(title="Residue",thickness=10,tickfont=dict(color="#00e5ff",size=8),outlinecolor="rgba(0,229,255,0.13)")
-            # Line trace (backbone)
+
+            # Line trace — backbone with style-specific width
             fig.add_trace(go.Scatter3d(
                 x=lx,y=ly,z=lz,mode="lines",
-                line=dict(color=lcolor,width=4 if style=="cartoon" else 2),
-                hoverinfo="none",showlegend=False,name=f"Chain {chain} backbone"
+                line=dict(color=lcolor, width=sp["line_width"]),
+                hoverinfo="none",showlegend=False,name=f"Chain {chain} backbone",
+                opacity=sp["opacity"]
             ))
-            # Node trace (residues)
-            msize = 5 if style=="cartoon" else (8 if style=="ball" else 4)
-            mcolor_arg = dict(
-                size=msize,
-                color=mcolor,
-                colorscale="Plasma" if color_by=="bfactor" else None,
-                colorbar=cbar,
-                opacity=0.85,
-                line=dict(color="rgba(255,255,255,0.2)",width=0.5)
-            ) if color_by!="chain" else dict(size=msize,color=CHAIN_COLORS[ci%len(CHAIN_COLORS)],opacity=0.85)
+
+            # Node trace — residues with style-specific size and symbol
+            if color_by != "chain":
+                mcolor_arg = dict(
+                    size=sp["marker_size"],
+                    color=mcolor,
+                    colorscale="Plasma" if color_by=="bfactor" else "Viridis",
+                    colorbar=cbar,
+                    opacity=sp["opacity"],
+                    symbol=sp["marker_symbol"],
+                    line=dict(color="rgba(255,255,255,0.3)",width=0.5)
+                )
+            else:
+                mcolor_arg = dict(
+                    size=sp["marker_size"],
+                    color=CHAIN_COLORS[ci%len(CHAIN_COLORS)],
+                    opacity=sp["opacity"],
+                    symbol=sp["marker_symbol"],
+                    line=dict(color="rgba(255,255,255,0.2)",width=0.5)
+                )
+
             ht_text=[f"Chain {chain} · {nm}{rn}" for nm,rn in zip(rnm,rns)]
             fig.add_trace(go.Scatter3d(
                 x=xs,y=ys,z=zs,mode="markers",
