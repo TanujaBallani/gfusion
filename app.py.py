@@ -640,11 +640,77 @@ with T2:
         fig_bar=go.Figure(go.Bar(x=cts,y=vls,marker=dict(color=vls,colorscale=[[0,"#002535"],[0.4,"#005566"],[0.7,"#00e5ff"],[1,"#ff3d5a"]],colorbar=dict(title="log2(TPM)",thickness=12,tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(0,229,255,0.4)",width=0.8)),text=[str(round(v,1)) for v in vls],textposition="outside",textfont=dict(color="#00e5ff",size=12)))
         fig_bar.update_layout(**DK(xaxis=dict(title="Cancer Type",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="log2(TPM)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Expression Across Cancer Types",font=dict(size=13,color="#4a9aaa")),height=400))
         st.plotly_chart(fig_bar,use_container_width=True, key="pc05")
-        ag=[g for g in EXPR_ALL if g in PDB_DB];ac=sorted(set(ct for e in EXPR_ALL.values() for ct in e.keys()))
-        hm=[[EXPR_ALL.get(g,{}).get(ct,0) for ct in ac] for g in ag]
-        fig_h=go.Figure(go.Heatmap(z=hm,x=ac,y=ag,colorscale=[[0,"#020c10"],[0.3,"#004455"],[0.6,"#00e5ff"],[1,"#ff3d5a"]],colorbar=dict(title="log2(TPM)",tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),hovertemplate="Gene:%{y}<br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>"))
-        fig_h.update_layout(**DK(xaxis=dict(title="Cancer Type",color="#4a9aaa",tickfont=dict(size=10)),yaxis=dict(title="Gene",color="#4a9aaa",tickfont=dict(size=11,family="Orbitron")),title=dict(text="Pan-Cancer Gene Expression Heatmap",font=dict(size=13,color="#4a9aaa")),height=380))
-        st.plotly_chart(fig_h,use_container_width=True, key="pc06")
+        # Build gene list — always include searched gene even if not in EXPR_ALL
+        base_genes = [g for g in EXPR_ALL if g in PDB_DB]
+        if query not in base_genes:
+            base_genes = [query] + base_genes  # add searched gene at top
+        else:
+            # Move searched gene to top so it's clearly visible
+            base_genes = [query] + [g for g in base_genes if g != query]
+
+        ac = sorted(set(ct for e in EXPR_ALL.values() for ct in e.keys()))
+        hm = [[ gen_expr(g).get(ct, 0) for ct in ac] for g in base_genes]
+
+        # Highlight searched gene row with annotation box
+        searched_row_idx = 0  # always at top now
+
+        fig_h = go.Figure(go.Heatmap(
+            z=hm, x=ac, y=base_genes,
+            colorscale=[[0,"#020c10"],[0.3,"#004455"],[0.6,"#00e5ff"],[1,"#ff3d5a"]],
+            colorbar=dict(title="log2(TPM)",tickfont=dict(color="#00e5ff",size=9),
+                         outlinecolor="rgba(0,229,255,0.13)"),
+            hovertemplate="Gene:%{y}<br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>"
+        ))
+
+        # Add glowing border around searched gene row
+        fig_h.add_shape(
+            type="rect",
+            x0=-0.5, x1=len(ac)-0.5,
+            y0=searched_row_idx-0.5, y1=searched_row_idx+0.5,
+            line=dict(color="#00ff9d", width=3),
+            fillcolor="rgba(0,255,157,0.0)"
+        )
+
+        # Add arrow annotation pointing to searched gene
+        fig_h.add_annotation(
+            x=len(ac)-0.5, y=searched_row_idx,
+            text=f"◀ {query} (searched)",
+            showarrow=False,
+            font=dict(color="#00ff9d", size=10, family="Orbitron"),
+            xanchor="left", xshift=8
+        )
+
+        # Make searched gene label bold and highlighted
+        tickcolors = ["#00ff9d" if g == query else "#4a9aaa" for g in base_genes]
+
+        fig_h.update_layout(**DK(
+            xaxis=dict(title="Cancer Type", color="#4a9aaa", tickfont=dict(size=10)),
+            yaxis=dict(title="Gene", color="#4a9aaa",
+                      tickfont=dict(size=11, family="Orbitron"),
+                      tickmode="array",
+                      tickvals=list(range(len(base_genes))),
+                      ticktext=[f"► {g}" if g==query else g for g in base_genes]),
+            title=dict(
+                text=f"Pan-Cancer Expression · <b style='color:#00ff9d'>{query}</b> highlighted",
+                font=dict(size=13, color="#4a9aaa")
+            ),
+            height=420,
+            margin=dict(r=150)  # space for annotation on right
+        ))
+        st.plotly_chart(fig_h, use_container_width=True, key="pc06")
+
+        # Show searched gene expression summary below heatmap
+        gene_expr_data = gen_expr(query)
+        top3 = sorted(gene_expr_data.items(), key=lambda x: x[1], reverse=True)[:3]
+        st.markdown(
+            f'<div style="background:#041820;border:1px solid rgba(0,255,157,0.2);'
+            f'border-left:4px solid #00ff9d;border-radius:8px;padding:10px 16px;'
+            f'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
+            f'<b style="color:#00ff9d;">{query}</b> is most highly expressed in: '
+            + " · ".join([f'<b style="color:#00e5ff;">{ct}</b> ({val})' for ct,val in top3])
+            + '</div>',
+            unsafe_allow_html=True
+        )
 
 # ══ TAB 3 — CRISPR ENGINE ═════════════════════════════════════════════
 with T3:
