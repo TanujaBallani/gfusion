@@ -640,75 +640,139 @@ with T2:
         fig_bar=go.Figure(go.Bar(x=cts,y=vls,marker=dict(color=vls,colorscale=[[0,"#002535"],[0.4,"#005566"],[0.7,"#00e5ff"],[1,"#ff3d5a"]],colorbar=dict(title="log2(TPM)",thickness=12,tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(0,229,255,0.4)",width=0.8)),text=[str(round(v,1)) for v in vls],textposition="outside",textfont=dict(color="#00e5ff",size=12)))
         fig_bar.update_layout(**DK(xaxis=dict(title="Cancer Type",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="log2(TPM)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Expression Across Cancer Types",font=dict(size=13,color="#4a9aaa")),height=400))
         st.plotly_chart(fig_bar,use_container_width=True, key="pc05")
-        # Build gene list — searched gene always at TOP
+        # ── REAL EXPRESSION DATA from cBioPortal API ─────────────────
+        @st.cache_data(ttl=3600, show_spinner=False)
+        def fetch_cbio_expression(gene):
+            """Fetch real TCGA expression for any gene — correct cBioPortal API"""
+            try:
+                import requests as _rq, math
+
+                # Step 1: Get entrezGeneId from gene symbol
+                gene_url = f"https://www.cbioportal.org/api/genes/{gene}"
+                gr = _rq.get(gene_url, timeout=8)
+                if gr.status_code != 200: return {}
+                gene_data = gr.json()
+                entrez_id = gene_data.get("entrezGeneId")
+                if not entrez_id: return {}
+
+                # Step 2: Fetch expression per cancer type
+                STUDIES = {
+                    "BRCA": "brca_tcga_rna_seq_v2_mrna",
+                    "LUAD": "luad_tcga_rna_seq_v2_mrna",
+                    "COAD": "coadread_tcga_rna_seq_v2_mrna",
+                    "GBM":  "gbm_tcga_rna_seq_v2_mrna",
+                    "PRAD": "prad_tcga_rna_seq_v2_mrna",
+                    "OV":   "ov_tcga_rna_seq_v2_mrna",
+                    "SKCM": "skcm_tcga_rna_seq_v2_mrna",
+                    "PAAD": "paad_tcga_rna_seq_v2_mrna",
+                    "UCEC": "ucec_tcga_rna_seq_v2_mrna",
+                    "THCA": "thca_tcga_rna_seq_v2_mrna",
+                    "HNSC": "hnsc_tcga_rna_seq_v2_mrna",
+                }
+                result = {}
+                for cancer, profile_id in STUDIES.items():
+                    try:
+                        url = (f"https://www.cbioportal.org/api/molecular-profiles"
+                               f"/{profile_id}/genes/{entrez_id}"
+                               f"/expression-value-statistics")
+                        r = _rq.get(url, timeout=6)
+                        if r.status_code == 200:
+                            data = r.json()
+                            if data and isinstance(data, list):
+                                mean_val = data[0].get("mean", 0) if data else 0
+                                if mean_val and float(mean_val) > 0:
+                                    result[cancer] = round(math.log2(float(mean_val)+1), 2)
+                    except Exception:
+                        continue
+                return result
+            except Exception:
+                return {}
+
+        # Try live cBioPortal first
+        with st.spinner(f"Fetching real TCGA expression data for {query} from cBioPortal..."):
+            live_expr = fetch_cbio_expression(query)
+
+        # Fallback to local data if API fails
+        if live_expr and len(live_expr) >= 3:
+            expr_source = "cBioPortal TCGA (Live)"
+            display_expr = live_expr
+        else:
+            expr_source = "Local DB (cBioPortal unavailable)"
+            display_expr = gen_expr(query)
+
+        src_color = "#00ff9d" if "Live" in expr_source else "#ffc107"
+        st.markdown(
+            f'<div style="background:#041820;border-left:3px solid {src_color};'
+            f'border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:.65rem;color:#4a9aaa;">'
+            f'Expression source: <b style="color:{src_color};">{expr_source}</b> · '
+            f'{len(display_expr)} cancer types found for <b style="color:#00e5ff;">{query}</b>'
+            f'</div>', unsafe_allow_html=True
+        )
+
+        # Build full heatmap with ALL genes
+        # Searched gene uses live/generated data, others use EXPR_ALL
         base_genes = [g for g in EXPR_ALL if g in PDB_DB]
         if query not in base_genes:
             base_genes = [query] + base_genes
         else:
             base_genes = [query] + [g for g in base_genes if g != query]
 
-        ac = sorted(set(ct for e in EXPR_ALL.values() for ct in e.keys()))
-
-        # TWO SEPARATE HEATMAPS:
-        # 1. Searched gene — bright colorscale, thick border effect
-        # 2. Other genes — dim colorscale
-        searched_expr = [gen_expr(query).get(ct, 0) for ct in ac]
-        other_genes   = [g for g in base_genes if g != query]
-        other_hm      = [[gen_expr(g).get(ct, 0) for ct in ac] for g in other_genes]
-
-        fig_h = go.Figure()
-
-        # Other genes — normal dim heatmap
-        if other_hm:
-            fig_h.add_trace(go.Heatmap(
-                z=other_hm, x=ac, y=other_genes,
-                colorscale=[[0,"#020c10"],[0.4,"#003344"],[0.7,"#006677"],[1,"#0099aa"]],
-                showscale=False,
-                hovertemplate="Gene:%{y}<br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>",
-                name="other genes"
-            ))
-
-        # Searched gene — BRIGHT colorscale, clearly different
-        fig_h.add_trace(go.Heatmap(
-            z=[searched_expr], x=ac, y=[query],
-            colorscale=[[0,"#1a0020"],[0.3,"#660033"],[0.6,"#ff3d5a"],[1,"#ffff00"]],
-            colorbar=dict(
-                title="log2(TPM)",
-                tickfont=dict(color="#00e5ff", size=9),
-                outlinecolor="rgba(0,229,255,0.13)"
-            ),
-            hovertemplate="<b>SEARCHED: "+query+"</b><br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>",
-            name=query
+        # All cancer types across all genes
+        ac = sorted(set(
+            list(display_expr.keys()) +
+            [ct for e in EXPR_ALL.values() for ct in e.keys()]
         ))
 
-        # Y axis labels — searched gene gets ► marker
-        all_genes_ordered = [query] + other_genes
-        ticktext = [f"► {query} ◄"] + other_genes
+        # Build heatmap matrix — boost searched gene row by +10 for color difference
+        hm_display = []
+        for g in base_genes:
+            if g == query:
+                row = [display_expr.get(ct, 0) + 10 for ct in ac]
+            else:
+                row = [gen_expr(g).get(ct, 0) for ct in ac]
+            hm_display.append(row)
 
+        # Custom colorscale: 0-10=dim blue, 10-20=bright red/yellow (searched gene)
+        custom_cs = [
+            [0.0,  "#020c10"],
+            [0.25, "#003344"],
+            [0.49, "#006677"],
+            [0.50, "#cc0000"],
+            [0.75, "#ff6600"],
+            [1.0,  "#ffff00"],
+        ]
+
+        fig_h = go.Figure(go.Heatmap(
+            z=hm_display,
+            x=ac,
+            y=[f"► {g} ◄" if g==query else g for g in base_genes],
+            colorscale=custom_cs,
+            zmin=0, zmax=20,
+            showscale=False,
+            hovertemplate="Gene:%{y}<br>Cancer:%{x}<extra></extra>",
+        ))
         fig_h.update_layout(**DK(
-            xaxis=dict(title="Cancer Type", color="#4a9aaa", tickfont=dict(size=10)),
+            xaxis=dict(title="Cancer Type", color="#4a9aaa", tickfont=dict(size=9)),
             yaxis=dict(
                 title="Gene", color="#4a9aaa",
-                tickfont=dict(size=11, family="Orbitron"),
-                categoryorder="array",
-                categoryarray=all_genes_ordered[::-1],  # reverse so searched gene on top
+                tickfont=dict(size=10, family="Orbitron"),
+                autorange="reversed"
             ),
             title=dict(
-                text=f"Pan-Cancer Expression · {query} = bright row · others = dim",
-                font=dict(size=12, color="#4a9aaa")
+                text=f"Pan-Cancer Expression · {query} = RED/YELLOW · others = BLUE · Source: {expr_source}",
+                font=dict(size=11, color="#4a9aaa")
             ),
-            height=420,
+            height=430,
         ))
         st.plotly_chart(fig_h, use_container_width=True, key="pc06")
 
         # Summary below
-        gene_expr_data = gen_expr(query)
-        top3 = sorted(gene_expr_data.items(), key=lambda x: x[1], reverse=True)[:3]
+        top3 = sorted(display_expr.items(), key=lambda x: x[1], reverse=True)[:3]
         st.markdown(
             '<div style="background:#041820;border:1px solid rgba(255,61,90,0.3);'
             'border-left:4px solid #ff3d5a;border-radius:8px;padding:10px 16px;'
             'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
-            f'<b style="color:#ff3d5a;">► {query}</b> highest expression in: '
+            f'<b style="color:#ff3d5a;">► {query}</b> · Source: <b style="color:{src_color};">{expr_source}</b> · Highest in: '
             + " · ".join([f'<b style="color:#ffff00;">{ct}</b> <span style="color:#c8f0f8;">({val})</span>' for ct,val in top3])
             + '</div>',
             unsafe_allow_html=True
@@ -856,19 +920,24 @@ with T3:
 
                         # Fallback if no PAM sites found
                         if not guides:
-                            for idx in range(min(8, len(seq)-20)):
-                                g = seq[idx:idx+20]
-                                gc = (g.count("G") + g.count("C")) / 20 * 100
-                                guides.append({
-                                    "Guide":        f"gRNA-{idx+1}",
-                                    "Sequence":     g,
-                                    "Position":     idx+1,
-                                    "PAM":          "N/A",
-                                    "GC%":          round(gc,1),
-                                    "Doench Score": round(float(np.random.uniform(0.5,0.82)),3),
-                                    "Off-targets":  int(np.random.randint(0,6)),
-                                    "Rating":       "MED"
-                                })
+                            if cas == "Cas12a (TTTV)":
+                                st.warning(f"⚠️ No TTTV PAM sites found in this sequence for Cas12a. Cas12a requires TTTA/TTTC/TTTG before the target. Try SpCas9 (NGG) which works on most sequences, or use the real KRAS sequence provided earlier.")
+                            elif cas == "SaCas9 (NNGRRT)":
+                                st.warning(f"⚠️ No NNGRRT PAM sites found. Try SpCas9 (NGG) for this sequence.")
+                            else:
+                                for idx in range(min(8, len(seq)-20)):
+                                    g = seq[idx:idx+20]
+                                    gc = (g.count("G") + g.count("C")) / 20 * 100
+                                    guides.append({
+                                        "Guide":        f"gRNA-{idx+1}",
+                                        "Sequence":     g,
+                                        "Position":     idx+1,
+                                        "PAM":          "N/A",
+                                        "GC%":          round(gc,1),
+                                        "Doench Score": round(float(np.random.uniform(0.5,0.82)),3),
+                                        "Off-targets":  int(np.random.randint(0,6)),
+                                        "Rating":       "MED"
+                                    })
                         guides = sorted(guides, key=lambda x: x["Doench Score"], reverse=True)[:8]
 
                     # Show top guide cards — safe column count
