@@ -640,76 +640,76 @@ with T2:
         fig_bar=go.Figure(go.Bar(x=cts,y=vls,marker=dict(color=vls,colorscale=[[0,"#002535"],[0.4,"#005566"],[0.7,"#00e5ff"],[1,"#ff3d5a"]],colorbar=dict(title="log2(TPM)",thickness=12,tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(0,229,255,0.4)",width=0.8)),text=[str(round(v,1)) for v in vls],textposition="outside",textfont=dict(color="#00e5ff",size=12)))
         fig_bar.update_layout(**DK(xaxis=dict(title="Cancer Type",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="log2(TPM)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Expression Across Cancer Types",font=dict(size=13,color="#4a9aaa")),height=400))
         st.plotly_chart(fig_bar,use_container_width=True, key="pc05")
-        # Build gene list — always include searched gene even if not in EXPR_ALL
+        # Build gene list — searched gene always at TOP
         base_genes = [g for g in EXPR_ALL if g in PDB_DB]
         if query not in base_genes:
-            base_genes = [query] + base_genes  # add searched gene at top
+            base_genes = [query] + base_genes
         else:
-            # Move searched gene to top so it's clearly visible
             base_genes = [query] + [g for g in base_genes if g != query]
 
         ac = sorted(set(ct for e in EXPR_ALL.values() for ct in e.keys()))
-        hm = [[ gen_expr(g).get(ct, 0) for ct in ac] for g in base_genes]
 
-        # Highlight searched gene row with annotation box
-        searched_row_idx = 0  # always at top now
+        # TWO SEPARATE HEATMAPS:
+        # 1. Searched gene — bright colorscale, thick border effect
+        # 2. Other genes — dim colorscale
+        searched_expr = [gen_expr(query).get(ct, 0) for ct in ac]
+        other_genes   = [g for g in base_genes if g != query]
+        other_hm      = [[gen_expr(g).get(ct, 0) for ct in ac] for g in other_genes]
 
-        fig_h = go.Figure(go.Heatmap(
-            z=hm, x=ac, y=base_genes,
-            colorscale=[[0,"#020c10"],[0.3,"#004455"],[0.6,"#00e5ff"],[1,"#ff3d5a"]],
-            colorbar=dict(title="log2(TPM)",tickfont=dict(color="#00e5ff",size=9),
-                         outlinecolor="rgba(0,229,255,0.13)"),
-            hovertemplate="Gene:%{y}<br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>"
+        fig_h = go.Figure()
+
+        # Other genes — normal dim heatmap
+        if other_hm:
+            fig_h.add_trace(go.Heatmap(
+                z=other_hm, x=ac, y=other_genes,
+                colorscale=[[0,"#020c10"],[0.4,"#003344"],[0.7,"#006677"],[1,"#0099aa"]],
+                showscale=False,
+                hovertemplate="Gene:%{y}<br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>",
+                name="other genes"
+            ))
+
+        # Searched gene — BRIGHT colorscale, clearly different
+        fig_h.add_trace(go.Heatmap(
+            z=[searched_expr], x=ac, y=[query],
+            colorscale=[[0,"#1a0020"],[0.3,"#660033"],[0.6,"#ff3d5a"],[1,"#ffff00"]],
+            colorbar=dict(
+                title="log2(TPM)",
+                tickfont=dict(color="#00e5ff", size=9),
+                outlinecolor="rgba(0,229,255,0.13)"
+            ),
+            hovertemplate="<b>SEARCHED: "+query+"</b><br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>",
+            name=query
         ))
 
-        # Add glowing border — use gene NAME not index for categorical y-axis
-        fig_h.add_shape(
-            type="rect",
-            x0=-0.5, x1=len(ac)-0.5,
-            y0=query, y1=query,   # categorical axis uses gene name
-            line=dict(color="#00ff9d", width=4),
-            fillcolor="rgba(0,255,157,0.05)"
-        )
-
-        # Annotation on right side
-        fig_h.add_annotation(
-            x=len(ac)-0.5, y=query,
-            text=f" ◀ YOU SEARCHED THIS",
-            showarrow=False,
-            font=dict(color="#00ff9d", size=9, family="Orbitron"),
-            xanchor="left", xshift=10,
-            bgcolor="rgba(0,255,157,0.1)",
-            bordercolor="#00ff9d",
-            borderwidth=1
-        )
+        # Y axis labels — searched gene gets ► marker
+        all_genes_ordered = [query] + other_genes
+        ticktext = [f"► {query} ◄"] + other_genes
 
         fig_h.update_layout(**DK(
             xaxis=dict(title="Cancer Type", color="#4a9aaa", tickfont=dict(size=10)),
             yaxis=dict(
                 title="Gene", color="#4a9aaa",
                 tickfont=dict(size=11, family="Orbitron"),
-                tickmode="array",
-                tickvals=base_genes,
-                ticktext=[f"► {g} ◄" if g==query else g for g in base_genes],
+                categoryorder="array",
+                categoryarray=all_genes_ordered[::-1],  # reverse so searched gene on top
             ),
             title=dict(
-                text=f"Pan-Cancer Expression · {query} highlighted in green",
-                font=dict(size=13, color="#4a9aaa")
+                text=f"Pan-Cancer Expression · {query} = bright row · others = dim",
+                font=dict(size=12, color="#4a9aaa")
             ),
             height=420,
-            margin=dict(r=180)
         ))
         st.plotly_chart(fig_h, use_container_width=True, key="pc06")
 
-        # Show searched gene expression summary below heatmap
+        # Summary below
         gene_expr_data = gen_expr(query)
         top3 = sorted(gene_expr_data.items(), key=lambda x: x[1], reverse=True)[:3]
         st.markdown(
-            f'<div style="background:#041820;border:1px solid rgba(0,255,157,0.2);'
-            f'border-left:4px solid #00ff9d;border-radius:8px;padding:10px 16px;'
-            f'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
-            f'<b style="color:#00ff9d;">{query}</b> is most highly expressed in: '
-            + " · ".join([f'<b style="color:#00e5ff;">{ct}</b> ({val})' for ct,val in top3])
+            '<div style="background:#041820;border:1px solid rgba(255,61,90,0.3);'
+            'border-left:4px solid #ff3d5a;border-radius:8px;padding:10px 16px;'
+            'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
+            f'<b style="color:#ff3d5a;">► {query}</b> highest expression in: '
+            + " · ".join([f'<b style="color:#ffff00;">{ct}</b> <span style="color:#c8f0f8;">({val})</span>' for ct,val in top3])
             + '</div>',
             unsafe_allow_html=True
         )
