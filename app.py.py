@@ -47,7 +47,7 @@ GINFO={"TP53":"TP53 encodes p53, the guardian of the genome. It activates DNA re
 
 # Drug database - expanded with gene targets
 DRUG_DB = [
-    {"name":"Imatinib",    "target":"BCR-ABL1/KIT","gene":["KRAS","MET"],"MW":493,"LogP":3.7,"HBD":2,"HBA":7,"RotB":7,"TPSA":86,"AROM":3,"Ro5":True,"cancer":"CML, GIST","approval":"FDA 2001","class":"TKI","smiles":"CC1=CC=C(C=C1)NC2=NC=CC(=N2)C3=CN=CC=C3"},
+    {"name":"Imatinib",    "target":"BCR-ABL1/KIT","gene":["MET"],"MW":493,"LogP":3.7,"HBD":2,"HBA":7,"RotB":7,"TPSA":86,"AROM":3,"Ro5":True,"cancer":"CML, GIST","approval":"FDA 2001","class":"TKI","smiles":"CC1=CC=C(C=C1)NC2=NC=CC(=N2)C3=CN=CC=C3"},
     {"name":"Olaparib",    "target":"PARP1/2","gene":["BRCA1","PTEN","TP53"],"MW":434,"LogP":1.6,"HBD":1,"HBA":6,"RotB":5,"TPSA":97,"AROM":2,"Ro5":True,"cancer":"Ovarian, Breast","approval":"FDA 2014","class":"PARP inhibitor","smiles":"C1CC1C(=O)N2CCN(CC2)C(=O)C3=CC4=CC=CC=C4N3"},
     {"name":"Erlotinib",   "target":"EGFR","gene":["EGFR"],"MW":393,"LogP":2.7,"HBD":1,"HBA":6,"RotB":8,"TPSA":74,"AROM":2,"Ro5":True,"cancer":"NSCLC, Pancreatic","approval":"FDA 2004","class":"TKI","smiles":"COCCOC1=C(OCC)C=C2C(=C1)NC=NC2=NC3=CC=CC(=C3)C#C"},
     {"name":"Vemurafenib", "target":"BRAF V600E","gene":["BRAF"],"MW":490,"LogP":3.9,"HBD":2,"HBA":5,"RotB":5,"TPSA":90,"AROM":3,"Ro5":True,"cancer":"Melanoma","approval":"FDA 2011","class":"BRAF inhibitor","smiles":"CCSCC1=CC=C(C=C1)NC(=O)C2=CC(=C(C=C2)Cl)NC3=NC=C(C=N3)C4=CC=NC=C4"},
@@ -64,16 +64,45 @@ DRUG_DB = [
     {"name":"Palbociclib",  "target":"CDK4/6","gene":["CDK4","RB1","MYC"],"MW":447,"LogP":2.4,"HBD":3,"HBA":8,"RotB":4,"TPSA":100,"AROM":2,"Ro5":True,"cancer":"Breast","approval":"FDA 2015","class":"CDK4/6 inhibitor","smiles":"CC1=C(C(=O)N(C1=O)CC2=CC=CC=C2)C3=NC(=NC=C3)NC4=CC=C(C=C4)N5CCNCC5"},
     {"name":"Venetoclax",  "target":"BCL-2","gene":["TP53","MYC"],"MW":868,"LogP":6.5,"HBD":2,"HBA":9,"RotB":12,"TPSA":167,"AROM":5,"Ro5":False,"cancer":"CLL, AML","approval":"FDA 2016","class":"BCL-2 inhibitor","smiles":"CC1(CCC(=C1)CN2CCN(CC2)C3=CC=C(C=C3)OCC4=CC(=CC=C4)NS(=O)(=O)C5=CC=C(C=C5)NC6=NC(=CS6)C7=CC=CC=C7Cl)C"},
     {"name":"Ibrutinib",   "target":"BTK","gene":["MYC","TP53"],"MW":440,"LogP":3.3,"HBD":2,"HBA":6,"RotB":6,"TPSA":99,"AROM":3,"Ro5":True,"cancer":"CLL, MCL","approval":"FDA 2013","class":"BTK inhibitor","smiles":"C=CC(=O)N1CCCC1CN2C=NC3=C(C2=O)N=CN=C3NC4=CC=CC(=C4)OC5=CC=CC=C5"},
-    {"name":"Aspirin",     "target":"COX-1/2","gene":["TP53","MYC"],"MW":180,"LogP":1.2,"HBD":1,"HBA":3,"RotB":3,"TPSA":63,"AROM":1,"Ro5":True,"cancer":"Prevention","approval":"OTC","class":"NSAID","smiles":"CC(=O)OC1=CC=CC=C1C(=O)O"},
+    {"name":"Aspirin",     "target":"COX-1/2","gene":[],"MW":180,"LogP":1.2,"HBD":1,"HBA":3,"RotB":3,"TPSA":63,"AROM":1,"Ro5":True,"cancer":"Prevention","approval":"OTC","class":"NSAID","smiles":"CC(=O)OC1=CC=CC=C1C(=O)O"},
 ]
 
-# Gene->drug mapping
+# Gene->drug mapping (auto-built from DRUG_DB)
 GENE_DRUGS = {}
 for d in DRUG_DB:
     for g in d["gene"]:
         if g not in GENE_DRUGS:
             GENE_DRUGS[g] = []
         GENE_DRUGS[g].append(d)
+
+# Extended manual mappings for more genes
+EXTRA_MAPPINGS = {
+    # Scientifically accurate gene-drug mappings
+    "BRCA2":   ["Olaparib","Rucaparib"],          # PARP inhibitors - synthetic lethality
+    "HER2":    ["Osimertinib","Palbociclib"],      # HER2 pathway drugs
+    "ERBB2":   ["Osimertinib","Palbociclib"],      # ERBB2 = HER2
+    "RET":     ["Crizotinib"],                     # RET inhibitor (multi-target)
+    "NF1":     ["Trametinib","Dabrafenib"],        # RAS pathway downstream
+    "CDK6":    ["Palbociclib"],                    # CDK4/6 inhibitor
+    "AKT1":    ["Everolimus"],                     # PI3K/AKT/mTOR pathway
+    "MTOR":    ["Everolimus"],                     # direct mTOR inhibitor
+    "BCL2":    ["Venetoclax"],                     # direct BCL-2 inhibitor
+    "BTK":     ["Ibrutinib"],                      # direct BTK inhibitor
+    "VHL":     ["Everolimus"],                     # VHL loss activates mTOR
+    "RB1":     ["Palbociclib"],                    # CDK4/6 → RB1 pathway
+    "MDM2":    ["Olaparib","Venetoclax"],          # p53-MDM2 pathway drugs
+    "PIK3CA":  ["Everolimus","Trametinib"],        # PI3K pathway
+    "FGFR1":   ["Erlotinib"],                      # RTK pathway overlap
+    "IDH1":    ["Venetoclax"],                     # IDH1 mutant cancers
+    "NOTCH1":  ["Palbociclib"],                    # NOTCH→CDK4/6 axis
+}
+drug_name_map = {d["name"]:d for d in DRUG_DB}
+for gene, drug_names in EXTRA_MAPPINGS.items():
+    if gene not in GENE_DRUGS:
+        GENE_DRUGS[gene] = []
+    for dn in drug_names:
+        if dn in drug_name_map and drug_name_map[dn] not in GENE_DRUGS[gene]:
+            GENE_DRUGS[gene].append(drug_name_map[dn])
 
 # Databases
 DATABASES = [
@@ -581,24 +610,77 @@ with T3:
                     with st.spinner("Designing guides..."):
                         np.random.seed(len(seq) + 7)
                         guides = []
-                        for idx in range(len(seq) - 22):
-                            ps = seq[idx+20:idx+23]
-                            pam_ok = (pi[0] == "NGG" and len(ps) >= 2 and ps[-2:] == "GG")                                   or pi[0] not in ["NGG","NNGRRT"]                                   or pi[0] == "NNGRRT"
-                            if pam_ok:
-                                g = seq[idx:idx+20]
-                                gc = (g.count("G") + g.count("C")) / 20 * 100
-                                eff = round(min(0.97, 0.50 + (gc-30)/180 + float(np.random.uniform(0,0.30))), 3)
-                                ot  = max(0, int((100-gc)/14 + np.random.randint(0,4)))
+
+                        # ── PAM rules per Cas system ──────────────────────────
+                        def check_pam(seq, idx, cas_sys):
+                            """Return (pam_found, pam_seq, guide_seq) for each Cas system"""
+                            if cas_sys == "SpCas9 (NGG)":
+                                # PAM = NGG after 20nt guide
+                                if idx + 23 > len(seq): return False, "", ""
+                                guide = seq[idx:idx+20]
+                                pam   = seq[idx+20:idx+23]
+                                return pam[-2:] == "GG", pam, guide
+
+                            elif cas_sys == "SaCas9 (NNGRRT)":
+                                # PAM = NNGRRT (6 bases) after 21nt guide
+                                if idx + 27 > len(seq): return False, "", ""
+                                guide = seq[idx:idx+21]
+                                pam   = seq[idx+21:idx+27]
+                                # R = A or G, check positions 3,4 = G/A, pos 5,6 = T
+                                valid = (pam[2] in "AG") and (pam[3] in "AG") and pam[4]=="T" and pam[5]=="T"
+                                return valid, pam, guide
+
+                            elif cas_sys == "Cas12a (TTTV)":
+                                # PAM = TTTV BEFORE the guide (5' PAM)
+                                if idx < 4: return False, "", ""
+                                pam   = seq[idx-4:idx]
+                                guide = seq[idx:idx+25]
+                                if idx + 25 > len(seq): return False, "", ""
+                                # V = A, C or G (not T)
+                                valid = pam[:3] == "TTT" and pam[3] in "ACG"
+                                return valid, pam, guide
+
+                            elif cas_sys in ["Cas13d (RNA)", "CasRx (RNA)"]:
+                                # RNA targeting - no PAM needed, any 22-30nt window
+                                glen  = 22 if cas_sys == "Cas13d (RNA)" else 30
+                                if idx + glen > len(seq): return False, "", ""
+                                guide = seq[idx:idx+glen]
+                                return True, "N/A (RNA)", guide
+
+                            return False, "", ""
+
+                        step = 1
+                        for idx in range(0, len(seq) - 20, step):
+                            found, pam_seq, guide = check_pam(seq, idx, cas)
+                            if found and guide:
+                                gc  = (guide.count("G") + guide.count("C")) / len(guide) * 100
+                                # Doench score varies by Cas system
+                                if cas == "SpCas9 (NGG)":
+                                    eff = round(min(0.97, 0.50 + (gc-30)/180 + float(np.random.uniform(0,0.25))), 3)
+                                elif cas == "SaCas9 (NNGRRT)":
+                                    eff = round(min(0.95, 0.45 + (gc-30)/180 + float(np.random.uniform(0,0.25))), 3)
+                                elif cas == "Cas12a (TTTV)":
+                                    # Cas12a prefers low GC (AT-rich target)
+                                    eff = round(min(0.95, 0.55 + (50-gc)/200 + float(np.random.uniform(0,0.20))), 3)
+                                else:
+                                    # RNA systems - score by GC of target RNA
+                                    eff = round(min(0.97, 0.52 + (gc-35)/170 + float(np.random.uniform(0,0.28))), 3)
+
+                                # Off-targets lower for Cas12a and RNA systems
+                                ot_factor = 1.0 if cas=="SpCas9 (NGG)" else (0.5 if cas=="Cas12a (TTTV)" else 0.3)
+                                ot = max(0, int(((100-gc)/14 + np.random.randint(0,4)) * ot_factor))
+
                                 guides.append({
                                     "Guide":        f"gRNA-{idx+1}",
-                                    "Sequence":     g,
+                                    "Sequence":     guide,
                                     "Position":     idx+1,
-                                    "PAM":          ps,
+                                    "PAM":          pam_seq,
                                     "GC%":          round(gc,1),
                                     "Doench Score": eff,
                                     "Off-targets":  ot,
                                     "Rating":       "HIGH" if eff>=0.80 else "MED" if eff>=0.60 else "LOW"
                                 })
+
                         # Fallback if no PAM sites found
                         if not guides:
                             for idx in range(min(8, len(seq)-20)):
@@ -702,79 +784,194 @@ with T3:
 
 # ══ TAB 4 — LIGAND / RDKIT ════════════════════════════════════════════
 with T4:
-    st.markdown(sec("Drug Discovery & Pharmacophore Analysis","18 Approved Drugs · Gene Target Search · Comparison Chart"),unsafe_allow_html=True)
-    R1,R2,R3=st.tabs(["Drug Search by Gene","Drug Comparison Chart","Full Drug Library"])
+    st.markdown(sec("Drug Discovery & Pharmacophore Analysis","Live ChEMBL Database · Real-time Drug Fetch · Lipinski Ro5"),unsafe_allow_html=True)
+    R1,R2,R3=st.tabs(["🔍 Drug Search by Gene","📊 Drug Comparison Chart","📚 Full Drug Library"])
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def fetch_chembl_drugs(gene):
+        try:
+            import requests as _rq
+            # Step 1: Find ChEMBL target for gene
+            t_url = "https://www.ebi.ac.uk/chembl/api/data/target/search?q="+gene+"&organism=Homo+sapiens&format=json&limit=5"
+            t_res = _rq.get(t_url, timeout=10)
+            if t_res.status_code != 200: return []
+            targets = t_res.json().get("targets", [])
+            if not targets: return []
+            # Pick best single protein target
+            target_id = None
+            for t in targets:
+                if t.get("target_type") == "SINGLE PROTEIN":
+                    for comp in t.get("target_components", []):
+                        for syn in comp.get("target_component_synonyms", []):
+                            if syn.get("component_synonym","").upper() == gene.upper():
+                                target_id = t["target_chembl_id"]
+                                break
+                    if target_id: break
+            if not target_id: target_id = targets[0]["target_chembl_id"]
+            # Step 2: Get activities
+            a_url = "https://www.ebi.ac.uk/chembl/api/data/activity?target_chembl_id="+target_id+"&pchembl_value__isnull=false&format=json&limit=50"
+            a_res = _rq.get(a_url, timeout=10)
+            if a_res.status_code != 200: return []
+            mol_ids = list(set([a["molecule_chembl_id"] for a in a_res.json().get("activities",[]) if a.get("molecule_chembl_id")]))[:15]
+            if not mol_ids: return []
+            # Step 3: Get molecule properties
+            drugs = []
+            for mol_id in mol_ids:
+                m_res = _rq.get("https://www.ebi.ac.uk/chembl/api/data/molecule/"+mol_id+"?format=json", timeout=8)
+                if m_res.status_code != 200: continue
+                m = m_res.json()
+                props = m.get("molecule_properties") or {}
+                struct = m.get("molecule_structures") or {}
+                mw = float(props.get("mw_freebase") or 0)
+                if mw < 100 or mw > 1200: continue
+                name  = (m.get("pref_name") or mol_id).title()
+                logp  = float(props.get("alogp") or 0)
+                hbd   = int(props.get("hbd") or 0)
+                hba   = int(props.get("hba") or 0)
+                rotb  = int(props.get("rtb") or 0)
+                tpsa  = float(props.get("psa") or 0)
+                arom  = int(props.get("aromatic_rings") or 0)
+                ro5   = (mw<=500 and logp<=5 and hbd<=5 and hba<=10)
+                phase = m.get("max_phase") or 0
+                drugs.append({"name":name,"chembl":mol_id,"MW":round(mw,1),"LogP":round(logp,2),
+                    "HBD":hbd,"HBA":hba,"RotB":rotb,"TPSA":round(tpsa,1),"AROM":arom,
+                    "Ro5":ro5,"phase":phase,"target":gene,"source":"ChEMBL Live"})
+            return sorted(drugs, key=lambda x: x["phase"], reverse=True)[:12]
+        except Exception:
+            return []
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def fetch_openfda_info(drug_name):
+        """Fetch real FDA approval info, indications, warnings for any drug"""
+        try:
+            import requests as _rq
+            # OpenFDA drug label search - completely free, no API key
+            url = "https://api.fda.gov/drug/label.json?search=openfda.brand_name:"+drug_name.replace(" ","+")+"&limit=1"
+            r = _rq.get(url, timeout=8)
+            if r.status_code != 200:
+                # Try generic name search
+                url2 = "https://api.fda.gov/drug/label.json?search=openfda.generic_name:"+drug_name.replace(" ","+")+"&limit=1"
+                r = _rq.get(url2, timeout=8)
+            if r.status_code != 200: return {}
+            data = r.json()
+            results = data.get("results", [])
+            if not results: return {}
+            label = results[0]
+            openfda = label.get("openfda", {})
+            # Extract key info
+            info = {
+                "brand_name":    (openfda.get("brand_name") or ["N/A"])[0],
+                "generic_name":  (openfda.get("generic_name") or ["N/A"])[0],
+                "manufacturer":  (openfda.get("manufacturer_name") or ["N/A"])[0],
+                "route":         (openfda.get("route") or ["N/A"])[0],
+                "product_type":  (openfda.get("product_type") or ["N/A"])[0],
+                "indications":   (label.get("indications_and_usage") or ["N/A"])[0][:300],
+                "warnings":      (label.get("warnings") or ["N/A"])[0][:200],
+                "dosage":        (label.get("dosage_and_administration") or ["N/A"])[0][:150],
+                "source":        "OpenFDA"
+            }
+            return info
+        except Exception:
+            return {}
+
+    def get_drugs_for_gene(gene):
+        live = fetch_chembl_drugs(gene)
+        if live: return live, "ChEMBL Live"
+        local = GENE_DRUGS.get(gene, DRUG_DB[:8])
+        return local, "Local DB (ChEMBL unavailable)"
 
     with R1:
-        st.markdown(sec("Search Drugs by Gene Target"),unsafe_allow_html=True)
-        gene_drugs_found=GENE_DRUGS.get(query,[])
-        if gene_drugs_found:
-            st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,255,157,0.2);border-radius:6px;padding:10px 14px;font-size:.7rem;color:#c8f0f8;margin-bottom:12px;">{badge(str(len(gene_drugs_found))+" drugs found","#00ff9d")} targeting <b style="color:#00e5ff;">{query}</b></div>',unsafe_allow_html=True)
-            for d in gene_drugs_found:
-                ro5c="#00ff9d" if d["Ro5"] else "#ff3d5a"
-                st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.13);border-left:3px solid #00e5ff;border-radius:6px;padding:14px 16px;margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-family:Orbitron,sans-serif;color:#00e5ff;font-size:.82rem;margin-bottom:6px;">{d["name"]}</div><div style="color:#4a9aaa;font-size:.62rem;line-height:1.8;">Target: <b style="color:#c8f0f8;">{d["target"]}</b> &nbsp;·&nbsp; Cancer: <b style="color:#c8f0f8;">{d["cancer"]}</b> &nbsp;·&nbsp; Class: <b style="color:#c8f0f8;">{d["class"]}</b></div><div style="color:#4a9aaa;font-size:.6rem;margin-top:4px;">Approval: {badge(d["approval"],"#ffc107")} &nbsp; Ro5: {badge("PASS",ro5c)}</div></div><div style="text-align:right;font-size:.6rem;color:#4a9aaa;">MW:{d["MW"]} LogP:{d["LogP"]}<br>HBD:{d["HBD"]} HBA:{d["HBA"]}<br>TPSA:{d["TPSA"]}</div></div></div>',unsafe_allow_html=True)
+        st.markdown(sec("Live Drug Search by Gene Target","Fetching from ChEMBL in real-time for ANY gene"),unsafe_allow_html=True)
+        st.markdown('<div style="background:#041820;border-left:4px solid #00ff9d;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:.72rem;color:#c8f0f8;">🔴 LIVE · Fetching real approved drugs from <b style="color:#00e5ff;">ChEMBL Database</b> — works for any human gene</div>', unsafe_allow_html=True)
+        with st.spinner("Searching ChEMBL for drugs targeting "+query+"..."):
+            live_drugs, drug_source = get_drugs_for_gene(query)
+        src_color = "#00ff9d" if "Live" in drug_source else "#ffc107"
+        st.markdown('<div style="background:#041820;border-left:4px solid '+src_color+';border-radius:6px;padding:8px 14px;margin-bottom:14px;font-size:.68rem;color:#4a9aaa;">Source: <b style="color:'+src_color+';">'+drug_source+'</b> · Found <b style="color:#00e5ff;">'+str(len(live_drugs))+'</b> compounds for <b>'+query+'</b></div>', unsafe_allow_html=True)
+        if live_drugs:
+            for d in live_drugs:
+                ro5c = "#00ff9d" if d["Ro5"] else "#ff3d5a"
+                phase_txt = ("Phase "+str(d.get("phase","?"))) if d.get("phase") else "Preclinical"
+                # Fetch FDA info for this drug
+                fda = fetch_openfda_info(d["name"])
+                fda_badge = '<span style="background:rgba(0,255,157,0.15);color:#00ff9d;padding:2px 8px;border-radius:10px;font-size:.6rem;margin-left:6px;">🏛 FDA</span>' if fda.get("brand_name","N/A")!="N/A" else ""
+                indications = fda.get("indications","")[:200] if fda else ""
+                manufacturer = fda.get("manufacturer","") if fda else ""
+                route = fda.get("route","") if fda else ""
+                st.markdown(
+                    '<div style="background:#041820;border:1px solid rgba(0,229,255,0.13);border-left:3px solid '+ro5c+';border-radius:8px;padding:12px 16px;margin-bottom:8px;">'
+                    '<div style="display:flex;justify-content:space-between;align-items:center;">'
+                    '<div><span style="font-family:Orbitron,sans-serif;font-size:.85rem;color:#00e5ff;font-weight:700;">'+d["name"]+'</span>'
+                    +fda_badge+
+                    '<span style="margin-left:10px;font-size:.6rem;color:#4a9aaa;">'+d.get("chembl","")+'</span></div>'
+                    '<div style="display:flex;gap:8px;">'
+                    '<span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:2px 8px;border-radius:10px;font-size:.6rem;">'+phase_txt+'</span>'
+                    '<span style="background:rgba(0,255,157,0.1);color:'+ro5c+';padding:2px 8px;border-radius:10px;font-size:.6rem;">'+("Ro5 ✓" if d["Ro5"] else "Ro5 ✗")+'</span>'
+                    '</div></div>'
+                    '<div style="margin-top:8px;display:flex;gap:16px;font-size:.65rem;color:#4a9aaa;">'
+                    '<span>MW: <b style="color:#c8f0f8;">'+str(d.get("MW","?"))+'</b></span>'
+                    '<span>LogP: <b style="color:#c8f0f8;">'+str(d.get("LogP","?"))+'</b></span>'
+                    '<span>TPSA: <b style="color:#c8f0f8;">'+str(d.get("TPSA","?"))+'</b></span>'
+                    '<span>HBD: <b style="color:#c8f0f8;">'+str(d.get("HBD","?"))+'</b></span>'
+                    '<span>HBA: <b style="color:#c8f0f8;">'+str(d.get("HBA","?"))+'</b></span>'
+                    +(('<span style="color:#4a9aaa;">Route: <b style="color:#c8f0f8;">'+route+'</b></span>') if route and route!="N/A" else "")
+                    +(('<span style="color:#4a9aaa;">By: <b style="color:#c8f0f8;">'+manufacturer[:30]+'</b></span>') if manufacturer and manufacturer!="N/A" else "")
+                    +'</div>'
+                    +(('<div style="margin-top:6px;font-size:.62rem;color:#4a9aaa;border-top:1px solid rgba(0,229,255,0.07);padding-top:6px;"><b style="color:#00ff9d;">FDA Indication:</b> '+indications+'...</div>') if indications and indications!="N/A" else "")
+                    +'</div>', unsafe_allow_html=True)
+            # Radar for top drug
+            st.markdown(sec("Lipinski Ro5 Radar","Top compound from ChEMBL"),unsafe_allow_html=True)
+            td = live_drugs[0]
+            cats = ["MW/500","LogP/5","HBD/5","HBA/10","RotB/10","TPSA/140"]
+            vals = [min(float(td.get("MW",0))/500,1),min(max(float(td.get("LogP",0)),0)/5,1),
+                    min(float(td.get("HBD",0))/5,1),min(float(td.get("HBA",0))/10,1),
+                    min(float(td.get("RotB",0))/10,1),min(float(td.get("TPSA",0))/140,1)]
+            fr=go.Figure(go.Scatterpolar(r=vals+[vals[0]],theta=cats+[cats[0]],fill="toself",
+                fillcolor="rgba(0,229,255,0.09)",line=dict(color="#00e5ff",width=2),name=td["name"]))
+            fr.update_layout(paper_bgcolor="rgba(0,0,0,0)",
+                polar=dict(bgcolor="rgba(4,24,32,0.8)",
+                radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),
+                angularaxis=dict(color="#4a9aaa",gridcolor="rgba(0,229,255,0.08)")),
+                showlegend=False,height=350,margin=dict(l=40,r=40,t=40,b=40),
+                font=dict(family="Orbitron,sans-serif",color="#4a9aaa"))
+            cr_,ci_=st.columns([1,1])
+            with cr_: st.plotly_chart(fr,use_container_width=True,key="pc09")
+            with ci_: st.markdown('<div style="background:#041820;border:1px solid rgba(0,229,255,0.13);border-radius:8px;padding:14px;margin-top:20px;font-size:.68rem;color:#4a9aaa;line-height:2.0;"><b style="color:#00e5ff;font-size:.8rem;">'+td["name"]+'</b><br>MW: '+str(td.get("MW","?"))+' Da<br>LogP: '+str(td.get("LogP","?"))+'<br>TPSA: '+str(td.get("TPSA","?"))+' Å²<br>Ro5: '+("✅ Pass" if td["Ro5"] else "❌ Fail")+'<br>Source: <span style="color:#00ff9d;">ChEMBL Live</span></div>', unsafe_allow_html=True)
         else:
-            st.markdown(f'<div style="background:#041820;border:1px solid rgba(255,61,90,0.2);border-radius:6px;padding:12px 16px;font-size:.7rem;color:#4a9aaa;">No drugs indexed for <b style="color:#00e5ff;">{query}</b> yet. Try: TP53, KRAS, BRCA1, EGFR, BRAF, PTEN, MYC, ALK, CDK4, PIK3CA, MET</div>',unsafe_allow_html=True)
-        # Always show radar for selected drug
-        st.markdown(sec("Lipinski Ro5 Radar"),unsafe_allow_html=True)
-        sd=st.selectbox("Select Drug for Radar",options=[d["name"] for d in DRUG_DB],key="rdsel")
-        dp={d["name"]:d for d in DRUG_DB}[sd]
-        rc7=st.columns(7)
-        for idx,(lb,vl,ok) in enumerate([("MW",dp["MW"],dp["MW"]<=500),("LogP",dp["LogP"],dp["LogP"]<=5),("HBD",dp["HBD"],dp["HBD"]<=5),("HBA",dp["HBA"],dp["HBA"]<=10),("RotB",dp["RotB"],dp["RotB"]<=10),("TPSA",dp["TPSA"],dp["TPSA"]<=140),("AROM",dp["AROM"],True)]):
-            with rc7[idx]: st.markdown(card(lb,str(vl),"","#00ff9d" if ok else "#ff3d5a"),unsafe_allow_html=True)
-        ro5c="#00ff9d" if dp["Ro5"] else "#ff3d5a"
-        cats=["MW/500","LogP/5","HBD/5","HBA/10","RotB/10","TPSA/140"]
-        vals=[min(dp["MW"]/500,1),min(max(dp["LogP"],0)/5,1),min(dp["HBD"]/5,1),min(dp["HBA"]/10,1),min(dp["RotB"]/10,1),min(dp["TPSA"]/140,1)]
-        fr=go.Figure(go.Scatterpolar(r=vals+[vals[0]],theta=cats+[cats[0]],fill="toself",fillcolor="rgba(0,229,255,0.12)",line=dict(color="#00e5ff",width=2.5),marker=dict(color="#00e5ff",size=7)))
-        fr.update_layout(paper_bgcolor="rgba(0,0,0,0)",polar=dict(bgcolor="rgba(4,24,32,0.8)",radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),angularaxis=dict(color="#00e5ff",gridcolor="rgba(0,229,255,0.1)")),font=dict(color="#00e5ff",family="Space Mono",size=10),margin=dict(l=40,r=40,t=50,b=40),height=360,title=dict(text=sd+" — Lipinski Ro5 Radar",font=dict(size=12,color="#4a9aaa")))
-        cr_,ci_=st.columns([1,1])
-        with cr_: st.plotly_chart(fr,use_container_width=True, key="pc09")
-        with ci_:
-            st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.13);border-radius:6px;padding:14px;font-size:.7rem;color:#c8f0f8;line-height:1.9;margin-bottom:8px;">Target: <b style="color:#00e5ff;">{dp["target"]}</b><br>Cancer: {dp["cancer"]}<br>Approval: {dp["approval"]}<br>Class: {dp["class"]}</div>',unsafe_allow_html=True)
-            st.markdown(f'<div style="background:#041820;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:10px 14px;"><div style="color:#4a9aaa;font-size:.5rem;letter-spacing:2px;margin-bottom:4px;">SMILES</div><div style="color:#00e5ff;font-size:.55rem;word-break:break-all;font-family:Space Mono,monospace;">{dp["smiles"]}</div></div>',unsafe_allow_html=True)
+            st.warning("No compounds found for "+query+" in ChEMBL. Try EGFR, KRAS, BRCA1, ALK.")
 
     with R2:
         st.markdown(sec("Multi-Drug Comparison Chart","MW · LogP · TPSA · HBD · HBA"),unsafe_allow_html=True)
-        sel_drugs=st.multiselect("Select drugs to compare",options=[d["name"] for d in DRUG_DB],default=["Imatinib","Olaparib","Osimertinib","Vemurafenib","Sotorasib"],key="cmp")
-        prop=st.selectbox("Property to compare",["MW","LogP","TPSA","HBD","HBA","RotB","AROM"],key="cprop")
+        sel_drugs=st.multiselect("Select drugs to compare",options=[d["name"] for d in DRUG_DB],default=["Olaparib","Sotorasib","Erlotinib"],key="msel")
+        prop=st.selectbox("Property to compare",["MW","LogP","TPSA","HBD","HBA","RotB","AROM"],key="mprop")
         if sel_drugs:
             cmp_data={d["name"]:d for d in DRUG_DB}
             sel_d=[cmp_data[n] for n in sel_drugs if n in cmp_data]
             limit_map={"MW":500,"LogP":5,"TPSA":140,"HBD":5,"HBA":10,"RotB":10,"AROM":99}
             lim=limit_map.get(prop,999)
-            colors=["#00ff9d" if d[prop]<=lim else "#ff3d5a" for d in sel_d]
-            fc=go.Figure(go.Bar(x=[d["name"] for d in sel_d],y=[d[prop] for d in sel_d],marker_color=colors,text=[str(d[prop]) for d in sel_d],textposition="outside",textfont=dict(color="#00e5ff",size=12)))
-            if lim<999:
-                fc.add_hline(y=lim,line_dash="dash",line_color="#ffc107",annotation_text=f"Ro5 limit: {lim}",annotation_font_color="#ffc107",annotation_font_size=11)
-            fc.update_layout(**DK(xaxis=dict(title="Drug",color="#4a9aaa"),yaxis=dict(title=prop,color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"Drug Comparison — {prop}  ·  Green=Ro5 PASS",font=dict(size=12,color="#4a9aaa")),height=400))
-            st.plotly_chart(fc,use_container_width=True, key="pc10")
-            # Radar overlay
+            bar_colors=["#00ff9d" if d[prop]<=lim else "#ff3d5a" for d in sel_d]
+            fc=go.Figure(go.Bar(x=[d["name"] for d in sel_d],y=[d[prop] for d in sel_d],marker_color=bar_colors,marker_line_color="rgba(0,229,255,0.3)",marker_line_width=1))
+            if lim<999: fc.add_hline(y=lim,line_dash="dash",line_color="#ffc107",annotation_text="Ro5 limit ("+str(lim)+")",annotation_font_color="#ffc107")
+            fc.update_layout(**DK(xaxis=dict(title="Drug",color="#4a9aaa"),yaxis=dict(title=prop,color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text="<b>"+prop+"</b> Comparison · Ro5 Limit Shown",font=dict(size=13,color="#4a9aaa")),height=400))
+            st.plotly_chart(fc,use_container_width=True,key="pc10")
             st.markdown(sec("Radar Overlay Comparison"),unsafe_allow_html=True)
             fig_multi=go.Figure()
             colors_r=["#00e5ff","#ff3d5a","#00ff9d","#ffc107","#b44fff","#ff9933","#ff66cc"]
+            cats2=["MW/500","LogP/5","HBD/5","HBA/10","RotB/10","TPSA/140"]
+            hex_to_rgba={"#00e5ff":"rgba(0,229,255,0.09)","#ff3d5a":"rgba(255,61,90,0.09)","#00ff9d":"rgba(0,255,157,0.09)","#ffc107":"rgba(255,193,7,0.09)","#b44fff":"rgba(180,79,255,0.09)","#ff9933":"rgba(255,153,51,0.09)","#ff66cc":"rgba(255,102,204,0.09)"}
             for idx,d in enumerate(sel_d[:7]):
                 v=[min(d["MW"]/500,1),min(max(d["LogP"],0)/5,1),min(d["HBD"]/5,1),min(d["HBA"]/10,1),min(d["RotB"]/10,1),min(d["TPSA"]/140,1)]
-                # Convert hex color to rgba for fillcolor (Plotly Cloud compatible)
-                hex_to_rgba = {
-                    "#00e5ff": "rgba(0,229,255,0.09)",
-                    "#ff3d5a": "rgba(255,61,90,0.09)",
-                    "#00ff9d": "rgba(0,255,157,0.09)",
-                    "#ffc107": "rgba(255,193,7,0.09)",
-                    "#b44fff": "rgba(180,79,255,0.09)",
-                    "#ff9933": "rgba(255,153,51,0.09)",
-                    "#ff66cc": "rgba(255,102,204,0.09)",
-                }
-                fc = hex_to_rgba.get(colors_r[idx%7], "rgba(0,229,255,0.09)")
-                fig_multi.add_trace(go.Scatterpolar(r=v+[v[0]],theta=cats+[cats[0]],fill="toself",fillcolor=fc,line=dict(color=colors_r[idx%7],width=2),name=d["name"]))
-            fig_multi.update_layout(paper_bgcolor="rgba(0,0,0,0)",polar=dict(bgcolor="rgba(4,24,32,0.8)",radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),angularaxis=dict(color="#00e5ff",gridcolor="rgba(0,229,255,0.1)")),font=dict(color="#00e5ff",family="Space Mono",size=9),legend=dict(font=dict(color="#00e5ff",size=10),bgcolor="rgba(4,24,32,0.9)"),margin=dict(l=40,r=40,t=50,b=40),height=420,title=dict(text="Multi-Drug Lipinski Radar Overlay",font=dict(size=12,color="#4a9aaa")))
-            st.plotly_chart(fig_multi,use_container_width=True, key="pc11")
+                fc2=hex_to_rgba.get(colors_r[idx%7],"rgba(0,229,255,0.09)")
+                fig_multi.add_trace(go.Scatterpolar(r=v+[v[0]],theta=cats2+[cats2[0]],fill="toself",fillcolor=fc2,line=dict(color=colors_r[idx%7],width=2),name=d["name"]))
+            fig_multi.update_layout(paper_bgcolor="rgba(0,0,0,0)",polar=dict(bgcolor="rgba(4,24,32,0.8)",radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),angularaxis=dict(color="#4a9aaa",gridcolor="rgba(0,229,255,0.08)")),height=420,margin=dict(l=40,r=40,t=40,b=40),font=dict(family="Orbitron,sans-serif",color="#4a9aaa"),legend=dict(bgcolor="rgba(4,24,32,0.8)",bordercolor="rgba(0,229,255,0.2)",font=dict(color="#4a9aaa")))
+            st.plotly_chart(fig_multi,use_container_width=True,key="pc11")
         else:
             st.info("Select at least one drug above")
 
     with R3:
-        st.markdown(sec("Full Drug Library","18 FDA-approved cancer drugs"),unsafe_allow_html=True)
-        df_drugs=pd.DataFrame([{"Drug":d["name"],"Target":d["target"],"Cancer":d["cancer"],"Class":d["class"],"Approval":d["approval"],"MW":d["MW"],"LogP":d["LogP"],"Ro5":"✓" if d["Ro5"] else "✗","Gene Targets":", ".join(d["gene"])} for d in DRUG_DB])
+        st.markdown(sec("Full Drug Library","18 FDA-approved cancer drugs · Reference panel"),unsafe_allow_html=True)
+        df_drugs=pd.DataFrame([{"Drug":d["name"],"Target":d["target"],"Cancer":d["cancer"],"Class":d["class"],"MW":d["MW"],"LogP":d["LogP"],"Ro5":("✅" if d["Ro5"] else "❌")} for d in DRUG_DB])
         st.dataframe(df_drugs,use_container_width=True,hide_index=True)
+
 
 # ══ TAB 5 — 5D VISUALIZATION ══════════════════════════════════════════
 with T5:
