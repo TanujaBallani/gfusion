@@ -423,39 +423,43 @@ with T1:
         # ── Style parameters — each style VISUALLY DISTINCT ──────────
         style_params = {
             "cartoon": {
-                "line_width": 6,       # thick ribbon-like backbone
-                "marker_size": 4,      # small nodes — backbone dominates
+                # PURE RIBBON — no markers at all, only thick smooth line
+                # Looks like NGL/Chimera cartoon ribbon
+                "line_width": 8,
+                "marker_size": 0,      # INVISIBLE markers — line only
                 "marker_symbol": "circle",
-                "line_dash": None,
-                "opacity": 0.95,
-                "mode": "lines+markers",
-                "description": "NGL Cartoon — thick backbone ribbon"
+                "opacity": 1.0,
+                "show_markers": False, # key flag — skip marker trace
+                "description": "NGL Cartoon — pure ribbon, no spheres"
             },
             "thick": {
-                "line_width": 10,      # very thick tubes like PyMOL
-                "marker_size": 7,      # medium nodes
+                # FAT TUBES — very thick line + medium spheres
+                # Looks like PyMOL cartoon tubes
+                "line_width": 12,
+                "marker_size": 6,
                 "marker_symbol": "circle",
-                "line_dash": None,
                 "opacity": 1.0,
-                "mode": "lines+markers",
-                "description": "PyMOL Thick — large tube representation"
+                "show_markers": True,
+                "description": "PyMOL Thick — fat tubes with spheres"
             },
             "ball": {
-                "line_width": 2,       # thin stick connections
-                "marker_size": 10,     # large balls at each residue
+                # BALL AND STICK — thin sticks + LARGE spheres
+                # Classic ball-and-stick model
+                "line_width": 2,
+                "marker_size": 12,
                 "marker_symbol": "circle",
-                "line_dash": None,
                 "opacity": 0.9,
-                "mode": "lines+markers",
-                "description": "Ball+Stick — large spheres at each residue"
+                "show_markers": True,
+                "description": "Ball+Stick — large spheres, thin sticks"
             },
             "thin": {
-                "line_width": 1,       # very thin wireframe
-                "marker_size": 2,      # tiny nodes
+                # WIREFRAME — ultra thin lines + tiny open circles
+                # Looks like VMD wireframe
+                "line_width": 1,
+                "marker_size": 3,
                 "marker_symbol": "circle-open",
-                "line_dash": None,
-                "opacity": 0.7,
-                "mode": "lines+markers",
+                "opacity": 0.6,
+                "show_markers": True,
                 "description": "VMD Thin — wireframe skeleton"
             },
         }
@@ -516,12 +520,22 @@ with T1:
                 )
 
             ht_text=[f"Chain {chain} · {nm}{rn}" for nm,rn in zip(rnm,rns)]
-            fig.add_trace(go.Scatter3d(
-                x=xs,y=ys,z=zs,mode="markers",
-                marker=mcolor_arg,
-                hovertext=ht_text,hoverinfo="text",
-                name=f"Chain {chain}",showlegend=True
-            ))
+            # Only add marker trace if style shows markers
+            if sp.get("show_markers", True):
+                fig.add_trace(go.Scatter3d(
+                    x=xs,y=ys,z=zs,mode="markers",
+                    marker=mcolor_arg,
+                    hovertext=ht_text,hoverinfo="text",
+                    name=f"Chain {chain}",showlegend=True
+                ))
+            else:
+                # Cartoon mode — line only, invisible marker for hover
+                fig.add_trace(go.Scatter3d(
+                    x=xs,y=ys,z=zs,mode="markers",
+                    marker=dict(size=0.1,opacity=0),
+                    hovertext=ht_text,hoverinfo="text",
+                    name=f"Chain {chain}",showlegend=True
+                ))
         # Hotspot markers
         if hot_coords:
             fig.add_trace(go.Scatter3d(
