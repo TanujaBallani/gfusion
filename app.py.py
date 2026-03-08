@@ -662,40 +662,42 @@ with T2:
             hovertemplate="Gene:%{y}<br>Cancer:%{x}<br>Expr:%{z:.1f}<extra></extra>"
         ))
 
-        # Add glowing border around searched gene row
+        # Add glowing border — use gene NAME not index for categorical y-axis
         fig_h.add_shape(
             type="rect",
             x0=-0.5, x1=len(ac)-0.5,
-            y0=searched_row_idx-0.5, y1=searched_row_idx+0.5,
-            line=dict(color="#00ff9d", width=3),
-            fillcolor="rgba(0,255,157,0.0)"
+            y0=query, y1=query,   # categorical axis uses gene name
+            line=dict(color="#00ff9d", width=4),
+            fillcolor="rgba(0,255,157,0.05)"
         )
 
-        # Add arrow annotation pointing to searched gene
+        # Annotation on right side
         fig_h.add_annotation(
-            x=len(ac)-0.5, y=searched_row_idx,
-            text=f"◀ {query} (searched)",
+            x=len(ac)-0.5, y=query,
+            text=f" ◀ YOU SEARCHED THIS",
             showarrow=False,
-            font=dict(color="#00ff9d", size=10, family="Orbitron"),
-            xanchor="left", xshift=8
+            font=dict(color="#00ff9d", size=9, family="Orbitron"),
+            xanchor="left", xshift=10,
+            bgcolor="rgba(0,255,157,0.1)",
+            bordercolor="#00ff9d",
+            borderwidth=1
         )
-
-        # Make searched gene label bold and highlighted
-        tickcolors = ["#00ff9d" if g == query else "#4a9aaa" for g in base_genes]
 
         fig_h.update_layout(**DK(
             xaxis=dict(title="Cancer Type", color="#4a9aaa", tickfont=dict(size=10)),
-            yaxis=dict(title="Gene", color="#4a9aaa",
-                      tickfont=dict(size=11, family="Orbitron"),
-                      tickmode="array",
-                      tickvals=list(range(len(base_genes))),
-                      ticktext=[f"► {g}" if g==query else g for g in base_genes]),
+            yaxis=dict(
+                title="Gene", color="#4a9aaa",
+                tickfont=dict(size=11, family="Orbitron"),
+                tickmode="array",
+                tickvals=base_genes,
+                ticktext=[f"► {g} ◄" if g==query else g for g in base_genes],
+            ),
             title=dict(
-                text=f"Pan-Cancer Expression · <b style='color:#00ff9d'>{query}</b> highlighted",
+                text=f"Pan-Cancer Expression · {query} highlighted in green",
                 font=dict(size=13, color="#4a9aaa")
             ),
             height=420,
-            margin=dict(r=150)  # space for annotation on right
+            margin=dict(r=180)
         ))
         st.plotly_chart(fig_h, use_container_width=True, key="pc06")
 
