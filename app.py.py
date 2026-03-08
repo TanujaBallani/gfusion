@@ -622,12 +622,13 @@ with T3:
                                 return pam[-2:] == "GG", pam, guide
 
                             elif cas_sys == "SaCas9 (NNGRRT)":
-                                # PAM = NNGRRT (6 bases) after 21nt guide
+                                # PAM = NNGRRT after 21nt guide
+                                # N=any, N=any, G=G, R=A/G, R=A/G, T=T
                                 if idx + 27 > len(seq): return False, "", ""
                                 guide = seq[idx:idx+21]
                                 pam   = seq[idx+21:idx+27]
-                                # R = A or G, check positions 3,4 = G/A, pos 5,6 = T
-                                valid = (pam[2] in "AG") and (pam[3] in "AG") and pam[4]=="T" and pam[5]=="T"
+                                if len(pam) < 6: return False, "", ""
+                                valid = (pam[2] == "G") and (pam[3] in "AG") and (pam[4] in "AG") and pam[5] == "T"
                                 return valid, pam, guide
 
                             elif cas_sys == "Cas12a (TTTV)":
@@ -654,21 +655,54 @@ with T3:
                             found, pam_seq, guide = check_pam(seq, idx, cas)
                             if found and guide:
                                 gc  = (guide.count("G") + guide.count("C")) / len(guide) * 100
-                                # Doench score varies by Cas system
-                                if cas == "SpCas9 (NGG)":
-                                    eff = round(min(0.97, 0.50 + (gc-30)/180 + float(np.random.uniform(0,0.25))), 3)
-                                elif cas == "SaCas9 (NNGRRT)":
-                                    eff = round(min(0.95, 0.45 + (gc-30)/180 + float(np.random.uniform(0,0.25))), 3)
-                                elif cas == "Cas12a (TTTV)":
-                                    # Cas12a prefers low GC (AT-rich target)
-                                    eff = round(min(0.95, 0.55 + (50-gc)/200 + float(np.random.uniform(0,0.20))), 3)
-                                else:
-                                    # RNA systems - score by GC of target RNA
-                                    eff = round(min(0.97, 0.52 + (gc-35)/170 + float(np.random.uniform(0,0.28))), 3)
 
-                                # Off-targets lower for Cas12a and RNA systems
-                                ot_factor = 1.0 if cas=="SpCas9 (NGG)" else (0.5 if cas=="Cas12a (TTTV)" else 0.3)
-                                ot = max(0, int(((100-gc)/14 + np.random.randint(0,4)) * ot_factor))
+                                # ── Base efficiency by Cas system ──────────────
+                                if cas == "SpCas9 (NGG)":
+                                    base_eff = 0.50 + (gc-30)/180 + float(np.random.uniform(0,0.25))
+                                elif cas == "SaCas9 (NNGRRT)":
+                                    base_eff = 0.45 + (gc-30)/180 + float(np.random.uniform(0,0.25))
+                                elif cas == "Cas12a (TTTV)":
+                                    base_eff = 0.55 + (50-gc)/200 + float(np.random.uniform(0,0.20))
+                                else:
+                                    base_eff = 0.52 + (gc-35)/170 + float(np.random.uniform(0,0.28))
+
+                                # ── Strategy modifier — each strategy has real biological effect ──
+                                strat_modifier = 0.0
+                                strat_ot_mult  = 1.0
+                                if estrat == "Knockout (NHEJ)":
+                                    # NHEJ works best with high efficiency cuts — no modifier needed
+                                    strat_modifier = 0.0
+                                    strat_ot_mult  = 1.0
+                                elif estrat == "Base Edit CBE":
+                                    # CBE needs guide near C on non-template strand (pos 4-8)
+                                    # Score based on C count in positions 4-8 of guide
+                                    c_window = guide[3:8].count("C")
+                                    strat_modifier = c_window * 0.03 - 0.05
+                                    strat_ot_mult  = 0.7  # CBE has fewer off-target DSBs (no cut)
+                                elif estrat == "Base Edit ABE":
+                                    # ABE needs A in positions 4-7
+                                    a_window = guide[3:7].count("A")
+                                    strat_modifier = a_window * 0.03 - 0.05
+                                    strat_ot_mult  = 0.7
+                                elif estrat == "Prime Editing":
+                                    # Prime editing less efficient overall (~60% of Cas9)
+                                    strat_modifier = -0.12
+                                    strat_ot_mult  = 0.4  # Very precise, low off-targets
+                                elif estrat == "CRISPRi":
+                                    # dCas9 — silencing. Best with low GC (stays near TSS)
+                                    strat_modifier = (40-gc)/300
+                                    strat_ot_mult  = 0.5  # No cuts = fewer off-target effects
+                                elif estrat == "CRISPRa":
+                                    # dCas9 activation. Needs guide close to TSS — prefer start of seq
+                                    tss_bonus = max(0, (200-idx)/2000)
+                                    strat_modifier = tss_bonus
+                                    strat_ot_mult  = 0.5
+
+                                eff = round(min(0.97, max(0.30, base_eff + strat_modifier)), 3)
+
+                                # Off-targets by Cas system × strategy
+                                cas_ot = 1.0 if cas=="SpCas9 (NGG)" else (0.8 if cas=="SaCas9 (NNGRRT)" else (0.5 if cas=="Cas12a (TTTV)" else 0.3))
+                                ot = max(0, int(((100-gc)/14 + np.random.randint(0,4)) * cas_ot * strat_ot_mult))
 
                                 guides.append({
                                     "Guide":        f"gRNA-{idx+1}",
