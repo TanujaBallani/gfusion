@@ -47,55 +47,157 @@ GINFO={"TP53":"TP53 encodes p53, the guardian of the genome. It activates DNA re
 
 # Drug database - expanded with gene targets
 DRUG_DB = [
-    {"name":"Imatinib",    "target":"BCR-ABL1/KIT","gene":["MET"],"MW":493,"LogP":3.7,"HBD":2,"HBA":7,"RotB":7,"TPSA":86,"AROM":3,"Ro5":True,"cancer":"CML, GIST","approval":"FDA 2001","class":"TKI","smiles":"CC1=CC=C(C=C1)NC2=NC=CC(=N2)C3=CN=CC=C3"},
-    {"name":"Olaparib",    "target":"PARP1/2","gene":["BRCA1","PTEN","TP53"],"MW":434,"LogP":1.6,"HBD":1,"HBA":6,"RotB":5,"TPSA":97,"AROM":2,"Ro5":True,"cancer":"Ovarian, Breast","approval":"FDA 2014","class":"PARP inhibitor","smiles":"C1CC1C(=O)N2CCN(CC2)C(=O)C3=CC4=CC=CC=C4N3"},
-    {"name":"Erlotinib",   "target":"EGFR","gene":["EGFR"],"MW":393,"LogP":2.7,"HBD":1,"HBA":6,"RotB":8,"TPSA":74,"AROM":2,"Ro5":True,"cancer":"NSCLC, Pancreatic","approval":"FDA 2004","class":"TKI","smiles":"COCCOC1=C(OCC)C=C2C(=C1)NC=NC2=NC3=CC=CC(=C3)C#C"},
-    {"name":"Vemurafenib", "target":"BRAF V600E","gene":["BRAF"],"MW":490,"LogP":3.9,"HBD":2,"HBA":5,"RotB":5,"TPSA":90,"AROM":3,"Ro5":True,"cancer":"Melanoma","approval":"FDA 2011","class":"BRAF inhibitor","smiles":"CCSCC1=CC=C(C=C1)NC(=O)C2=CC(=C(C=C2)Cl)NC3=NC=C(C=N3)C4=CC=NC=C4"},
-    {"name":"Osimertinib", "target":"EGFR T790M","gene":["EGFR"],"MW":499,"LogP":3.4,"HBD":2,"HBA":7,"RotB":8,"TPSA":97,"AROM":3,"Ro5":True,"cancer":"NSCLC","approval":"FDA 2015","class":"3rd gen TKI","smiles":"COC1=CC2=C(C=C1OCCCN3CCOCC3)C(=NC(=N2)NC4=CC=C(C=C4)F)NC5=CC=CC(=C5)C#C"},
-    {"name":"Sotorasib",   "target":"KRAS G12C","gene":["KRAS"],"MW":560,"LogP":3.5,"HBD":1,"HBA":7,"RotB":5,"TPSA":100,"AROM":3,"Ro5":True,"cancer":"NSCLC, CRC","approval":"FDA 2021","class":"KRAS G12C inhibitor","smiles":"C1CN2C(=O)C=CC2=N1"},
-    {"name":"Adagrasib",   "target":"KRAS G12C","gene":["KRAS"],"MW":604,"LogP":3.8,"HBD":1,"HBA":8,"RotB":6,"TPSA":108,"AROM":3,"Ro5":False,"cancer":"NSCLC, CRC","approval":"FDA 2022","class":"KRAS G12C inhibitor","smiles":"C1CN2C(=O)C=CC2=N1"},
-    {"name":"Alectinib",   "target":"ALK","gene":["ALK"],"MW":482,"LogP":4.1,"HBD":1,"HBA":5,"RotB":4,"TPSA":74,"AROM":3,"Ro5":True,"cancer":"NSCLC","approval":"FDA 2015","class":"2nd gen ALK TKI","smiles":"CC1=CC2=C(C=C1)N(C(=O)C2)CC3=CC=C(C=C3)CN4CCOCC4"},
-    {"name":"Lorlatinib",  "target":"ALK/ROS1","gene":["ALK"],"MW":406,"LogP":1.7,"HBD":1,"HBA":7,"RotB":4,"TPSA":97,"AROM":2,"Ro5":True,"cancer":"NSCLC","approval":"FDA 2018","class":"3rd gen ALK TKI","smiles":"CC1=CN=CC(=C1)NC2=NC3=CC=CC=C3S(=O)(=O)N2C"},
-    {"name":"Rucaparib",   "target":"PARP1/2/3","gene":["BRCA1","PTEN"],"MW":323,"LogP":1.8,"HBD":2,"HBA":4,"RotB":2,"TPSA":67,"AROM":3,"Ro5":True,"cancer":"Ovarian","approval":"FDA 2016","class":"PARP inhibitor","smiles":"C1=CC2=C(C=C1CN3CCN(CC3)C(=O)C4=CC=CC=C4F)NC=C2"},
-    {"name":"Dabrafenib",  "target":"BRAF V600E","gene":["BRAF"],"MW":519,"LogP":3.8,"HBD":2,"HBA":7,"RotB":7,"TPSA":113,"AROM":3,"Ro5":False,"cancer":"Melanoma, NSCLC","approval":"FDA 2013","class":"BRAF inhibitor","smiles":"CC(C)(C)C1=NC(=C(S1)C2=CC(=CC=C2F)NS(=O)(=O)C3=NC=CC=C3)C4=CC=C(C=C4)Cl"},
-    {"name":"Trametinib",  "target":"MEK1/2","gene":["BRAF","KRAS"],"MW":615,"LogP":3.4,"HBD":2,"HBA":9,"RotB":5,"TPSA":120,"AROM":3,"Ro5":False,"cancer":"Melanoma, NSCLC","approval":"FDA 2013","class":"MEK inhibitor","smiles":"CC1=C(C(=O)N1)C2=CC=C(C=C2)NC3=NC4=C(C=CN=C4S3)F"},
-    {"name":"Everolimus",  "target":"mTOR","gene":["PTEN","PIK3CA"],"MW":958,"LogP":4.2,"HBD":3,"HBA":13,"RotB":14,"TPSA":195,"AROM":0,"Ro5":False,"cancer":"RCC, SEGA, PNET","approval":"FDA 2009","class":"mTOR inhibitor","smiles":"CC1CCCC2C1CC(=O)O2"},
-    {"name":"Crizotinib",  "target":"ALK/MET/ROS1","gene":["ALK","MET"],"MW":450,"LogP":3.2,"HBD":2,"HBA":6,"RotB":5,"TPSA":98,"AROM":2,"Ro5":True,"cancer":"NSCLC","approval":"FDA 2011","class":"1st gen ALK TKI","smiles":"CC1=C(C=NC=C1)OC2=CC(=CC(=C2)Cl)NC3=CC(=NC=C3)NC4CC4"},
-    {"name":"Palbociclib",  "target":"CDK4/6","gene":["CDK4","RB1","MYC"],"MW":447,"LogP":2.4,"HBD":3,"HBA":8,"RotB":4,"TPSA":100,"AROM":2,"Ro5":True,"cancer":"Breast","approval":"FDA 2015","class":"CDK4/6 inhibitor","smiles":"CC1=C(C(=O)N(C1=O)CC2=CC=CC=C2)C3=NC(=NC=C3)NC4=CC=C(C=C4)N5CCNCC5"},
-    {"name":"Venetoclax",  "target":"BCL-2","gene":["TP53","MYC"],"MW":868,"LogP":6.5,"HBD":2,"HBA":9,"RotB":12,"TPSA":167,"AROM":5,"Ro5":False,"cancer":"CLL, AML","approval":"FDA 2016","class":"BCL-2 inhibitor","smiles":"CC1(CCC(=C1)CN2CCN(CC2)C3=CC=C(C=C3)OCC4=CC(=CC=C4)NS(=O)(=O)C5=CC=C(C=C5)NC6=NC(=CS6)C7=CC=CC=C7Cl)C"},
-    {"name":"Ibrutinib",   "target":"BTK","gene":["MYC","TP53"],"MW":440,"LogP":3.3,"HBD":2,"HBA":6,"RotB":6,"TPSA":99,"AROM":3,"Ro5":True,"cancer":"CLL, MCL","approval":"FDA 2013","class":"BTK inhibitor","smiles":"C=CC(=O)N1CCCC1CN2C=NC3=C(C2=O)N=CN=C3NC4=CC=CC(=C4)OC5=CC=CC=C5"},
-    {"name":"Aspirin",     "target":"COX-1/2","gene":[],"MW":180,"LogP":1.2,"HBD":1,"HBA":3,"RotB":3,"TPSA":63,"AROM":1,"Ro5":True,"cancer":"Prevention","approval":"OTC","class":"NSAID","smiles":"CC(=O)OC1=CC=CC=C1C(=O)O"},
+    {"name":"Imatinib",     "target":"BCR-ABL1/KIT", "gene":["ABL1","KIT","PDGFRA"],"MW":493,"LogP":3.7,"HBD":2,"HBA":7,"RotB":7,"TPSA":86,"AROM":3,"Ro5":True, "cancer":"CML, GIST",           "approval":"FDA 2001","class":"TKI"},
+    {"name":"Olaparib",     "target":"PARP1/2",       "gene":["BRCA1","BRCA2","PTEN"],"MW":434,"LogP":1.6,"HBD":1,"HBA":6,"RotB":5,"TPSA":97,"AROM":2,"Ro5":True, "cancer":"Ovarian, Breast",      "approval":"FDA 2014","class":"PARP inhibitor"},
+    {"name":"Erlotinib",    "target":"EGFR",           "gene":["EGFR"],              "MW":393,"LogP":2.7,"HBD":1,"HBA":5,"RotB":6,"TPSA":74,"AROM":3,"Ro5":True, "cancer":"NSCLC",                "approval":"FDA 2004","class":"TKI"},
+    {"name":"Osimertinib",  "target":"EGFR T790M",    "gene":["EGFR"],              "MW":500,"LogP":3.5,"HBD":1,"HBA":6,"RotB":7,"TPSA":79,"AROM":3,"Ro5":True, "cancer":"NSCLC",                "approval":"FDA 2015","class":"3rd gen TKI"},
+    {"name":"Vemurafenib",  "target":"BRAF V600E",    "gene":["BRAF"],              "MW":489,"LogP":3.8,"HBD":2,"HBA":5,"RotB":4,"TPSA":85,"AROM":4,"Ro5":True, "cancer":"Melanoma",             "approval":"FDA 2011","class":"BRAF inhibitor"},
+    {"name":"Dabrafenib",   "target":"BRAF V600",     "gene":["BRAF"],              "MW":519,"LogP":3.5,"HBD":2,"HBA":6,"RotB":5,"TPSA":98,"AROM":3,"Ro5":False,"cancer":"Melanoma, NSCLC",      "approval":"FDA 2013","class":"BRAF inhibitor"},
+    {"name":"Trametinib",   "target":"MEK1/2",        "gene":["BRAF","KRAS","NRAS"],"MW":615,"LogP":3.4,"HBD":1,"HBA":7,"RotB":4,"TPSA":91,"AROM":3,"Ro5":False,"cancer":"Melanoma, NSCLC",      "approval":"FDA 2013","class":"MEK inhibitor"},
+    {"name":"Sotorasib",    "target":"KRAS G12C",     "gene":["KRAS"],              "MW":560,"LogP":3.5,"HBD":1,"HBA":6,"RotB":5,"TPSA":92,"AROM":3,"Ro5":False,"cancer":"NSCLC, CRC",           "approval":"FDA 2021","class":"KRAS inhibitor"},
+    {"name":"Adagrasib",    "target":"KRAS G12C",     "gene":["KRAS"],              "MW":604,"LogP":3.8,"HBD":1,"HBA":7,"RotB":6,"TPSA":98,"AROM":4,"Ro5":False,"cancer":"NSCLC, CRC",           "approval":"FDA 2022","class":"KRAS inhibitor"},
+    {"name":"Crizotinib",   "target":"ALK/MET/ROS1",  "gene":["ALK","MET","ROS1"],  "MW":450,"LogP":3.1,"HBD":2,"HBA":5,"RotB":6,"TPSA":83,"AROM":3,"Ro5":True, "cancer":"NSCLC",                "approval":"FDA 2011","class":"TKI"},
+    {"name":"Alectinib",    "target":"ALK",           "gene":["ALK"],               "MW":482,"LogP":3.9,"HBD":1,"HBA":5,"RotB":5,"TPSA":73,"AROM":4,"Ro5":True, "cancer":"NSCLC",                "approval":"FDA 2015","class":"2nd gen ALK"},
+    {"name":"Lorlatinib",   "target":"ALK/ROS1",      "gene":["ALK","ROS1"],        "MW":406,"LogP":1.9,"HBD":2,"HBA":6,"RotB":4,"TPSA":91,"AROM":2,"Ro5":True, "cancer":"NSCLC",                "approval":"FDA 2018","class":"3rd gen ALK"},
+    {"name":"Palbociclib",  "target":"CDK4/6",        "gene":["CDK4","CDK6","RB1","MYC","CCND1"],"MW":447,"LogP":1.9,"HBD":2,"HBA":8,"RotB":5,"TPSA":101,"AROM":3,"Ro5":True,"cancer":"Breast",  "approval":"FDA 2015","class":"CDK4/6 inhibitor"},
+    {"name":"Ribociclib",   "target":"CDK4/6",        "gene":["CDK4","CDK6","RB1"], "MW":434,"LogP":1.8,"HBD":2,"HBA":8,"RotB":5,"TPSA":97,"AROM":3,"Ro5":True, "cancer":"Breast",               "approval":"FDA 2017","class":"CDK4/6 inhibitor"},
+    {"name":"Abemaciclib",  "target":"CDK4/6",        "gene":["CDK4","CDK6"],       "MW":506,"LogP":3.7,"HBD":2,"HBA":8,"RotB":6,"TPSA":101,"AROM":4,"Ro5":False,"cancer":"Breast",              "approval":"FDA 2017","class":"CDK4/6 inhibitor"},
+    {"name":"Venetoclax",   "target":"BCL2",          "gene":["BCL2","TP53","MYC"], "MW":868,"LogP":7.7,"HBD":2,"HBA":8,"RotB":9,"TPSA":125,"AROM":5,"Ro5":False,"cancer":"CLL, AML",            "approval":"FDA 2016","class":"BCL2 inhibitor"},
+    {"name":"Ibrutinib",    "target":"BTK",           "gene":["BTK","MYC","TP53"],  "MW":440,"LogP":3.8,"HBD":2,"HBA":5,"RotB":5,"TPSA":99,"AROM":3,"Ro5":True, "cancer":"CLL, MCL",             "approval":"FDA 2013","class":"BTK inhibitor"},
+    {"name":"Acalabrutinib","target":"BTK",           "gene":["BTK"],               "MW":465,"LogP":1.9,"HBD":2,"HBA":6,"RotB":5,"TPSA":113,"AROM":3,"Ro5":True,"cancer":"CLL, MCL",             "approval":"FDA 2017","class":"BTK inhibitor"},
+    {"name":"Everolimus",   "target":"mTOR",          "gene":["MTOR","PTEN","PIK3CA","TSC1","TSC2"],"MW":958,"LogP":4.7,"HBD":3,"HBA":13,"RotB":12,"TPSA":195,"AROM":1,"Ro5":False,"cancer":"RCC, PNET","approval":"FDA 2009","class":"mTOR inhibitor"},
+    {"name":"Temsirolimus", "target":"mTOR",          "gene":["MTOR","PTEN"],       "MW":1030,"LogP":4.5,"HBD":3,"HBA":14,"RotB":13,"TPSA":206,"AROM":1,"Ro5":False,"cancer":"RCC",              "approval":"FDA 2007","class":"mTOR inhibitor"},
+    {"name":"Alpelisib",    "target":"PI3Ka",         "gene":["PIK3CA"],            "MW":441,"LogP":2.6,"HBD":3,"HBA":6,"RotB":4,"TPSA":105,"AROM":2,"Ro5":True, "cancer":"Breast",               "approval":"FDA 2019","class":"PI3K inhibitor"},
+    {"name":"Idelalisib",   "target":"PI3Kd",         "gene":["PIK3CD","BTK"],      "MW":415,"LogP":2.1,"HBD":1,"HBA":6,"RotB":4,"TPSA":100,"AROM":4,"Ro5":True, "cancer":"CLL, FL",             "approval":"FDA 2014","class":"PI3K inhibitor"},
+    {"name":"Rucaparib",    "target":"PARP1/2/3",     "gene":["BRCA1","BRCA2"],     "MW":323,"LogP":1.8,"HBD":2,"HBA":4,"RotB":3,"TPSA":71,"AROM":3,"Ro5":True, "cancer":"Ovarian",              "approval":"FDA 2016","class":"PARP inhibitor"},
+    {"name":"Niraparib",    "target":"PARP1/2",       "gene":["BRCA1","BRCA2","PTEN"],"MW":320,"LogP":1.7,"HBD":3,"HBA":4,"RotB":4,"TPSA":78,"AROM":2,"Ro5":True,"cancer":"Ovarian",             "approval":"FDA 2017","class":"PARP inhibitor"},
+    {"name":"Trastuzumab",  "target":"HER2",          "gene":["ERBB2","HER2"],      "MW":145531,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"Breast, Gastric",      "approval":"FDA 1998","class":"Monoclonal antibody"},
+    {"name":"Pertuzumab",   "target":"HER2",          "gene":["ERBB2","HER2"],      "MW":148000,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"Breast",               "approval":"FDA 2012","class":"Monoclonal antibody"},
+    {"name":"Lapatinib",    "target":"EGFR/HER2",     "gene":["EGFR","ERBB2","HER2"],"MW":581,"LogP":5.0,"HBD":2,"HBA":7,"RotB":9,"TPSA":107,"AROM":4,"Ro5":False,"cancer":"Breast",             "approval":"FDA 2007","class":"Dual TKI"},
+    {"name":"Neratinib",    "target":"HER2/EGFR",     "gene":["ERBB2","HER2","EGFR"],"MW":557,"LogP":4.5,"HBD":2,"HBA":7,"RotB":8,"TPSA":110,"AROM":4,"Ro5":False,"cancer":"Breast",             "approval":"FDA 2017","class":"Irreversible TKI"},
+    {"name":"Ivosidenib",   "target":"IDH1",          "gene":["IDH1"],              "MW":583,"LogP":3.7,"HBD":2,"HBA":6,"RotB":7,"TPSA":101,"AROM":3,"Ro5":False,"cancer":"AML",                 "approval":"FDA 2018","class":"IDH1 inhibitor"},
+    {"name":"Enasidenib",   "target":"IDH2",          "gene":["IDH2"],              "MW":473,"LogP":3.1,"HBD":2,"HBA":7,"RotB":4,"TPSA":112,"AROM":3,"Ro5":True, "cancer":"AML",                 "approval":"FDA 2017","class":"IDH2 inhibitor"},
+    {"name":"Ruxolitinib",  "target":"JAK1/2",        "gene":["JAK1","JAK2"],       "MW":306,"LogP":2.1,"HBD":1,"HBA":4,"RotB":4,"TPSA":67,"AROM":2,"Ro5":True, "cancer":"MF, PV",              "approval":"FDA 2011","class":"JAK inhibitor"},
+    {"name":"Fedratinib",   "target":"JAK2",          "gene":["JAK2"],              "MW":596,"LogP":3.7,"HBD":2,"HBA":7,"RotB":7,"TPSA":104,"AROM":4,"Ro5":False,"cancer":"MF",                  "approval":"FDA 2019","class":"JAK2 inhibitor"},
+    {"name":"Midostaurin",  "target":"FLT3/KIT",      "gene":["FLT3","KIT"],        "MW":570,"LogP":4.4,"HBD":1,"HBA":5,"RotB":5,"TPSA":80,"AROM":5,"Ro5":False,"cancer":"AML",                 "approval":"FDA 2017","class":"Multi-kinase"},
+    {"name":"Gilteritinib", "target":"FLT3/AXL",      "gene":["FLT3"],              "MW":552,"LogP":4.0,"HBD":3,"HBA":7,"RotB":8,"TPSA":119,"AROM":3,"Ro5":False,"cancer":"AML",                "approval":"FDA 2018","class":"FLT3 inhibitor"},
+    {"name":"Cabozantinib", "target":"MET/VEGFR/RET", "gene":["MET","RET","VEGFR2"],"MW":501,"LogP":4.7,"HBD":2,"HBA":6,"RotB":8,"TPSA":100,"AROM":3,"Ro5":False,"cancer":"RCC, HCC, MTC",      "approval":"FDA 2012","class":"Multi-TKI"},
+    {"name":"Vandetanib",   "target":"RET/VEGFR/EGFR","gene":["RET","EGFR"],        "MW":475,"LogP":4.5,"HBD":1,"HBA":5,"RotB":5,"TPSA":81,"AROM":3,"Ro5":True, "cancer":"MTC",                 "approval":"FDA 2011","class":"Multi-TKI"},
+    {"name":"Selpercatinib","target":"RET",           "gene":["RET"],               "MW":526,"LogP":2.8,"HBD":2,"HBA":7,"RotB":6,"TPSA":102,"AROM":3,"Ro5":False,"cancer":"NSCLC, MTC",          "approval":"FDA 2020","class":"RET inhibitor"},
+    {"name":"Pralsetinib",  "target":"RET",           "gene":["RET"],               "MW":534,"LogP":3.1,"HBD":2,"HBA":7,"RotB":6,"TPSA":105,"AROM":3,"Ro5":False,"cancer":"NSCLC, MTC",          "approval":"FDA 2020","class":"RET inhibitor"},
+    {"name":"Erdafitinib",  "target":"FGFR1-4",       "gene":["FGFR1","FGFR2","FGFR3","FGFR4"],"MW":446,"LogP":3.5,"HBD":1,"HBA":6,"RotB":6,"TPSA":87,"AROM":3,"Ro5":True,"cancer":"Bladder",  "approval":"FDA 2019","class":"FGFR inhibitor"},
+    {"name":"Infigratinib", "target":"FGFR1-3",       "gene":["FGFR1","FGFR2","FGFR3"],"MW":560,"LogP":4.1,"HBD":2,"HBA":7,"RotB":7,"TPSA":105,"AROM":4,"Ro5":False,"cancer":"CCA",             "approval":"FDA 2021","class":"FGFR inhibitor"},
+    {"name":"Pemigatinib",  "target":"FGFR1-3",       "gene":["FGFR1","FGFR2","FGFR3"],"MW":487,"LogP":2.8,"HBD":2,"HBA":7,"RotB":6,"TPSA":103,"AROM":3,"Ro5":True, "cancer":"CCA",             "approval":"FDA 2020","class":"FGFR inhibitor"},
+    {"name":"Vismodegib",   "target":"SMO/Hedgehog",  "gene":["SMO","PTCH1"],       "MW":421,"LogP":4.2,"HBD":1,"HBA":4,"RotB":5,"TPSA":64,"AROM":3,"Ro5":True, "cancer":"BCC",                 "approval":"FDA 2012","class":"Hedgehog inhibitor"},
+    {"name":"Sonidegib",    "target":"SMO",           "gene":["SMO","PTCH1"],       "MW":485,"LogP":5.0,"HBD":2,"HBA":5,"RotB":7,"TPSA":78,"AROM":4,"Ro5":True, "cancer":"BCC",                 "approval":"FDA 2015","class":"Hedgehog inhibitor"},
+    {"name":"Olaparib",     "target":"PARP",          "gene":["ATM","PALB2"],       "MW":434,"LogP":1.6,"HBD":1,"HBA":6,"RotB":5,"TPSA":97,"AROM":2,"Ro5":True, "cancer":"Breast, Ovarian",      "approval":"FDA 2014","class":"PARP inhibitor"},
+    {"name":"Selumetinib",  "target":"MEK1/2",        "gene":["KRAS","BRAF","NF1"], "MW":457,"LogP":2.9,"HBD":2,"HBA":6,"RotB":4,"TPSA":101,"AROM":2,"Ro5":True, "cancer":"NF1, NSCLC",          "approval":"FDA 2020","class":"MEK inhibitor"},
+    {"name":"Binimetinib",  "target":"MEK1/2",        "gene":["NRAS","BRAF"],       "MW":441,"LogP":2.1,"HBD":2,"HBA":7,"RotB":4,"TPSA":109,"AROM":2,"Ro5":True, "cancer":"Melanoma",             "approval":"FDA 2018","class":"MEK inhibitor"},
+    {"name":"Cobimetinib",  "target":"MEK1",          "gene":["BRAF","NRAS"],       "MW":531,"LogP":4.3,"HBD":2,"HBA":5,"RotB":5,"TPSA":82,"AROM":3,"Ro5":False,"cancer":"Melanoma",             "approval":"FDA 2015","class":"MEK inhibitor"},
+    {"name":"Encorafenib",  "target":"BRAF",          "gene":["BRAF"],              "MW":540,"LogP":3.4,"HBD":2,"HBA":7,"RotB":7,"TPSA":105,"AROM":3,"Ro5":False,"cancer":"Melanoma, CRC",        "approval":"FDA 2018","class":"BRAF inhibitor"},
+    {"name":"Cetuximab",    "target":"EGFR",          "gene":["EGFR","KRAS"],       "MW":145781,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"CRC, HNSCC",           "approval":"FDA 2004","class":"Monoclonal antibody"},
+    {"name":"Bevacizumab",  "target":"VEGF-A",        "gene":["VEGFA","VHL"],       "MW":149000,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"CRC, NSCLC, GBM",      "approval":"FDA 2004","class":"Anti-VEGF antibody"},
+    {"name":"Nivolumab",    "target":"PD-1",          "gene":["PDCD1","TP53"],      "MW":143597,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"Melanoma, NSCLC, RCC", "approval":"FDA 2014","class":"Anti-PD-1"},
+    {"name":"Pembrolizumab","target":"PD-1",          "gene":["PDCD1","TP53","MYC"],"MW":149000,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"Melanoma, NSCLC+",     "approval":"FDA 2014","class":"Anti-PD-1"},
+    {"name":"Atezolizumab", "target":"PD-L1",         "gene":["CD274","TP53"],      "MW":145000,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"NSCLC, Bladder, TNBC", "approval":"FDA 2016","class":"Anti-PD-L1"},
+    {"name":"Ipilimumab",   "target":"CTLA-4",        "gene":["CTLA4"],             "MW":148000,"LogP":0,"HBD":0,"HBA":0,"RotB":0,"TPSA":0,"AROM":0,"Ro5":False,"cancer":"Melanoma",             "approval":"FDA 2011","class":"Anti-CTLA-4"},
+    {"name":"Ixazomib",     "target":"Proteasome",    "gene":["PSMB5","MYC"],       "MW":361,"LogP":1.5,"HBD":2,"HBA":6,"RotB":4,"TPSA":96,"AROM":1,"Ro5":True, "cancer":"Multiple Myeloma",      "approval":"FDA 2015","class":"Proteasome inhibitor"},
+    {"name":"Bortezomib",   "target":"26S Proteasome","gene":["PSMB5"],             "MW":384,"LogP":2.4,"HBD":3,"HBA":6,"RotB":6,"TPSA":100,"AROM":2,"Ro5":True, "cancer":"Multiple Myeloma",     "approval":"FDA 2003","class":"Proteasome inhibitor"},
+    {"name":"Azacitidine",  "target":"DNMT1/3",       "gene":["DNMT1","DNMT3A","TET2"],"MW":244,"LogP":-2.0,"HBD":4,"HBA":7,"RotB":2,"TPSA":127,"AROM":1,"Ro5":True,"cancer":"MDS, AML",         "approval":"FDA 2004","class":"Hypomethylating"},
+    {"name":"Decitabine",   "target":"DNMT",          "gene":["DNMT1","DNMT3A"],    "MW":228,"LogP":-2.1,"HBD":4,"HBA":7,"RotB":2,"TPSA":129,"AROM":1,"Ro5":True, "cancer":"MDS",                "approval":"FDA 2006","class":"Hypomethylating"},
+    {"name":"Vorinostat",   "target":"HDAC1/2/3/6",   "gene":["HDAC1","HDAC2","MYC"],"MW":264,"LogP":1.4,"HBD":3,"HBA":4,"RotB":7,"TPSA":79,"AROM":1,"Ro5":True,"cancer":"CTCL",                "approval":"FDA 2006","class":"HDAC inhibitor"},
+    {"name":"Romidepsin",   "target":"HDAC1/2",       "gene":["HDAC1","HDAC2"],     "MW":540,"LogP":2.5,"HBD":3,"HBA":7,"RotB":5,"TPSA":124,"AROM":1,"Ro5":False,"cancer":"CTCL, PTCL",         "approval":"FDA 2009","class":"HDAC inhibitor"},
+    {"name":"Tazemetostat", "target":"EZH2",          "gene":["EZH2"],              "MW":572,"LogP":3.5,"HBD":1,"HBA":7,"RotB":8,"TPSA":99,"AROM":4,"Ro5":False,"cancer":"FL, ES",              "approval":"FDA 2020","class":"EZH2 inhibitor"},
+    {"name":"Olutasidenib", "target":"IDH1",          "gene":["IDH1"],              "MW":537,"LogP":3.9,"HBD":2,"HBA":6,"RotB":5,"TPSA":97,"AROM":3,"Ro5":False,"cancer":"AML",                 "approval":"FDA 2022","class":"IDH1 inhibitor"},
+    {"name":"Zanubrutinib", "target":"BTK",           "gene":["BTK"],               "MW":471,"LogP":2.9,"HBD":2,"HBA":6,"RotB":5,"TPSA":107,"AROM":3,"Ro5":True, "cancer":"CLL, MCL, WM",        "approval":"FDA 2019","class":"BTK inhibitor"},
+    {"name":"Ponatinib",    "target":"BCR-ABL/FGFR",  "gene":["ABL1","FGFR1"],      "MW":532,"LogP":4.5,"HBD":1,"HBA":6,"RotB":7,"TPSA":86,"AROM":5,"Ro5":False,"cancer":"CML, ALL",            "approval":"FDA 2012","class":"3rd gen TKI"},
+    {"name":"Dasatinib",    "target":"BCR-ABL/SRC",   "gene":["ABL1","SRC"],        "MW":488,"LogP":2.6,"HBD":3,"HBA":7,"RotB":7,"TPSA":110,"AROM":3,"Ro5":True, "cancer":"CML, ALL",            "approval":"FDA 2006","class":"TKI"},
+    {"name":"Nilotinib",    "target":"BCR-ABL",       "gene":["ABL1"],              "MW":529,"LogP":4.0,"HBD":2,"HBA":6,"RotB":5,"TPSA":83,"AROM":5,"Ro5":False,"cancer":"CML",                 "approval":"FDA 2007","class":"2nd gen TKI"},
+    {"name":"Gefitinib",    "target":"EGFR",          "gene":["EGFR"],              "MW":446,"LogP":3.2,"HBD":1,"HBA":5,"RotB":5,"TPSA":68,"AROM":3,"Ro5":True, "cancer":"NSCLC",               "approval":"FDA 2003","class":"TKI"},
+    {"name":"Afatinib",     "target":"EGFR/HER2",     "gene":["EGFR","ERBB2"],      "MW":485,"LogP":3.3,"HBD":2,"HBA":7,"RotB":7,"TPSA":109,"AROM":3,"Ro5":True, "cancer":"NSCLC",              "approval":"FDA 2013","class":"Irreversible TKI"},
+    {"name":"Brigatinib",   "target":"ALK/EGFR",      "gene":["ALK","EGFR"],        "MW":539,"LogP":3.3,"HBD":2,"HBA":7,"RotB":7,"TPSA":107,"AROM":3,"Ro5":False,"cancer":"NSCLC",              "approval":"FDA 2017","class":"2nd gen ALK"},
+    {"name":"Ceritinib",    "target":"ALK",           "gene":["ALK"],               "MW":558,"LogP":4.4,"HBD":2,"HBA":6,"RotB":8,"TPSA":97,"AROM":3,"Ro5":False,"cancer":"NSCLC",               "approval":"FDA 2014","class":"2nd gen ALK"},
+    {"name":"Entrectinib",  "target":"ROS1/TRK/ALK",  "gene":["ROS1","NTRK1","ALK"],"MW":560,"LogP":3.7,"HBD":2,"HBA":7,"RotB":6,"TPSA":102,"AROM":4,"Ro5":False,"cancer":"NSCLC, TRK+",       "approval":"FDA 2019","class":"TRK/ROS1 inhibitor"},
+    {"name":"Larotrectinib","target":"TRK A/B/C",     "gene":["NTRK1","NTRK2","NTRK3"],"MW":428,"LogP":1.8,"HBD":2,"HBA":7,"RotB":4,"TPSA":105,"AROM":2,"Ro5":True,"cancer":"TRK fusion+",     "approval":"FDA 2018","class":"TRK inhibitor"},
+    {"name":"Tepotinib",    "target":"MET",           "gene":["MET"],               "MW":492,"LogP":3.5,"HBD":1,"HBA":6,"RotB":6,"TPSA":90,"AROM":4,"Ro5":True, "cancer":"NSCLC METex14",        "approval":"FDA 2021","class":"MET inhibitor"},
+    {"name":"Capmatinib",   "target":"MET",           "gene":["MET"],               "MW":412,"LogP":2.7,"HBD":2,"HBA":6,"RotB":4,"TPSA":96,"AROM":3,"Ro5":True, "cancer":"NSCLC METex14",        "approval":"FDA 2020","class":"MET inhibitor"},
+    {"name":"Inavolisib",   "target":"PI3Ka",         "gene":["PIK3CA"],            "MW":452,"LogP":2.9,"HBD":2,"HBA":7,"RotB":5,"TPSA":108,"AROM":3,"Ro5":True, "cancer":"Breast",              "approval":"FDA 2024","class":"PI3Ka inhibitor"},
+    {"name":"Capivasertib", "target":"AKT1/2/3",      "gene":["AKT1","AKT2","PTEN"],"MW":437,"LogP":2.7,"HBD":2,"HBA":6,"RotB":4,"TPSA":94,"AROM":3,"Ro5":True, "cancer":"Breast",              "approval":"FDA 2023","class":"AKT inhibitor"},
+    {"name":"Fulvestrant",  "target":"ER",            "gene":["ESR1"],              "MW":606,"LogP":6.8,"HBD":2,"HBA":3,"RotB":9,"TPSA":65,"AROM":1,"Ro5":False,"cancer":"Breast",               "approval":"FDA 2002","class":"SERD"},
+    {"name":"Tamoxifen",    "target":"ER",            "gene":["ESR1"],              "MW":371,"LogP":6.3,"HBD":0,"HBA":1,"RotB":5,"TPSA":12,"AROM":3,"Ro5":False,"cancer":"Breast",               "approval":"FDA 1977","class":"SERM"},
+    {"name":"Letrozole",    "target":"Aromatase",     "gene":["CYP19A1","ESR1"],    "MW":285,"LogP":2.0,"HBD":0,"HBA":3,"RotB":3,"TPSA":50,"AROM":2,"Ro5":True, "cancer":"Breast",               "approval":"FDA 1997","class":"Aromatase inhibitor"},
+    {"name":"Anastrozole",  "target":"Aromatase",     "gene":["CYP19A1"],           "MW":293,"LogP":1.9,"HBD":0,"HBA":3,"RotB":3,"TPSA":45,"AROM":2,"Ro5":True, "cancer":"Breast",               "approval":"FDA 1995","class":"Aromatase inhibitor"},
+    {"name":"Enzalutamide", "target":"AR",            "gene":["AR"],                "MW":464,"LogP":3.7,"HBD":1,"HBA":5,"RotB":5,"TPSA":92,"AROM":2,"Ro5":True, "cancer":"Prostate",             "approval":"FDA 2012","class":"AR antagonist"},
+    {"name":"Abiraterone",  "target":"CYP17A1",       "gene":["CYP17A1","AR"],      "MW":391,"LogP":4.6,"HBD":1,"HBA":1,"RotB":2,"TPSA":33,"AROM":1,"Ro5":True, "cancer":"Prostate",             "approval":"FDA 2011","class":"CYP17 inhibitor"},
+    {"name":"Olaparib",     "target":"PARP",          "gene":["ATR","CHEK1","CHEK2"],"MW":434,"LogP":1.6,"HBD":1,"HBA":6,"RotB":5,"TPSA":97,"AROM":2,"Ro5":True,"cancer":"Ovarian, Breast",      "approval":"FDA 2014","class":"PARP inhibitor"},
+    {"name":"Alisertib",    "target":"Aurora A",      "gene":["AURKA","MYC"],       "MW":552,"LogP":3.7,"HBD":2,"HBA":7,"RotB":5,"TPSA":107,"AROM":3,"Ro5":False,"cancer":"Lymphoma, AML",        "approval":"Clinical","class":"Aurora A inhibitor"},
+    {"name":"Navitoclax",   "target":"BCL2/BCL-XL",   "gene":["BCL2","BCL2L1"],     "MW":974,"LogP":7.1,"HBD":3,"HBA":9,"RotB":10,"TPSA":133,"AROM":5,"Ro5":False,"cancer":"CLL, AML",           "approval":"Clinical","class":"BCL2/XL inhibitor"},
+    {"name":"AMG-232",      "target":"MDM2",          "gene":["MDM2","TP53"],       "MW":629,"LogP":4.1,"HBD":2,"HBA":7,"RotB":8,"TPSA":115,"AROM":2,"Ro5":False,"cancer":"AML, Solid tumors",   "approval":"Clinical","class":"MDM2 inhibitor"},
+    {"name":"RG7388",       "target":"MDM2",          "gene":["MDM2","TP53"],       "MW":581,"LogP":4.5,"HBD":1,"HBA":6,"RotB":6,"TPSA":97,"AROM":3,"Ro5":False,"cancer":"AML",                 "approval":"Clinical","class":"MDM2 inhibitor"},
 ]
 
-# Gene->drug mapping (auto-built from DRUG_DB)
+# Build GENE_DRUGS lookup from DRUG_DB
 GENE_DRUGS = {}
 for d in DRUG_DB:
     for g in d["gene"]:
         if g not in GENE_DRUGS:
             GENE_DRUGS[g] = []
-        GENE_DRUGS[g].append(d)
+        if d not in GENE_DRUGS[g]:
+            GENE_DRUGS[g].append(d)
 
-# Extended manual mappings for more genes
+# Extended mappings for genes not directly in DRUG_DB
 EXTRA_MAPPINGS = {
-    # Scientifically accurate gene-drug mappings
-    "BRCA2":   ["Olaparib","Rucaparib"],          # PARP inhibitors - synthetic lethality
-    "HER2":    ["Osimertinib","Palbociclib"],      # HER2 pathway drugs
-    "ERBB2":   ["Osimertinib","Palbociclib"],      # ERBB2 = HER2
-    "RET":     ["Crizotinib"],                     # RET inhibitor (multi-target)
-    "NF1":     ["Trametinib","Dabrafenib"],        # RAS pathway downstream
-    "CDK6":    ["Palbociclib"],                    # CDK4/6 inhibitor
-    "AKT1":    ["Everolimus"],                     # PI3K/AKT/mTOR pathway
-    "MTOR":    ["Everolimus"],                     # direct mTOR inhibitor
-    "BCL2":    ["Venetoclax"],                     # direct BCL-2 inhibitor
-    "BTK":     ["Ibrutinib"],                      # direct BTK inhibitor
-    "VHL":     ["Everolimus"],                     # VHL loss activates mTOR
-    "RB1":     ["Palbociclib"],                    # CDK4/6 → RB1 pathway
-    "MDM2":    ["Olaparib","Venetoclax"],          # p53-MDM2 pathway drugs
-    "PIK3CA":  ["Everolimus","Trametinib"],        # PI3K pathway
-    "FGFR1":   ["Erlotinib"],                      # RTK pathway overlap
-    "IDH1":    ["Venetoclax"],                     # IDH1 mutant cancers
-    "NOTCH1":  ["Palbociclib"],                    # NOTCH→CDK4/6 axis
+    "BRCA2":  ["Olaparib","Rucaparib","Niraparib"],
+    "HER2":   ["Trastuzumab","Pertuzumab","Lapatinib","Neratinib"],
+    "ERBB2":  ["Trastuzumab","Pertuzumab","Lapatinib","Neratinib"],
+    "NF1":    ["Selumetinib","Trametinib","Cobimetinib"],
+    "CDK6":   ["Palbociclib","Ribociclib","Abemaciclib"],
+    "AKT1":   ["Capivasertib","Everolimus"],
+    "AKT2":   ["Capivasertib"],
+    "BCL2L1": ["Navitoclax","Venetoclax"],
+    "VHL":    ["Bevacizumab","Everolimus"],
+    "MDM2":   ["AMG-232","RG7388"],
+    "NOTCH1": ["Palbociclib","Bortezomib"],
+    "AURKA":  ["Alisertib"],
+    "EZH2":   ["Tazemetostat"],
+    "DNMT3A": ["Azacitidine","Decitabine"],
+    "TET2":   ["Azacitidine","Decitabine"],
+    "HDAC1":  ["Vorinostat","Romidepsin"],
+    "HDAC2":  ["Vorinostat","Romidepsin"],
+    "SRC":    ["Dasatinib","Bosutinib"],
+    "KIT":    ["Imatinib","Midostaurin"],
+    "PDGFRA": ["Imatinib"],
+    "ROS1":   ["Crizotinib","Entrectinib","Lorlatinib"],
+    "NTRK1":  ["Larotrectinib","Entrectinib"],
+    "NTRK2":  ["Larotrectinib","Entrectinib"],
+    "NTRK3":  ["Larotrectinib","Entrectinib"],
+    "PTCH1":  ["Vismodegib","Sonidegib"],
+    "SMO":    ["Vismodegib","Sonidegib"],
+    "TSC1":   ["Everolimus","Temsirolimus"],
+    "TSC2":   ["Everolimus","Temsirolimus"],
+    "ESR1":   ["Fulvestrant","Tamoxifen","Letrozole"],
+    "CYP19A1":["Letrozole","Anastrozole"],
+    "AR":     ["Enzalutamide","Abiraterone"],
+    "CYP17A1":["Abiraterone"],
+    "CCND1":  ["Palbociclib","Ribociclib","Abemaciclib"],
+    "VEGFA":  ["Bevacizumab"],
+    "PDCD1":  ["Nivolumab","Pembrolizumab"],
+    "CD274":  ["Atezolizumab"],
+    "CTLA4":  ["Ipilimumab"],
+    "PSMB5":  ["Bortezomib","Ixazomib"],
+    "ATM":    ["Olaparib","Rucaparib"],
+    "ATR":    ["Olaparib"],
+    "CHEK1":  ["Olaparib"],
+    "CHEK2":  ["Olaparib","Niraparib"],
+    "PALB2":  ["Olaparib","Niraparib"],
+    "JAK1":   ["Ruxolitinib"],
+    "PIK3CD": ["Idelalisib"],
+    "HRAS":   ["Trametinib","Binimetinib"],
+    "VEGFR2": ["Cabozantinib","Bevacizumab"],
+    "ABL1":   ["Imatinib","Dasatinib","Nilotinib","Ponatinib"],
 }
+
+
 drug_name_map = {d["name"]:d for d in DRUG_DB}
 for gene, drug_names in EXTRA_MAPPINGS.items():
     if gene not in GENE_DRUGS:
@@ -1113,11 +1215,20 @@ with T4:
                 struct = m.get("molecule_structures") or {}
                 mw = float(props.get("mw_freebase") or 0)
                 if mw < 100 or mw > 1200: continue
-                # Use pref_name (real drug name), skip if only ChEMBL ID available
-                raw_name = m.get("pref_name") or m.get("molecule_synonyms",[{}])[0].get("molecule_synonym","") if m.get("molecule_synonyms") else ""
-                if not raw_name:
-                    continue  # skip compounds with no proper name — don't show ChEMBL IDs
-                name = raw_name.title()
+                # Skip if no proper drug name — never show ChEMBL IDs as names
+                pref = m.get("pref_name") or ""
+                # pref_name sometimes IS the ChEMBL ID — detect and reject it
+                if not pref or pref.upper().startswith("CHEMBL") or pref.strip() == "":
+                    # Try synonyms
+                    syns = m.get("molecule_synonyms") or []
+                    real_syns = [s["molecule_synonym"] for s in syns
+                                 if s.get("molecule_synonym")
+                                 and not s["molecule_synonym"].upper().startswith("CHEMBL")
+                                 and len(s["molecule_synonym"]) > 3]
+                    if not real_syns:
+                        continue  # no real name found — skip this compound entirely
+                    pref = real_syns[0]
+                name = pref.title()
                 logp  = float(props.get("alogp") or 0)
                 hbd   = int(props.get("hbd") or 0)
                 hba   = int(props.get("hba") or 0)
@@ -1168,10 +1279,15 @@ with T4:
             return {}
 
     def get_drugs_for_gene(gene):
+        # Always use local DB first (real drug names guaranteed)
+        local = GENE_DRUGS.get(gene, [])
+        if local:
+            return local, "Local DB (Curated)"
+        # Only use ChEMBL if no local data exists for this gene
         live = fetch_chembl_drugs(gene)
-        if live: return live, "ChEMBL Live"
-        local = GENE_DRUGS.get(gene, DRUG_DB[:8])
-        return local, "Local DB (ChEMBL unavailable)"
+        if live:
+            return live, "ChEMBL Live"
+        return DRUG_DB[:8], "Local DB (General)"
 
     with R1:
         st.markdown(sec("Live Drug Search by Gene Target","Fetching from ChEMBL in real-time for ANY gene"),unsafe_allow_html=True)
@@ -1269,63 +1385,394 @@ with T4:
 # ══ TAB 5 — 5D VISUALIZATION ══════════════════════════════════════════
 with T5:
     st.markdown(sec("5D Visualization & MD Trajectory","Manifold · RMSD · RMSF · Rg · H-Bonds"),unsafe_allow_html=True)
-    v5mode = st.radio("View",["5D Manifold","RMSD","RMSF","Radius of Gyration","H-Bond Count","Structure Views"],horizontal=True,key="v5mode")
-    if v5mode == "5D Manifold":
-        vA,vB,vC=st.columns(3)
-        with vA: npts=st.slider("Points",50,400,150,key="v5n")
-        with vB: dim5=st.selectbox("Color by",["Mutational Burden","Expression Level","Therapeutic Index","Genomic Instability"],key="v5d")
-        with vC: cscl=st.selectbox("Color scale",["Plasma","Viridis","Inferno","Turbo"],key="v5c")
-        np.random.seed(42);cl2=list(expr.keys())
-        df5=pd.DataFrame({"X":np.random.randn(npts),"Y":np.random.randn(npts),"Z":np.random.randn(npts),"Size":np.random.rand(npts)*10+3,"Mut":np.abs(np.random.randn(npts))*60,"Expr":np.random.randn(npts)*3+6,"TI":np.random.uniform(0,100,npts),"GI":np.random.exponential(20,npts),"Cancer":np.random.choice(cl2,npts)})
-        cv={"Mutational Burden":"Mut","Expression Level":"Expr","Therapeutic Index":"TI","Genomic Instability":"GI"}.get(dim5,"Mut")
-        f5=go.Figure(go.Scatter3d(x=df5["X"],y=df5["Y"],z=df5["Z"],mode="markers",hovertext=[f"{r['Cancer']}<br>{dim5}:{round(r[cv],1)}" for _,r in df5.iterrows()],hoverinfo="text",marker=dict(size=df5["Size"],color=df5[cv],colorscale=cscl,opacity=0.85,colorbar=dict(title=dim5,thickness=14,tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(255,255,255,0.15)",width=0.3))))
-        f5.update_layout(**DK(scene=dict(xaxis=dict(title="Genomic Freq",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),yaxis=dict(title="Pathway Stability",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),zaxis=dict(title="Expression Energy",color="#4a9aaa",backgroundcolor="rgba(4,24,32,0.6)",gridcolor="rgba(0,229,255,0.08)"),bgcolor="rgba(2,12,18,0.9)"),title=dict(text=f"<b>{query}</b> {dim5} 5D Manifold",font=dict(size=12,color="#4a9aaa")),height=520))
-        st.plotly_chart(f5,use_container_width=True, key="pc12")
-        dc=df5["Cancer"].value_counts()
-        fd=go.Figure(go.Pie(labels=dc.index,values=dc.values,hole=0.60,marker=dict(colors=["#00e5ff","#ff3d5a","#ffc107","#00ff9d","#b44fff","#ff6600","#ff9933","#00aaff"],line=dict(color="#030f14",width=2)),textfont=dict(color="#c8f0f8",size=11)))
-        fd.update_layout(**DK(title=dict(text="Cancer Distribution",font=dict(size=11,color="#4a9aaa")),legend=dict(font=dict(color="#00e5ff",size=10),bgcolor="rgba(0,0,0,0)"),height=300))
-        st.plotly_chart(fd,use_container_width=True, key="pc13")
-    elif v5mode == "RMSD":
-        np.random.seed(10);fr2=np.arange(200)
-        rmsd=np.clip(np.cumsum(np.random.normal(0,0.02,200))+1.0,0.8,4.0)
-        frm=go.Figure(go.Scatter(x=fr2,y=rmsd,mode="lines",line=dict(color="#00e5ff",width=2.5),fill="tozeroy",fillcolor="rgba(0,229,255,0.06)"))
-        frm.add_hline(y=float(np.mean(rmsd)),line_dash="dash",line_color="#ffc107",annotation_text=f"Mean:{round(float(np.mean(rmsd)),2)}A",annotation_font_color="#ffc107")
-        frm.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="RMSD (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Backbone RMSD 200 frames",font=dict(size=12,color="#4a9aaa")),height=400))
-        st.plotly_chart(frm,use_container_width=True, key="pc14")
-        c1,c2,c3=st.columns(3)
-        with c1: st.markdown(card("MEAN RMSD",str(round(float(np.mean(rmsd)),2)),"A","#00e5ff"),unsafe_allow_html=True)
-        with c2: st.markdown(card("MAX RMSD",str(round(float(np.max(rmsd)),2)),"A","#ffc107"),unsafe_allow_html=True)
-        with c3: st.markdown(card("MIN RMSD",str(round(float(np.min(rmsd)),2)),"A","#00ff9d"),unsafe_allow_html=True)
-    elif v5mode == "RMSF":
-        np.random.seed(10)
-        rmsf=np.abs(np.random.normal(0.9,0.5,100))+0.2
-        for h in hs: idx=min(h["pos"]%100,99);rmsf[idx]+=2.0*h["freq"]*8
-        frf=go.Figure(go.Bar(x=np.arange(1,101),y=rmsf,marker=dict(color=rmsf,colorscale=[[0,"#002535"],[0.4,"#00e5ff"],[1,"#ff3d5a"]],line=dict(color="rgba(0,0,0,0)",width=0)),hovertemplate="Res %{x}<br>RMSF:%{y:.2f}A<extra></extra>"))
-        for h in hs[:4]: frf.add_vline(x=min(h["pos"]%100,99)+1,line_dash="dash",line_color="#ff3d5a",annotation_text=h["aa"],annotation_font_color="#ff3d5a",annotation_font_size=9)
-        frf.update_layout(**DK(xaxis=dict(title="Residue",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="RMSF (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Per-Residue RMSF · Red=mutation hotspots",font=dict(size=12,color="#4a9aaa")),height=400))
-        st.plotly_chart(frf,use_container_width=True, key="pc15")
+    v5mode = st.radio("View",["RMSF (B-factor)","RMSD & Quality","Radius of Gyration","H-Bond / Sec. Structure","5D Manifold","Structure Views"],horizontal=True,key="v5mode")
+
+    # ── Real data fetchers ─────────────────────────────────────────────
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def fetch_pdbe_validation(pdb_id):
+        """Real RMSD, Ramachandran, geometry quality from PDBe"""
+        try:
+            import requests as _rq
+            url = f"https://www.ebi.ac.uk/pdbe/api/validation/global-3d-quality-assessment/entry/{pdb_id.lower()}"
+            r = _rq.get(url, timeout=8)
+            if r.status_code == 200:
+                data = r.json()
+                entry = data.get(pdb_id.lower(), {})
+                return entry
+            return {}
+        except: return {}
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def fetch_pdbe_secondary(pdb_id):
+        """Real secondary structure (helices/sheets = H-bond regions) from PDBe"""
+        try:
+            import requests as _rq
+            url = f"https://www.ebi.ac.uk/pdbe/api/pdb/entry/secondary_structure/{pdb_id.lower()}"
+            r = _rq.get(url, timeout=8)
+            if r.status_code == 200:
+                data = r.json()
+                return data.get(pdb_id.lower(), {})
+            return {}
+        except: return {}
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def fetch_rcsb_entry(pdb_id):
+        """Real entry data (MW, resolution, R-factor) from RCSB"""
+        try:
+            import requests as _rq
+            url = f"https://data.rcsb.org/rest/v1/core/entry/{pdb_id.upper()}"
+            r = _rq.get(url, timeout=8)
+            if r.status_code == 200:
+                return r.json()
+            return {}
+        except: return {}
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def fetch_opentargets_mutations(gene):
+        """Real somatic mutation burden from OpenTargets"""
+        try:
+            import requests as _rq
+            # GraphQL query for mutation data
+            query = """{ target(ensemblId: "PLACEHOLDER") { 
+                knownDrugs { count } 
+                associatedDiseases { count }
+            }}"""
+            # Use simpler REST endpoint
+            url = f"https://api.platform.opentargets.org/api/v4/target/{gene}/associations?size=10&datasourceId=cancer_gene_census"
+            r = _rq.get(url, timeout=8)
+            if r.status_code == 200:
+                return r.json()
+            return {}
+        except: return {}
+
+    # ── Get B-factors from already-fetched PDB ─────────────────────────
+    def get_bfactors_from_pdb(pdb_text):
+        """Extract real B-factors per residue from PDB file"""
+        residues, bfactors = [], []
+        for line in (pdb_text or "").split("\n"):
+            if line.startswith("ATOM") and line[12:16].strip() == "CA":
+                try:
+                    resnum = int(line[22:26].strip())
+                    bfac   = float(line[60:66]) if len(line) >= 66 else 30.0
+                    residues.append(resnum)
+                    bfactors.append(bfac)
+                except: continue
+        return residues, bfactors
+
+    gseed = gene_seed(query)
+
+    # ── RMSF from real B-factors ────────────────────────────────────────
+    if v5mode == "RMSF (B-factor)":
+        st.markdown(sec("RMSF — Real B-factor Analysis","Source: RCSB PDB crystallographic B-factors · Real atomic displacement data"),unsafe_allow_html=True)
+        with st.spinner("Extracting real B-factors from PDB structure..."):
+            pdb_text_rmsf = fetch_pdb(pdb)
+        res_nums, bfacs = get_bfactors_from_pdb(pdb_text_rmsf)
+
+        if res_nums and len(res_nums) > 5:
+            import numpy as _np2
+            bfacs_arr = _np2.array(bfacs)
+            # B-factor to RMSF conversion: RMSF = sqrt(3*B / (8*pi^2))
+            rmsf_real = _np2.sqrt(3 * bfacs_arr / (8 * 3.14159**2))
+
+            # Mark hotspot residues
+            hot_res_set = {h["pos"] for h in hs}
+
+            colors = ["#ff3d5a" if r in hot_res_set else "#00e5ff" for r in res_nums]
+
+            frf = go.Figure()
+            frf.add_trace(go.Bar(
+                x=res_nums, y=rmsf_real,
+                marker=dict(color=colors),
+                hovertemplate="Residue %{x}<br>RMSF: %{y:.3f} Å<extra></extra>",
+                name="RMSF"
+            ))
+            # Mark hotspots
+            for h in hs[:5]:
+                if h["pos"] in res_nums:
+                    frf.add_vline(x=h["pos"], line_dash="dash", line_color="#ff3d5a",
+                        annotation_text=h["aa"], annotation_font_color="#ff3d5a", annotation_font_size=9)
+
+            frf.update_layout(**DK(
+                xaxis=dict(title="Residue Number", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
+                yaxis=dict(title="RMSF (Å) from B-factors", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
+                title=dict(text=f"{query} · Real RMSF from PDB B-factors · {len(res_nums)} residues · Red = mutation hotspots",
+                          font=dict(size=11, color="#4a9aaa")),
+                height=420
+            ))
+            st.plotly_chart(frf, use_container_width=True, key="pc15")
+
+            # Stats
+            c1,c2,c3,c4 = st.columns(4)
+            with c1: st.markdown(card("RESIDUES", str(len(res_nums)), "", "#00e5ff"), unsafe_allow_html=True)
+            with c2: st.markdown(card("MEAN RMSF", str(round(float(_np2.mean(rmsf_real)),3)), "Å", "#00ff9d"), unsafe_allow_html=True)
+            with c3: st.markdown(card("MAX RMSF",  str(round(float(_np2.max(rmsf_real)),3)),  "Å", "#ff3d5a"), unsafe_allow_html=True)
+            with c4: st.markdown(card("MIN RMSF",  str(round(float(_np2.min(rmsf_real)),3)),  "Å", "#ffc107"), unsafe_allow_html=True)
+
+            st.markdown('<div style="background:#041820;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-top:10px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · B-factors extracted directly from RCSB PDB file · B-factor→RMSF: √(3B/8π²) · Red bars = known mutation hotspot residues</div>', unsafe_allow_html=True)
+        else:
+            st.warning("Could not extract B-factors from PDB. Try a different gene.")
+
+    # ── RMSD from PDBe Validation ───────────────────────────────────────
+    elif v5mode == "RMSD & Quality":
+        st.markdown(sec("RMSD & Structure Quality","Source: PDBe Validation API · Real crystallographic quality metrics"),unsafe_allow_html=True)
+        with st.spinner("Fetching real structure quality from PDBe..."):
+            val_data = fetch_pdbe_validation(pdb)
+            rcsb_data = fetch_rcsb_entry(pdb)
+
+        if val_data:
+            # Extract real metrics
+            rama_favored  = val_data.get("percent_ramachandran_outliers_full_length", None)
+            rota_outliers = val_data.get("percent_rotamer_outliers", None)
+            clashscore    = val_data.get("clashscore", None)
+            rama_allowed  = val_data.get("percent_ramachandran_outliers", None)
+            bond_rmsd     = val_data.get("bond_length_rmsd", None)
+            angle_rmsd    = val_data.get("bond_angle_rmsd",  None)
+
+            # RCSB resolution and R-factor
+            resolution = None
+            rfactor    = None
+            try:
+                resolution = rcsb_data.get("refine", [{}])[0].get("ls_d_res_high")
+                rfactor    = rcsb_data.get("refine", [{}])[0].get("ls_r_factor_r_work")
+            except: pass
+
+            st.markdown(f'<div style="background:#041820;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · PDBe Validation API · PDB: <b style="color:#00e5ff;">{pdb}</b> · Gene: <b style="color:#00e5ff;">{query}</b></div>', unsafe_allow_html=True)
+
+            # Display real metrics as cards
+            cols = st.columns(3)
+            metrics = [
+                ("CLASHSCORE",      str(round(clashscore,2)) if clashscore else "N/A",   "",    "#ff3d5a"),
+                ("BOND RMSD",       str(round(bond_rmsd,4))  if bond_rmsd  else "N/A",   "Å",   "#00e5ff"),
+                ("ANGLE RMSD",      str(round(angle_rmsd,3)) if angle_rmsd else "N/A",   "°",   "#ffc107"),
+                ("RESOLUTION",      str(round(resolution,2)) if resolution else "N/A",   "Å",   "#00ff9d"),
+                ("R-FACTOR",        str(round(rfactor,4))    if rfactor    else "N/A",   "",    "#b44fff"),
+                ("RAMA OUTLIERS",   str(round(rama_favored,2)) if rama_favored else "N/A", "%", "#ff9933"),
+            ]
+            for i, (label, val, unit, color) in enumerate(metrics):
+                with cols[i % 3]:
+                    st.markdown(card(label, val, unit, color), unsafe_allow_html=True)
+                    st.markdown("<br>", unsafe_allow_html=True)
+
+            # Real Ramachandran-based quality bar chart
+            st.markdown(sec("Structure Quality Profile", "Real PDBe Validation Metrics"), unsafe_allow_html=True)
+            quality_metrics = {
+                "Clashscore":        clashscore or 0,
+                "Bond RMSD (×100)":  (bond_rmsd or 0)*100,
+                "Angle RMSD (×10)":  (angle_rmsd or 0)*10,
+                "Rama Outliers":     rama_favored or 0,
+                "Rota Outliers":     rota_outliers or 0,
+            }
+            fq = go.Figure(go.Bar(
+                x=list(quality_metrics.keys()),
+                y=list(quality_metrics.values()),
+                marker=dict(color=["#ff3d5a","#00e5ff","#ffc107","#ff9933","#b44fff"]),
+                hovertemplate="%{x}: %{y:.3f}<extra></extra>"
+            ))
+            fq.update_layout(**DK(
+                xaxis=dict(color="#4a9aaa"),
+                yaxis=dict(title="Value", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
+                title=dict(text=f"{query} ({pdb}) · Real Structure Quality Metrics from PDBe",
+                          font=dict(size=11, color="#4a9aaa")),
+                height=350
+            ))
+            st.plotly_chart(fq, use_container_width=True, key="pc14")
+        else:
+            st.warning(f"PDBe validation data not available for {pdb}. The structure may be too new or not validated.")
+            st.info("Clashscore, Bond RMSD, Ramachandran outliers are real crystallographic quality metrics from PDBe.")
+
+    # ── Radius of Gyration from RCSB ───────────────────────────────────
     elif v5mode == "Radius of Gyration":
-        np.random.seed(10);fr2=np.arange(200)
-        rg=np.clip(18+np.cumsum(np.random.normal(0,0.05,200)),16,22)
-        frg=go.Figure(go.Scatter(x=fr2,y=rg,mode="lines",line=dict(color="#00ff9d",width=2.5),fill="tozeroy",fillcolor="rgba(0,255,157,0.05)"))
-        frg.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="Rg (A)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Radius of Gyration · Protein Compactness",font=dict(size=12,color="#4a9aaa")),height=400))
-        st.plotly_chart(frg,use_container_width=True, key="pc16")
-    elif v5mode == "H-Bond Count":
-        np.random.seed(10);fr2=np.arange(200)
-        hb=np.abs(np.random.normal(45,9,200)).astype(int)
-        fhb=go.Figure(go.Scatter(x=fr2,y=hb,mode="lines",line=dict(color="#b44fff",width=2.5),fill="tozeroy",fillcolor="rgba(180,79,255,0.05)"))
-        fhb.update_layout(**DK(xaxis=dict(title="Frame",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="H-Bond Count",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Hydrogen Bond Count · Stability",font=dict(size=12,color="#4a9aaa")),height=400))
-        st.plotly_chart(fhb,use_container_width=True, key="pc17")
+        st.markdown(sec("Radius of Gyration","Source: Calculated from real PDB coordinates · RCSB entry metadata"),unsafe_allow_html=True)
+        with st.spinner("Calculating Rg from real PDB coordinates..."):
+            pdb_text_rg = fetch_pdb(pdb)
+            rcsb_data2  = fetch_rcsb_entry(pdb)
+
+        # Calculate REAL Rg from PDB coordinates
+        coords = []
+        for line in (pdb_text_rg or "").split("\n"):
+            if line.startswith("ATOM") and line[12:16].strip() == "CA":
+                try:
+                    x = float(line[30:38])
+                    y = float(line[38:46])
+                    z = float(line[46:54])
+                    coords.append([x,y,z])
+                except: continue
+
+        if coords and len(coords) > 5:
+            import numpy as _np3
+            coords_arr = _np3.array(coords)
+            center = coords_arr.mean(axis=0)
+            rg_real = _np3.sqrt(((coords_arr - center)**2).sum(axis=1).mean())
+
+            # Real metadata
+            mw, resolution, nchains = None, None, None
+            try:
+                mw         = rcsb_data2.get("rcsb_entry_info",{}).get("molecular_weight")
+                resolution = rcsb_data2.get("rcsb_entry_info",{}).get("resolution_combined",[None])[0]
+                nchains    = rcsb_data2.get("rcsb_entry_info",{}).get("polymer_entity_count")
+            except: pass
+
+            st.markdown(f'<div style="background:#041820;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · Rg calculated from {len(coords)} Cα coordinates from RCSB PDB · Formula: √(Σ|ri-rcm|²/N)</div>', unsafe_allow_html=True)
+
+            c1,c2,c3,c4 = st.columns(4)
+            with c1: st.markdown(card("Rg (Cα)",      str(round(rg_real,2)),               "Å",   "#00ff9d"), unsafe_allow_html=True)
+            with c2: st.markdown(card("RESIDUES",      str(len(coords)),                    "",    "#00e5ff"), unsafe_allow_html=True)
+            with c3: st.markdown(card("MW",            str(round(mw/1000,1))+"k" if mw else "N/A","Da","#ffc107"), unsafe_allow_html=True)
+            with c4: st.markdown(card("RESOLUTION",    str(round(resolution,2)) if resolution else "N/A","Å","#b44fff"), unsafe_allow_html=True)
+
+            # Plot Rg per chain segment
+            segment_size = max(1, len(coords)//20)
+            seg_rg = []
+            seg_idx = []
+            for i in range(0, len(coords), segment_size):
+                seg = _np3.array(coords[i:i+segment_size])
+                if len(seg) > 2:
+                    c = seg.mean(axis=0)
+                    seg_rg.append(float(_np3.sqrt(((seg-c)**2).sum(axis=1).mean())))
+                    seg_idx.append(i)
+
+            frg = go.Figure(go.Scatter(x=seg_idx, y=seg_rg, mode="lines+markers",
+                line=dict(color="#00ff9d", width=2.5),
+                marker=dict(size=5, color="#00ff9d"),
+                fill="tozeroy", fillcolor="rgba(0,255,157,0.05)",
+                hovertemplate="Residue segment %{x}<br>Local Rg: %{y:.2f}Å<extra></extra>"
+            ))
+            frg.add_hline(y=rg_real, line_dash="dash", line_color="#ffc107",
+                annotation_text=f"Overall Rg: {round(rg_real,2)}Å",
+                annotation_font_color="#ffc107", annotation_font_size=10)
+            frg.update_layout(**DK(
+                xaxis=dict(title="Residue Index", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
+                yaxis=dict(title="Local Radius of Gyration (Å)", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
+                title=dict(text=f"{query} · Real Rg = {round(rg_real,2)}Å · Calculated from {len(coords)} Cα atoms",
+                          font=dict(size=11, color="#4a9aaa")),
+                height=400
+            ))
+            st.plotly_chart(frg, use_container_width=True, key="pc16")
+        else:
+            st.warning("Could not calculate Rg — PDB coordinates unavailable.")
+
+    # ── H-Bond from real secondary structure ───────────────────────────
+    elif v5mode == "H-Bond / Sec. Structure":
+        st.markdown(sec("H-Bond & Secondary Structure","Source: PDBe Secondary Structure API · Real helix/sheet assignments"),unsafe_allow_html=True)
+        with st.spinner("Fetching real secondary structure from PDBe..."):
+            ss_data = fetch_pdbe_secondary(pdb)
+
+        if ss_data:
+            helices, strands = [], []
+            try:
+                molecules = ss_data.get("molecules", [])
+                for mol in molecules:
+                    for chain in mol.get("chains", []):
+                        for h in chain.get("secondary_structure", {}).get("helices", []):
+                            helices.append({"start": h["start"]["residue_number"],
+                                           "end":   h["end"]["residue_number"],
+                                           "length": h["end"]["residue_number"] - h["start"]["residue_number"] + 1})
+                        for s in chain.get("secondary_structure", {}).get("strands", []):
+                            strands.append({"start": s["start"]["residue_number"],
+                                           "end":   s["end"]["residue_number"],
+                                           "length": s["end"]["residue_number"] - s["start"]["residue_number"] + 1})
+            except: pass
+
+            n_helices = len(helices)
+            n_strands = len(strands)
+            helix_res = sum(h["length"] for h in helices)
+            strand_res = sum(s["length"] for s in strands)
+            # H-bonds estimated: each helix residue ~1 H-bond, each strand ~0.5
+            hbond_estimate = helix_res * 1 + strand_res * 0.5
+
+            st.markdown(f'<div style="background:#041820;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · PDBe Secondary Structure API · {n_helices} helices · {n_strands} β-strands · Est. {int(hbond_estimate)} backbone H-bonds</div>', unsafe_allow_html=True)
+
+            c1,c2,c3,c4 = st.columns(4)
+            with c1: st.markdown(card("α-HELICES",   str(n_helices),          "",  "#00e5ff"), unsafe_allow_html=True)
+            with c2: st.markdown(card("β-STRANDS",   str(n_strands),          "",  "#b44fff"), unsafe_allow_html=True)
+            with c3: st.markdown(card("HELIX RES",   str(helix_res),          "",  "#00ff9d"), unsafe_allow_html=True)
+            with c4: st.markdown(card("EST. H-BONDS",str(int(hbond_estimate)),"",  "#ffc107"), unsafe_allow_html=True)
+
+            # Bar chart of helix/strand lengths
+            if helices or strands:
+                labels = ([f"Helix {i+1}" for i in range(len(helices))] +
+                          [f"Strand {i+1}" for i in range(len(strands))])
+                values = [h["length"] for h in helices] + [s["length"] for s in strands]
+                colors = (["#00e5ff"]*len(helices)) + (["#b44fff"]*len(strands))
+                fss = go.Figure(go.Bar(x=labels, y=values,
+                    marker=dict(color=colors),
+                    hovertemplate="%{x}<br>Length: %{y} residues<extra></extra>"))
+                fss.update_layout(**DK(
+                    xaxis=dict(title="Secondary Structure Element", color="#4a9aaa",
+                              tickangle=45, tickfont=dict(size=8)),
+                    yaxis=dict(title="Length (residues)", color="#4a9aaa",
+                              gridcolor="rgba(0,229,255,0.06)"),
+                    title=dict(text=f"{query} · Real Secondary Structure · Blue=Helix · Purple=Strand",
+                              font=dict(size=11, color="#4a9aaa")),
+                    height=420
+                ))
+                st.plotly_chart(fss, use_container_width=True, key="pc17")
+        else:
+            st.warning(f"Secondary structure data not available from PDBe for {pdb}.")
+
+    # ── 5D Manifold ─────────────────────────────────────────────────────
+    elif v5mode == "5D Manifold":
+        st.markdown(sec("5D Manifold","Gene expression × mutation burden × druggability × cancer type × therapeutic index"),unsafe_allow_html=True)
+        vA,vB,vC = st.columns(3)
+        with vA: npts = st.slider("Points",50,400,150,key="v5n")
+        with vB: dim5 = st.selectbox("Color by",["Mutational Burden","Expression Level","Therapeutic Index","Genomic Instability"],key="v5d")
+        with vC: cscl = st.selectbox("Color scale",["Plasma","Viridis","Inferno","Turbo"],key="v5c")
+
+        # Use real sc values as distribution centers
+        np.random.seed(gseed); cl2=list(expr.keys())
+        df5 = pd.DataFrame({
+            "X":      np.random.randn(npts),
+            "Y":      np.random.randn(npts),
+            "Z":      np.random.randn(npts),
+            "Size":   np.abs(np.random.normal(6,2,npts)),
+            "Mut":    np.abs(np.random.normal(sc.get("mutation_freq",20)/5, 2, npts)),
+            "Expr":   np.abs(np.random.normal(sc.get("druggability",60)/10, 1.5, npts)),
+            "TI":     np.abs(np.random.normal(sc.get("oncoscore",75)/10, 2, npts)),
+            "GI":     np.abs(np.random.normal(5, 2, npts)),
+            "Cancer": np.random.choice(cl2 if cl2 else ["BRCA","LUAD","COAD","GBM"], npts)
+        })
+        cv = {"Mutational Burden":"Mut","Expression Level":"Expr","Therapeutic Index":"TI","Genomic Instability":"GI"}
+        f5 = go.Figure(go.Scatter3d(
+            x=df5["X"], y=df5["Y"], z=df5["Z"], mode="markers",
+            hovertext=[f"{r['Cancer']}<br>Mut:{r['Mut']:.1f} Expr:{r['Expr']:.1f} TI:{r['TI']:.1f}" for _,r in df5.iterrows()],
+            hoverinfo="text",
+            marker=dict(size=df5["Size"], color=df5[cv[dim5]], colorscale=cscl,
+                       colorbar=dict(title=dim5, tickfont=dict(color="#00e5ff",size=8)),
+                       opacity=0.85, line=dict(color="rgba(255,255,255,0.1)",width=0.5))
+        ))
+        f5.update_layout(**DK(
+            scene=dict(
+                xaxis=dict(title="PC1 (Genomic)", color="#4a9aaa", backgroundcolor="rgba(0,0,0,0)"),
+                yaxis=dict(title="PC2 (Expression)", color="#4a9aaa", backgroundcolor="rgba(0,0,0,0)"),
+                zaxis=dict(title="PC3 (Mut Burden)", color="#4a9aaa", backgroundcolor="rgba(0,0,0,0)"),
+                bgcolor="rgba(0,0,0,0)"),
+            title=dict(text=f"{query} · 5D Manifold · {npts} samples · {dim5} · Oncoscore={sc.get('oncoscore','?')}",
+                      font=dict(size=11, color="#4a9aaa")),
+            height=520
+        ))
+        st.plotly_chart(f5, use_container_width=True, key="pc12")
+        st.markdown('<div style="background:#041820;border-left:3px solid #ffc107;border-radius:6px;padding:8px 14px;margin-top:8px;font-size:.65rem;color:#4a9aaa;">⚠️ <b style="color:#ffc107;">Simulated manifold</b> · Point distribution centered on real gene stats (oncoscore, druggability, mutation_freq) · For real UMAP projection, connect to cBioPortal bulk data</div>', unsafe_allow_html=True)
+
+    # ── Structure Views ─────────────────────────────────────────────────
     elif v5mode == "Structure Views":
-        st.markdown(sec("Structure Views","Molstar · NGL · PyMOL · Py3Dmol · VMD equivalent"),unsafe_allow_html=True)
-        sv_choice = st.radio("Style",["NGL-style (Cartoon)","PyMOL-style (Surface)","Py3Dmol (Ball+Stick)","VMD (Ribbon)"],horizontal=True,key="svchoice")
-        with st.spinner(f"Loading structure {pdb}..."):
+        st.markdown(sec("Structure Views","NGL · PyMOL · Ball+Stick · VMD styles"),unsafe_allow_html=True)
+        sv_choice = st.radio("Style",[
+            "NGL-style (Cartoon)",
+            "PyMOL-style (Thick)",
+            "Py3Dmol (Ball+Stick)",
+            "VMD-style (Thin)"
+        ], horizontal=True, key="sv5")
+        smap  = {"NGL-style (Cartoon)":"cartoon","PyMOL-style (Thick)":"thick",
+                 "Py3Dmol (Ball+Stick)":"ball","VMD-style (Thin)":"thin"}
+        cmap2 = {"NGL-style (Cartoon)":"chain","PyMOL-style (Thick)":"bfactor",
+                 "Py3Dmol (Ball+Stick)":"index","VMD-style (Thin)":"chain"}
+        with st.spinner(f"Loading {pdb} structure..."):
             pdb_text2 = fetch_pdb(pdb)
         if pdb_text2:
             chains2, hots2, _ = parse_pdb(pdb_text2, hs)
-            smap = {"NGL-style (Cartoon)":"cartoon","PyMOL-style (Thick)":"thick","Py3Dmol (Ball+Stick)":"ball","VMD-style (Thin)":"thin"}
-            cmap2 = {"NGL-style (Cartoon)":"chain","PyMOL-style (Thick)":"bfactor","Py3Dmol (Ball+Stick)":"index","VMD-style (Thin)":"chain"}
-            fig_sv = build_3d_cartoon(chains2, hots2, smap.get(sv_choice,"cartoon"), cmap2.get(sv_choice,"chain"))
+            fig_sv = build_3d_cartoon(chains2, hots2,
+                smap.get(sv_choice,"cartoon"),
+                cmap2.get(sv_choice,"chain"))
             st.plotly_chart(fig_sv, use_container_width=True, key="pc18")
         else:
             st.warning("Could not load PDB structure.")
