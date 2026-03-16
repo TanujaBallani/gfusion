@@ -913,7 +913,7 @@ with T2:
             ),
             height=430,
         ))
-        st.plotly_chart(fig_h, use_container_width=True, key="pc06")
+        st.plotly_chart(fig_h, use_container_width=True, key="pc06b")
 
         # Summary below
         top3 = sorted(display_expr.items(), key=lambda x: x[1], reverse=True)[:3]
