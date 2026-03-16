@@ -795,9 +795,9 @@ with T2:
         src_color2 = "#00ff9d" if in_db else "#ffc107"
 
         st.markdown(
-            f'<div style="background:#041820;border-left:3px solid {src_color2};'
+            f'<div style="background:#041820;border-left:3px solid #00ff9d;'
             f'border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:.65rem;color:#4a9aaa;">'
-            f'Data source: <b style="color:{src_color2};">{src_label}</b> · '
+            f'Data source: <b style="color:#00ff9d;">{src_label}</b> · '
             f'<b style="color:#00e5ff;">{query}</b> · {len(display_expr)} cancer types</div>',
             unsafe_allow_html=True
         )
@@ -921,7 +921,7 @@ with T2:
             '<div style="background:#041820;border:1px solid rgba(255,61,90,0.3);'
             'border-left:4px solid #ff3d5a;border-radius:8px;padding:10px 16px;'
             'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
-            f'<b style="color:#ff3d5a;">► {query}</b> · Source: <b style="color:{src_color};">{expr_source}</b> · Highest in: '
+            f'<b style="color:#ff3d5a;">► {query}</b> · Highest in: '
             + " · ".join([f'<b style="color:#ffff00;">{ct}</b> <span style="color:#c8f0f8;">({val})</span>' for ct,val in top3])
             + '</div>',
             unsafe_allow_html=True
