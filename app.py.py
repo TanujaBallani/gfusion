@@ -908,7 +908,7 @@ with T2:
                 autorange="reversed"
             ),
             title=dict(
-                text=f"Pan-Cancer Expression · {query} = RED/YELLOW · others = BLUE · Source: {expr_source}",
+                text=f"Pan-Cancer Expression · {query} = RED/YELLOW · others = BLUE",
                 font=dict(size=11, color="#4a9aaa")
             ),
             height=430,
