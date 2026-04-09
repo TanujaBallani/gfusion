@@ -134,7 +134,16 @@ DRUG_DB = [
     {"name":"Navitoclax",   "target":"BCL2/BCL-XL",   "gene":["BCL2","BCL2L1"],     "MW":974,"LogP":7.1,"HBD":3,"HBA":9,"RotB":10,"TPSA":133,"AROM":5,"Ro5":False,"cancer":"CLL, AML",           "approval":"Clinical","class":"BCL2/XL inhibitor"},
     {"name":"AMG-232",      "target":"MDM2",          "gene":["MDM2","TP53"],       "MW":629,"LogP":4.1,"HBD":2,"HBA":7,"RotB":8,"TPSA":115,"AROM":2,"Ro5":False,"cancer":"AML, Solid tumors",   "approval":"Clinical","class":"MDM2 inhibitor"},
     {"name":"RG7388",       "target":"MDM2",          "gene":["MDM2","TP53"],       "MW":581,"LogP":4.5,"HBD":1,"HBA":6,"RotB":6,"TPSA":97,"AROM":3,"Ro5":False,"cancer":"AML",                 "approval":"Clinical","class":"MDM2 inhibitor"},
+    # ── CARDIAC / MYH7 DRUGS ─────────────────────────────────────────
+    {"name":"Mavacamten",   "target":"MYH7/Cardiac myosin","gene":["MYH7","MYH6"],  "MW":429,"LogP":3.1,"HBD":1,"HBA":5,"RotB":4,"TPSA":75,"AROM":2,"Ro5":True, "cancer":"HCM (Hypertrophic Cardiomyopathy)","approval":"FDA 2022","class":"Cardiac myosin inhibitor"},
+    {"name":"Aficamten",    "target":"Cardiac myosin ATPase","gene":["MYH7","MYH6"],"MW":412,"LogP":2.9,"HBD":1,"HBA":5,"RotB":4,"TPSA":72,"AROM":2,"Ro5":True, "cancer":"HCM (Hypertrophic Cardiomyopathy)","approval":"FDA 2024","class":"Cardiac myosin inhibitor"},
+    {"name":"Metoprolol",   "target":"Beta-1 adrenergic","gene":["MYH7","ADRB1"],   "MW":267,"LogP":1.9,"HBD":2,"HBA":4,"RotB":7,"TPSA":50,"AROM":1,"Ro5":True, "cancer":"HCM, Heart failure",              "approval":"FDA 1978","class":"Beta-blocker"},
+    {"name":"Verapamil",    "target":"Calcium channel","gene":["MYH7","CACNA1C"],   "MW":454,"LogP":3.8,"HBD":0,"HBA":5,"RotB":9,"TPSA":63,"AROM":2,"Ro5":True, "cancer":"HCM, Arrhythmia",                 "approval":"FDA 1981","class":"Calcium channel blocker"},
+    {"name":"Disopyramide", "target":"Na+ channel","gene":["MYH7","SCN5A"],         "MW":339,"LogP":2.7,"HBD":1,"HBA":3,"RotB":6,"TPSA":50,"AROM":1,"Ro5":True, "cancer":"HCM with obstruction",            "approval":"FDA 1977","class":"Antiarrhythmic"},
+    {"name":"Omecamtiv mecarbil","target":"Cardiac myosin","gene":["MYH7","MYH6"],  "MW":509,"LogP":2.1,"HBD":2,"HBA":7,"RotB":6,"TPSA":98,"AROM":2,"Ro5":False,"cancer":"Heart failure with reduced EF",   "approval":"Clinical Phase 3","class":"Cardiac myosin activator"},
 ]
+
+# Build GENE_DRUGS lookup from DRUG_DB
 
 # Build GENE_DRUGS lookup from DRUG_DB
 GENE_DRUGS = {}
@@ -195,6 +204,20 @@ EXTRA_MAPPINGS = {
     "HRAS":   ["Trametinib","Binimetinib"],
     "VEGFR2": ["Cabozantinib","Bevacizumab"],
     "ABL1":   ["Imatinib","Dasatinib","Nilotinib","Ponatinib"],
+    # ── CARDIAC GENES ────────────────────────────────────────────────
+    "MYH7":   ["Mavacamten","Aficamten","Metoprolol","Verapamil","Disopyramide"],
+    "MYH6":   ["Mavacamten","Aficamten","Metoprolol"],
+    "MYBPC3": ["Mavacamten","Aficamten","Metoprolol","Verapamil"],
+    "TNNT2":  ["Mavacamten","Metoprolol","Verapamil"],
+    "TNNI3":  ["Mavacamten","Metoprolol"],
+    "TPM1":   ["Mavacamten","Metoprolol","Verapamil"],
+    "SCN5A":  ["Disopyramide","Mexiletine","Flecainide"],
+    "CACNA1C":["Verapamil","Diltiazem","Amlodipine"],
+    "LMNA":   ["Metoprolol","Eplerenone"],
+    "TTR":    ["Tafamidis","Patisiran","Inotersen"],
+    "KCNQ1":  ["Metoprolol","Nadolol"],
+    "KCNH2":  ["Metoprolol","Nadolol"],
+    "PKP2":   ["Metoprolol","Sotalol"],
 }
 
 
