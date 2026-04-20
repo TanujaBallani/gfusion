@@ -15,24 +15,142 @@ except Exception:
 st.set_page_config(page_title="G-FUSION", layout="wide", page_icon="🧬", initial_sidebar_state="collapsed")
 
 st.markdown("""<style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
-html,body,.stApp{background:#1e2330!important;color:#e0e6f0!important;font-family:'Space Mono',monospace!important;}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+/* ── LIGHT PROFESSIONAL THEME ── */
+html,body,.stApp{
+  background:#EEF2F7!important;
+  color:#1C2B3A!important;
+  font-family:'Inter',sans-serif!important;
+}
+
+/* Hide streamlit default UI */
 #MainMenu,footer,header{visibility:hidden;}
-.block-container{padding:1rem 2rem!important;max-width:100%!important;}
+.block-container{padding:1.5rem 2.5rem!important;max-width:100%!important;}
 [data-testid="stSidebar"]{display:none!important;}
-.stTextInput>div>div>input{background:#252d3d!important;border:1px solid rgba(0,229,255,0.4)!important;border-radius:6px!important;color:#00e5ff!important;font-family:'Space Mono',monospace!important;font-size:1.1rem!important;padding:12px 18px!important;text-transform:uppercase;letter-spacing:3px;}
-.stButton>button{background:linear-gradient(135deg,rgba(0,229,255,0.1),#041820)!important;border:1px solid #00e5ff!important;border-radius:6px!important;color:#00e5ff!important;font-family:Orbitron,sans-serif!important;font-size:.65rem!important;letter-spacing:3px!important;padding:10px 20px!important;text-transform:uppercase!important;}
-.stButton>button:hover{background:linear-gradient(135deg,rgba(0,229,255,0.25),#041820)!important;box-shadow:0 0 25px rgba(0,229,255,0.35)!important;}
-.stDownloadButton>button{background:linear-gradient(135deg,rgba(0,255,157,0.1),#041820)!important;border:1px solid #00ff9d!important;color:#00ff9d!important;font-family:Orbitron,sans-serif!important;font-size:.62rem!important;letter-spacing:2px!important;border-radius:6px!important;padding:10px 16px!important;width:100%!important;}
-.stTabs [data-baseweb="tab-list"]{background:transparent!important;border-bottom:2px solid rgba(0,229,255,0.13)!important;gap:4px!important;}
-.stTabs [data-baseweb="tab"]{background:#252d3d!important;border:1px solid rgba(0,229,255,0.13)!important;border-bottom:none!important;color:#4a9aaa!important;font-family:Orbitron,sans-serif!important;font-size:.55rem!important;letter-spacing:2px!important;padding:8px 14px!important;border-radius:6px 6px 0 0!important;}
-.stTabs [aria-selected="true"]{background:#062535!important;border-color:#00e5ff!important;color:#00e5ff!important;box-shadow:0 -3px 15px rgba(0,229,255,0.2)!important;}
-.stTabs [data-baseweb="tab-panel"]{background:#1e2330!important;border:1px solid rgba(0,229,255,0.1)!important;border-top:none!important;border-radius:0 0 8px 8px!important;padding:20px!important;}
-.stSelectbox>div>div{background:#252d3d!important;border:1px solid rgba(0,229,255,0.2)!important;color:#00e5ff!important;border-radius:6px!important;}
-.stSlider>div>div>div{background:#00e5ff!important;}
-[data-testid="stSlider"] label{color:#4a9aaa!important;font-size:.62rem!important;letter-spacing:2px!important;}
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-thumb{background:rgba(100,160,255,0.3);border-radius:2px;}
+
+/* Input box */
+.stTextInput>div>div>input{
+  background:#FFFFFF!important;
+  border:2px solid #3B7DD8!important;
+  border-radius:8px!important;
+  color:#1C2B3A!important;
+  font-family:'Space Mono',monospace!important;
+  font-size:1rem!important;
+  padding:12px 18px!important;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  box-shadow:0 2px 8px rgba(59,125,216,0.1)!important;
+}
+.stTextInput>div>div>input:focus{
+  border-color:#1A5CB8!important;
+  box-shadow:0 0 0 3px rgba(59,125,216,0.15)!important;
+}
+
+/* Buttons */
+.stButton>button{
+  background:linear-gradient(135deg,#3B7DD8,#1A5CB8)!important;
+  border:none!important;
+  border-radius:8px!important;
+  color:#FFFFFF!important;
+  font-family:'Inter',sans-serif!important;
+  font-size:.75rem!important;
+  font-weight:600!important;
+  letter-spacing:1px!important;
+  padding:10px 22px!important;
+  text-transform:uppercase!important;
+  box-shadow:0 2px 8px rgba(59,125,216,0.25)!important;
+  transition:all 0.2s!important;
+}
+.stButton>button:hover{
+  background:linear-gradient(135deg,#1A5CB8,#0D3E8A)!important;
+  box-shadow:0 4px 12px rgba(59,125,216,0.35)!important;
+  transform:translateY(-1px)!important;
+}
+
+/* Download button */
+.stDownloadButton>button{
+  background:linear-gradient(135deg,#2E9E6B,#1A7A50)!important;
+  border:none!important;
+  border-radius:8px!important;
+  color:#FFFFFF!important;
+  font-weight:600!important;
+  box-shadow:0 2px 8px rgba(46,158,107,0.25)!important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"]{
+  background:transparent!important;
+  border-bottom:2px solid #D0DCF0!important;
+  gap:4px!important;
+}
+.stTabs [data-baseweb="tab"]{
+  background:#FFFFFF!important;
+  border:1px solid #D0DCF0!important;
+  border-bottom:none!important;
+  color:#5C7A9A!important;
+  font-family:'Inter',sans-serif!important;
+  font-size:.7rem!important;
+  font-weight:500!important;
+  letter-spacing:1px!important;
+  padding:8px 16px!important;
+  border-radius:8px 8px 0 0!important;
+}
+.stTabs [aria-selected="true"]{
+  background:#3B7DD8!important;
+  border-color:#3B7DD8!important;
+  color:#FFFFFF!important;
+  font-weight:600!important;
+  box-shadow:0 -2px 8px rgba(59,125,216,0.2)!important;
+}
+.stTabs [data-baseweb="tab-panel"]{
+  background:#FFFFFF!important;
+  border:1px solid #D0DCF0!important;
+  border-top:none!important;
+  border-radius:0 0 10px 10px!important;
+  padding:24px!important;
+  box-shadow:0 2px 12px rgba(0,0,0,0.04)!important;
+}
+
+/* Selectbox */
+.stSelectbox>div>div{
+  background:#FFFFFF!important;
+  border:1px solid #D0DCF0!important;
+  color:#1C2B3A!important;
+  border-radius:8px!important;
+}
+
+/* Slider */
+.stSlider>div>div>div{background:#3B7DD8!important;}
+[data-testid="stSlider"] label{
+  color:#5C7A9A!important;
+  font-size:.7rem!important;
+  font-weight:500!important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:#EEF2F7;}
+::-webkit-scrollbar-thumb{background:#B0C4DE;border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:#3B7DD8;}
+
+/* Radio buttons */
+.stRadio>div{gap:8px!important;}
+.stRadio label{color:#1C2B3A!important;font-size:.8rem!important;}
+
+/* Multiselect */
+.stMultiSelect>div>div{
+  background:#FFFFFF!important;
+  border:1px solid #D0DCF0!important;
+  border-radius:8px!important;
+}
+
+/* Dataframe */
+.stDataFrame{border-radius:8px!important;overflow:hidden!important;}
+
+/* Warning/info boxes */
+.stAlert{border-radius:8px!important;}
+
 </style>""", unsafe_allow_html=True)
 
 # ── DATA ──────────────────────────────────────────────────────────────
@@ -40,7 +158,7 @@ PDB_DB={"TP53":"1TUP","KRAS":"4DSN","BRCA1":"1JNX","EGFR":"1IVO","MYC":"1NKP","P
 EXPR_ALL={"TP53":{"BRCA":8.2,"LUAD":9.1,"COAD":7.8,"GBM":6.5,"PRAD":5.4,"OV":7.9,"SKCM":6.2,"PAAD":8.8},"KRAS":{"PAAD":9.8,"COAD":8.9,"LUAD":8.1,"BRCA":4.2,"GBM":3.8,"NSCLC":8.5,"SKCM":5.1,"OV":6.2},"BRCA1":{"BRCA":9.5,"OV":8.8,"PRAD":5.1,"LUAD":4.3,"COAD":3.9,"UCEC":6.2,"GBM":3.5,"SKCM":4.1},"EGFR":{"LUAD":9.7,"GBM":9.2,"BRCA":6.1,"COAD":5.4,"PAAD":4.8,"HNSC":7.3,"NSCLC":9.5,"OV":5.2},"BRAF":{"SKCM":9.5,"THCA":8.8,"COAD":7.2,"LUAD":5.1,"OV":4.6,"GBM":5.9,"PAAD":3.8,"BRCA":4.2},"PTEN":{"UCEC":9.2,"GBM":8.7,"PRAD":8.1,"BRCA":6.3,"COAD":5.8,"LUAD":4.9,"SKCM":5.5,"OV":6.8},"MYC":{"BRCA":8.9,"LUAD":8.2,"COAD":8.5,"GBM":7.9,"PAAD":8.1,"SKCM":7.3,"OV":8.4,"UCEC":7.1},"ALK":{"LUAD":8.8,"NSCLC":9.1,"BRCA":4.2,"GBM":3.9,"COAD":3.5,"SKCM":3.8,"PAAD":4.1,"OV":3.6}}
 HOTS_ALL={"TP53":[{"pos":175,"aa":"R175H","freq":0.15,"type":"Missense"},{"pos":248,"aa":"R248W","freq":0.12,"type":"Missense"},{"pos":273,"aa":"R273H","freq":0.11,"type":"Missense"},{"pos":249,"aa":"R249S","freq":0.08,"type":"Missense"},{"pos":245,"aa":"G245S","freq":0.07,"type":"Missense"}],"KRAS":[{"pos":12,"aa":"G12D","freq":0.35,"type":"Missense"},{"pos":12,"aa":"G12V","freq":0.22,"type":"Missense"},{"pos":13,"aa":"G13D","freq":0.14,"type":"Missense"},{"pos":61,"aa":"Q61H","freq":0.06,"type":"Missense"}],"BRCA1":[{"pos":1775,"aa":"M1775R","freq":0.08,"type":"Missense"},{"pos":1853,"aa":"W1853C","freq":0.06,"type":"Missense"},{"pos":300,"aa":"C300Y","freq":0.05,"type":"Missense"}],"EGFR":[{"pos":746,"aa":"E746del","freq":0.45,"type":"Deletion"},{"pos":858,"aa":"L858R","freq":0.40,"type":"Missense"},{"pos":790,"aa":"T790M","freq":0.15,"type":"Resistance"}],"BRAF":[{"pos":600,"aa":"V600E","freq":0.90,"type":"Missense"},{"pos":600,"aa":"V600K","freq":0.06,"type":"Missense"}],"PTEN":[{"pos":130,"aa":"R130Q","freq":0.12,"type":"Missense"},{"pos":233,"aa":"C233Y","freq":0.08,"type":"Missense"}],"MYC":[{"pos":58,"aa":"T58A","freq":0.18,"type":"Missense"},{"pos":58,"aa":"T58I","freq":0.12,"type":"Missense"}],"ALK":[{"pos":1174,"aa":"F1174L","freq":0.22,"type":"Missense"},{"pos":1245,"aa":"R1245Q","freq":0.14,"type":"Missense"}]}
 PWY={"MDM2":"Apoptosis","ATM":"DNA Repair","CHEK2":"Cell Cycle","BAX":"Apoptosis","CDKN1A":"Cell Cycle","PTEN":"PI3K/AKT","RAF1":"MAPK","BRAF":"MAPK","PIK3CA":"PI3K/AKT","NF1":"RAS","EGFR":"RTK","SOS1":"RAS","BARD1":"DNA Repair","RAD51":"DNA Repair","BRCA2":"DNA Repair","KRAS":"RAS","PALB2":"DNA Repair","ERBB2":"RTK","GRB2":"RTK","SRC":"RTK","MET":"RTK","AKT1":"PI3K/AKT","MTOR":"PI3K/AKT","RB1":"Cell Cycle","CDK4":"Cell Cycle","MEK1":"MAPK","ERK1":"MAPK","MEK2":"MAPK","ERK2":"MAPK","TP53":"Apoptosis","MAX":"MYC Network","MYC":"MYC Network","MYCN":"MYC Network","ALK":"RTK","NPM1":"MYC Network","PTPN11":"RTK"}
-PCLR={"Apoptosis":"#ff3d5a","DNA Repair":"#00ff9d","Cell Cycle":"#ffc107","PI3K/AKT":"#b44fff","MAPK":"#ff6600","RAS":"#ff9933","RTK":"#00aaff","MYC Network":"#ff66cc","Unknown":"#445566"}
+PCLR={"Apoptosis":"#c0392b","DNA Repair":"#0d7c6e","Cell Cycle":"#d4681a","PI3K/AKT":"#6c3483","MAPK":"#ff6600","RAS":"#ff9933","RTK":"#00aaff","MYC Network":"#ff66cc","Unknown":"#445566"}
 SCR_ALL={"TP53":{"druggability":62,"oncoscore":97,"mutation_freq":46,"clinical_trials":312},"KRAS":{"druggability":58,"oncoscore":99,"mutation_freq":27,"clinical_trials":189},"BRCA1":{"druggability":71,"oncoscore":94,"mutation_freq":8,"clinical_trials":241},"EGFR":{"druggability":93,"oncoscore":96,"mutation_freq":15,"clinical_trials":578},"BRAF":{"druggability":89,"oncoscore":91,"mutation_freq":18,"clinical_trials":203},"PTEN":{"druggability":44,"oncoscore":88,"mutation_freq":33,"clinical_trials":156},"MYC":{"druggability":38,"oncoscore":95,"mutation_freq":22,"clinical_trials":98},"ALK":{"druggability":91,"oncoscore":89,"mutation_freq":12,"clinical_trials":267}}
 PPI_FB={"TP53":[("TP53","MDM2",0.99),("TP53","ATM",0.98),("TP53","CHEK2",0.95),("TP53","BAX",0.93),("TP53","CDKN1A",0.97),("TP53","PTEN",0.88),("TP53","RB1",0.85),("TP53","CDK4",0.82),("TP53","BRCA1",0.79),("TP53","EGFR",0.76)],"KRAS":[("KRAS","RAF1",0.99),("KRAS","BRAF",0.97),("KRAS","PIK3CA",0.94),("KRAS","SOS1",0.96),("KRAS","NF1",0.89),("KRAS","EGFR",0.86),("KRAS","AKT1",0.83),("KRAS","MTOR",0.80),("KRAS","MEK1",0.91),("KRAS","ERK1",0.88)],"BRCA1":[("BRCA1","BARD1",0.99),("BRCA1","RAD51",0.98),("BRCA1","BRCA2",0.97),("BRCA1","ATM",0.95),("BRCA1","PALB2",0.96),("BRCA1","TP53",0.88),("BRCA1","CHEK2",0.85),("BRCA1","CDK4",0.72)],"EGFR":[("EGFR","ERBB2",0.99),("EGFR","GRB2",0.97),("EGFR","SRC",0.94),("EGFR","KRAS",0.91),("EGFR","PIK3CA",0.88),("EGFR","MET",0.85),("EGFR","AKT1",0.82),("EGFR","PTPN11",0.90),("EGFR","MTOR",0.78)],"BRAF":[("BRAF","RAF1",0.97),("BRAF","KRAS",0.95),("BRAF","MEK1",0.99),("BRAF","MEK2",0.98),("BRAF","ERK1",0.96),("BRAF","ERK2",0.95),("BRAF","SRC",0.82),("BRAF","PIK3CA",0.79)],"PTEN":[("PTEN","AKT1",0.99),("PTEN","PIK3CA",0.97),("PTEN","MTOR",0.95),("PTEN","TP53",0.90),("PTEN","MDM2",0.88),("PTEN","CDKN1A",0.85),("PTEN","RB1",0.80),("PTEN","EGFR",0.76)],"MYC":[("MYC","MAX",0.99),("MYC","MYCN",0.92),("MYC","CDK4",0.88),("MYC","TP53",0.85),("MYC","RB1",0.82),("MYC","NPM1",0.90),("MYC","ATM",0.75),("MYC","PIK3CA",0.78)],"ALK":[("ALK","SRC",0.95),("ALK","GRB2",0.92),("ALK","PIK3CA",0.89),("ALK","KRAS",0.85),("ALK","MTOR",0.82),("ALK","AKT1",0.88),("ALK","EGFR",0.79),("ALK","MEK1",0.86)]}
 GINFO={"TP53":"TP53 encodes p53, the guardian of the genome. It activates DNA repair and triggers apoptosis via MDM2, ATM-CHEK2 and BAX. Mutated in ~50% of all cancers. Therapeutics: MDM2 inhibitors (AMG-232), APR-246 p53 reactivator.","KRAS":"KRAS is a GTPase regulator of RAS-MAPK and PI3K-AKT. G12D and G12V lock it active. Prevalent in PAAD 90%, CRC 45%, LUAD 35%. FDA-approved: sotorasib and adagrasib for G12C.","BRCA1":"BRCA1 orchestrates homologous recombination via BARD1-RAD51. Germline loss gives 50-70% breast cancer risk. Sensitive to PARP inhibitors olaparib and rucaparib.","EGFR":"EGFR drives RAS-MAPK and PI3K-AKT. Exon 19 deletions and L858R dominate NSCLC at 15%. Three TKI generations: gefitinib, afatinib, osimertinib.","BRAF":"BRAF kinase in RAS-RAF-MEK-ERK. V600E = 90% of mutations. SKCM 60%, THCA 60%. FDA: dabrafenib plus trametinib.","PTEN":"PTEN antagonises PI3K-AKT-mTOR. Lost in UCEC 80%, GBM 36%, PRAD 20%. Targeted by everolimus and temsirolimus.","MYC":"MYC transcription factor amplified in 20% of cancers. Heterodimer with MAX. Targeted indirectly by BET inhibitors and CDK4/6 inhibitors.","ALK":"ALK forms EML4-ALK fusion in NSCLC at 5%. TKIs: crizotinib, alectinib, lorlatinib."}
@@ -231,12 +349,12 @@ for gene, drug_names in EXTRA_MAPPINGS.items():
 
 # Databases
 DATABASES = [
-    {"name":"GDC","full":"Genomic Data Commons","url":"https://portal.gdc.cancer.gov/","color":"#00e5ff","desc":"NCI cancer genomics portal with TCGA and TARGET data. Somatic mutations, copy number, expression, clinical data."},
-    {"name":"ICGC","full":"Int. Cancer Genome Consortium","url":"https://dcc.icgc.org/","color":"#00ff9d","desc":"25,000+ cancer genomes across 50 tumour types from 17 countries. Whole-genome sequencing and RNA-seq."},
-    {"name":"cBioPortal","full":"cBioPortal for Cancer Genomics","url":"https://www.cbioportal.org/","color":"#ffc107","desc":"Interactive exploration of multidimensional cancer genomics. OncoPrint, survival analysis, co-expression."},
-    {"name":"OpenTargets","full":"Open Targets Platform","url":"https://platform.opentargets.org/","color":"#b44fff","desc":"Target-disease associations from genetics, genomics, and literature. Drug tractability and safety data."},
+    {"name":"GDC","full":"Genomic Data Commons","url":"https://portal.gdc.cancer.gov/","color":"#0d7c6e","desc":"NCI cancer genomics portal with TCGA and TARGET data. Somatic mutations, copy number, expression, clinical data."},
+    {"name":"ICGC","full":"Int. Cancer Genome Consortium","url":"https://dcc.icgc.org/","color":"#0d7c6e","desc":"25,000+ cancer genomes across 50 tumour types from 17 countries. Whole-genome sequencing and RNA-seq."},
+    {"name":"cBioPortal","full":"cBioPortal for Cancer Genomics","url":"https://www.cbioportal.org/","color":"#d4681a","desc":"Interactive exploration of multidimensional cancer genomics. OncoPrint, survival analysis, co-expression."},
+    {"name":"OpenTargets","full":"Open Targets Platform","url":"https://platform.opentargets.org/","color":"#6c3483","desc":"Target-disease associations from genetics, genomics, and literature. Drug tractability and safety data."},
     {"name":"ClinVar","full":"ClinVar Variant Archive","url":"https://www.ncbi.nlm.nih.gov/clinvar/","color":"#ff9933","desc":"Clinically interpreted variants from NCBI. Pathogenicity classifications: Pathogenic, VUS, Benign."},
-    {"name":"COSMIC","full":"Catalogue of Somatic Mutations","url":"https://cancer.sanger.ac.uk/cosmic","color":"#ff3d5a","desc":"Sanger Institute somatic mutation catalogue. Hotspots, cancer gene census, signatures, drug resistance."},
+    {"name":"COSMIC","full":"Catalogue of Somatic Mutations","url":"https://cancer.sanger.ac.uk/cosmic","color":"#c0392b","desc":"Sanger Institute somatic mutation catalogue. Hotspots, cancer gene census, signatures, drug resistance."},
     {"name":"STRING DB","full":"STRING Protein Interaction DB","url":"https://string-db.org/","color":"#00aaff","desc":"Known and predicted protein-protein interactions. Experimental, co-expression, text-mining evidence."},
     {"name":"UniProt","full":"Universal Protein Resource","url":"https://www.uniprot.org/","color":"#ff66cc","desc":"Protein sequence and functional annotation. Domains, PTMs, variants, structure, interactions."},
     {"name":"OMIM","full":"Online Mendelian Inheritance","url":"https://omim.org/","color":"#88ddee","desc":"Genetic disorders and genes database. Phenotype-genotype relationships for hereditary cancers."},
@@ -253,17 +371,17 @@ CRISPR_TOOLS = [
 ]
 
 def DK(**kw):
-    b=dict(paper_bgcolor="rgba(0,0,0,0)",plot_bgcolor="rgba(2,12,18,0.8)",font=dict(color="#c8f0f8",family="Space Mono, monospace"),margin=dict(l=12,r=12,b=40,t=50))
+    b=dict(paper_bgcolor="rgba(255,255,255,0)",plot_bgcolor="rgba(2,12,18,0.8)",font=dict(color="#1c2b3a",family="Space Mono, monospace"),margin=dict(l=12,r=12,b=40,t=50))
     b.update(kw); return b
 
-def card(label,value,unit="",color="#00e5ff"):
-    return f'<div style="background:linear-gradient(135deg,#041820,#030f14);border-top:2px solid {color};border-radius:8px;padding:12px 14px;text-align:center;border:1px solid rgba(0,229,255,0.13);"><div style="color:#4a9aaa;font-size:.48rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">{label}</div><div style="font-family:Orbitron,sans-serif;font-size:1.2rem;font-weight:700;color:{color};">{value}<span style="font-size:.6rem;color:#4a9aaa;margin-left:2px;">{unit}</span></div></div>'
+def card(label,value,unit="",color="#0d7c6e"):
+    return f'<div style="background:#ffffff;border-top:2px solid {color};border-radius:8px;padding:12px 14px;text-align:center;border:1px solid rgba(13,124,110,0.15);"><div style="color:#1c6b5f;font-size:.48rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">{label}</div><div style="font-family:Orbitron,sans-serif;font-size:1.2rem;font-weight:700;color:{color};">{value}<span style="font-size:.6rem;color:#1c6b5f;margin-left:2px;">{unit}</span></div></div>'
 
-def badge(text,color="#00e5ff"):
+def badge(text,color="#0d7c6e"):
     return f'<span style="background:{color}18;border:1px solid {color};color:{color};padding:2px 8px;border-radius:4px;font-size:.52rem;letter-spacing:1px;">{text}</span>'
 
 def sec(title,sub=""):
-    return f'<div style="font-family:Orbitron,sans-serif;font-size:.6rem;letter-spacing:4px;color:#00e5ff;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(0,229,255,0.13);margin:16px 0 12px;">{title}{"<span style=color:#4a9aaa;font-size:.45rem;margin-left:10px;>"+sub+"</span>" if sub else ""}</div>'
+    return f'<div style="font-family:Orbitron,sans-serif;font-size:.6rem;letter-spacing:4px;color:#0d7c6e;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(59,125,216,0.12);margin:16px 0 12px;">{title}{"<span style=color:#4a9aaa;font-size:.45rem;margin-left:10px;>"+sub+"</span>" if sub else ""}</div>'
 def net3d(ppi,gene):
     G=nx.Graph()
     for a,b,s in ppi: G.add_edge(a,b,weight=s)
@@ -276,7 +394,7 @@ def net3d(ppi,gene):
     ht=[f"<b>{n}</b><br>{PWY.get(n,'Unknown')}"+(f"<br>STRING:{round(G[gene][n]['weight'],3)}" if G.has_edge(gene,n) else "") for n in nl]
     fig=go.Figure()
     fig.add_trace(go.Scatter3d(x=ex,y=ey,z=ez,mode="lines",line=dict(color="rgba(0,229,255,0.15)",width=2),hoverinfo="none",showlegend=False))
-    fig.add_trace(go.Scatter3d(x=[pos[n][0] for n in nl],y=[pos[n][1] for n in nl],z=[pos[n][2] for n in nl],mode="markers+text",text=nl,textfont=dict(color="#00e5ff",size=11,family="Space Mono"),textposition="top center",hovertext=ht,hoverinfo="text",marker=dict(size=ns,color=nc,opacity=0.9,line=dict(color="rgba(255,255,255,0.6)",width=1)),showlegend=False))
+    fig.add_trace(go.Scatter3d(x=[pos[n][0] for n in nl],y=[pos[n][1] for n in nl],z=[pos[n][2] for n in nl],mode="markers+text",text=nl,textfont=dict(color="#0d7c6e",size=11,family="Space Mono"),textposition="top center",hovertext=ht,hoverinfo="text",marker=dict(size=ns,color=nc,opacity=0.9,line=dict(color="rgba(255,255,255,0.6)",width=1)),showlegend=False))
     fig.update_layout(**DK(scene=dict(xaxis=dict(visible=False,backgroundcolor="rgba(0,0,0,0)"),yaxis=dict(visible=False,backgroundcolor="rgba(0,0,0,0)"),zaxis=dict(visible=False,backgroundcolor="rgba(0,0,0,0)"),bgcolor="rgba(0,0,0,0)"),title=dict(text=f"<b>{gene}</b> STRING DB PPI {len(G.nodes())} proteins",font=dict(size=12,color="#4a9aaa")),height=520))
     return fig
 
@@ -290,12 +408,12 @@ def net2d(ppi,gene):
         fig.add_trace(go.Scatter(x=[x0,x1,None],y=[y0,y1,None],mode="lines",line=dict(color=f"rgba(0,200,230,{round(w*0.55,2)})",width=1+w*4),hoverinfo="none",showlegend=False))
     for nd in G.nodes():
         pw=PWY.get(nd,"Unknown");clr=PCLR.get(pw,"#445566");sz=32 if nd==gene else 18
-        bc="#00e5ff" if nd==gene else "rgba(255,255,255,0.5)";bw=3 if nd==gene else 1.5
+        bc="#0d7c6e" if nd==gene else "rgba(255,255,255,0.5)";bw=3 if nd==gene else 1.5
         sc2=G[gene][nd]["weight"] if G.has_edge(gene,nd) else 0
         ht=f"<b>{nd}</b><br>{pw}"+(f"<br>STRING:{round(sc2,3)}" if sc2 else "")
-        fig.add_trace(go.Scatter(x=[pos[nd][0]],y=[pos[nd][1]],mode="markers+text",text=[nd],textposition="top center",textfont=dict(color="#00e5ff",size=11,family="Space Mono"),marker=dict(size=sz,color=clr,opacity=0.9,line=dict(color=bc,width=bw)),hovertext=ht,hoverinfo="text",name=pw,legendgroup=pw,showlegend=(pw not in added)))
+        fig.add_trace(go.Scatter(x=[pos[nd][0]],y=[pos[nd][1]],mode="markers+text",text=[nd],textposition="top center",textfont=dict(color="#0d7c6e",size=11,family="Space Mono"),marker=dict(size=sz,color=clr,opacity=0.9,line=dict(color=bc,width=bw)),hovertext=ht,hoverinfo="text",name=pw,legendgroup=pw,showlegend=(pw not in added)))
         added.add(pw)
-    fig.update_layout(**DK(xaxis=dict(visible=False),yaxis=dict(visible=False),legend=dict(font=dict(size=10,color="#00e5ff"),bgcolor="rgba(4,24,32,0.9)",bordercolor="rgba(0,229,255,0.13)",borderwidth=1),title=dict(text=f"<b>{gene}</b> Cytoscape 2D {len(G.nodes())} nodes {len(G.edges())} edges",font=dict(size=12,color="#4a9aaa")),height=560))
+    fig.update_layout(**DK(xaxis=dict(visible=False),yaxis=dict(visible=False),legend=dict(font=dict(size=10,color="#0d7c6e"),bgcolor="rgba(4,24,32,0.9)",bordercolor="rgba(0,229,255,0.13)",borderwidth=1),title=dict(text=f"<b>{gene}</b> Cytoscape 2D {len(G.nodes())} nodes {len(G.edges())} edges",font=dict(size=12,color="#4a9aaa")),height=560))
     return fig,G
 
 @st.cache_data(ttl=86400, show_spinner=False)
@@ -393,7 +511,7 @@ def get_ann(gene,api_key):
     return GINFO.get(gene,f"{gene} is a clinically relevant cancer gene.")
 
 # ── HEADER ─────────────────────────────────────────────────────────────
-st.markdown('<div style="text-align:center;padding:18px 0 14px;border-bottom:2px solid rgba(0,229,255,0.13);margin-bottom:20px;"><div style="font-family:Orbitron,sans-serif;font-size:2.6rem;font-weight:900;color:#00e5ff;letter-spacing:12px;text-shadow:0 0 40px rgba(0,229,255,0.35);">G-FUSION</div><div style="color:#4a9aaa;font-size:.58rem;letter-spacing:6px;margin-top:6px;text-transform:uppercase;">Any Human Cancer Gene · CRISPR · STRING DB · RCSB PDB · v14</div></div>',unsafe_allow_html=True)
+st.markdown('<div style="text-align:center;padding:18px 0 14px;border-bottom:2px solid rgba(13,124,110,0.2);margin-bottom:20px;"><div style="font-family:Orbitron,sans-serif;font-size:2.6rem;font-weight:900;color:#0d7c6e;letter-spacing:12px;text-shadow:0 0 20px rgba(13,124,110,0.2);">G-FUSION</div><div style="color:#1c6b5f;font-size:.58rem;letter-spacing:6px;margin-top:6px;text-transform:uppercase;">Any Human Cancer Gene · CRISPR · STRING DB · RCSB PDB · v14</div></div>',unsafe_allow_html=True)
 
 _,cc,_=st.columns([1,2,1])
 with cc:
@@ -405,21 +523,21 @@ with cc:
 # Show welcome screen if no gene entered
 if not query:
     st.markdown("""
-    <div style="text-align:center;padding:80px 20px;background:#252d3d;border:1px solid rgba(100,160,255,0.2);border-radius:16px;margin:40px auto;max-width:700px;">
-        <div style="font-family:Orbitron,sans-serif;font-size:2.5rem;font-weight:900;color:#00e5ff;letter-spacing:8px;margin-bottom:20px;">G-FUSION</div>
+    <div style="text-align:center;padding:80px 20px;background:#ffffff;border:1px solid rgba(13,124,110,0.15);border-radius:16px;margin:40px auto;max-width:700px;">
+        <div style="font-family:Orbitron,sans-serif;font-size:2.5rem;font-weight:900;color:#0d7c6e;letter-spacing:8px;margin-bottom:20px;">G-FUSION</div>
         <div style="color:#a0b0c8;font-size:1rem;margin-bottom:30px;line-height:1.8;">
             In-silico Pipeline for Cancer Genomics<br>& CRISPR-based Therapeutic Targeting
         </div>
         <div style="color:#6080a0;font-size:0.8rem;margin-bottom:20px;">Enter any human cancer gene above to begin analysis</div>
         <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">TP53</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">KRAS</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">BRCA1</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">EGFR</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">BRAF</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">ALK</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">PTEN</span>
-            <span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,229,255,0.2);">MYC</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">TP53</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">KRAS</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">BRCA1</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">EGFR</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">BRAF</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">ALK</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">PTEN</span>
+            <span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:6px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(13,124,110,0.2);">MYC</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -496,10 +614,10 @@ try:
 except Exception:
     ann = GINFO.get(query, f"{query} is a cancer-associated gene. Use the tabs below to explore its structure, interactions, and therapeutic targeting options.")
 
-st.markdown(f'<div style="background:linear-gradient(135deg,#041820,#030f14);border:1px solid rgba(0,229,255,0.13);border-left:4px solid #00e5ff;border-radius:8px;padding:16px 20px;margin-bottom:18px;"><div style="display:flex;align-items:flex-start;gap:24px;"><div style="min-width:160px;text-align:center;"><div style="font-family:Orbitron,sans-serif;font-size:2rem;font-weight:900;color:#00e5ff;">{query}</div><div style="margin:8px 0;">{badge("PDB:"+pdb)} {badge("TOP:"+topc,"#00ff9d")} {badge(str(sc.get("oncoscore","?"))+" ONCO","#ff3d5a")}</div></div><div style="flex:1;"><div style="color:#4a9aaa;font-size:.5rem;letter-spacing:3px;margin-bottom:6px;font-family:Orbitron,sans-serif;">MOLECULAR INTELLIGENCE</div><div style="color:#c8f0f8;font-size:.74rem;line-height:1.9;">{ann}</div></div></div></div>',unsafe_allow_html=True)
+st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(13,124,110,0.15);border-left:4px solid #0d7c6e;border-radius:8px;padding:16px 20px;margin-bottom:18px;"><div style="display:flex;align-items:flex-start;gap:24px;"><div style="min-width:160px;text-align:center;"><div style="font-family:Orbitron,sans-serif;font-size:2rem;font-weight:900;color:#0d7c6e;">{query}</div><div style="margin:8px 0;">{badge("PDB:"+pdb)} {badge("TOP:"+topc,"#0d7c6e")} {badge(str(sc.get("oncoscore","?"))+" ONCO","#c0392b")}</div></div><div style="flex:1;"><div style="color:#1c6b5f;font-size:.5rem;letter-spacing:3px;margin-bottom:6px;font-family:Orbitron,sans-serif;">MOLECULAR INTELLIGENCE</div><div style="color:#1c2b3a;font-size:.74rem;line-height:1.9;">{ann}</div></div></div></div>',unsafe_allow_html=True)
 
 s4=st.columns(4)
-for i,(k,lb,u,clr) in enumerate([("druggability","DRUGGABILITY","/100","#00e5ff"),("oncoscore","ONCO SCORE","/100","#ff3d5a"),("mutation_freq","MUTATION FREQ","%","#ffc107"),("clinical_trials","CLINICAL TRIALS","","#b44fff")]):
+for i,(k,lb,u,clr) in enumerate([("druggability","DRUGGABILITY","/100","#0d7c6e"),("oncoscore","ONCO SCORE","/100","#c0392b"),("mutation_freq","MUTATION FREQ","%","#d4681a"),("clinical_trials","CLINICAL TRIALS","","#6c3483")]):
     with s4[i]: st.markdown(card(lb,sc.get(k,"N/A"),u,clr),unsafe_allow_html=True)
 st.markdown("<br>",unsafe_allow_html=True)
 
@@ -513,9 +631,9 @@ with T1:
     if hs:
         hc=st.columns(min(5,len(hs)))
         for i,h in enumerate(hs):
-            c2="#ff3d5a" if h["freq"]>0.2 else ("#ffc107" if h["freq"]>0.08 else "#00ff9d")
+            c2="#c0392b" if h["freq"]>0.2 else ("#d4681a" if h["freq"]>0.08 else "#0d7c6e")
             with hc[i]:
-                st.markdown(f'<div style="background:#252d3d;border-left:3px solid {c2};border-radius:6px;padding:10px 12px;margin-bottom:8px;"><div style="color:#4a9aaa;font-size:.5rem;letter-spacing:1px;">POS {h["pos"]}</div><div style="font-family:Orbitron,sans-serif;color:{c2};font-size:.95rem;">{h["aa"]}</div><div style="color:#1a4455;font-size:.52rem;">{h["type"]} · {round(h["freq"]*100)}%</div></div>',unsafe_allow_html=True)
+                st.markdown(f'<div style="background:#ffffff;border-left:3px solid {c2};border-radius:6px;padding:10px 12px;margin-bottom:8px;"><div style="color:#1c6b5f;font-size:.5rem;letter-spacing:1px;">POS {h["pos"]}</div><div style="font-family:Orbitron,sans-serif;color:{c2};font-size:.95rem;">{h["aa"]}</div><div style="color:#1a4455;font-size:.52rem;">{h["type"]} · {round(h["freq"]*100)}%</div></div>',unsafe_allow_html=True)
 
     @st.cache_data(ttl=86400, show_spinner=False)
     def fetch_pdb(pdb_id):
@@ -562,7 +680,7 @@ with T1:
                 continue
         return chains, hot_coords, hot_labels
 
-    CHAIN_COLORS = ["#00e5ff","#00ff9d","#ffc107","#b44fff","#ff9933","#ff66cc","#ff3d5a","#00aaff"]
+    CHAIN_COLORS = ["#0d7c6e","#0d7c6e","#d4681a","#6c3483","#ff9933","#ff66cc","#c0392b","#00aaff"]
 
     def build_3d_cartoon(chains, hot_coords, style="cartoon", color_by="chain"):
         fig = go.Figure()
@@ -632,11 +750,11 @@ with T1:
             elif color_by=="bfactor":
                 lcolor = "#445566"
                 mcolor = bfs
-                cbar = dict(title="B-factor",thickness=10,tickfont=dict(color="#00e5ff",size=8),outlinecolor="rgba(0,229,255,0.13)")
+                cbar = dict(title="B-factor",thickness=10,tickfont=dict(color="#0d7c6e",size=8),outlinecolor="rgba(0,229,255,0.13)")
             else:  # residue index
                 lcolor = CHAIN_COLORS[ci % len(CHAIN_COLORS)]
                 mcolor = list(range(len(xs)))
-                cbar = dict(title="Residue",thickness=10,tickfont=dict(color="#00e5ff",size=8),outlinecolor="rgba(0,229,255,0.13)")
+                cbar = dict(title="Residue",thickness=10,tickfont=dict(color="#0d7c6e",size=8),outlinecolor="rgba(0,229,255,0.13)")
 
             # Line trace — backbone with style-specific width
             fig.add_trace(go.Scatter3d(
@@ -692,8 +810,8 @@ with T1:
                 mode="markers+text",
                 text=[h[3] for h in hot_coords],
                 textposition="top center",
-                textfont=dict(color="#ff3d5a",size=12,family="Orbitron"),
-                marker=dict(size=14,color="#ff3d5a",opacity=1.0,
+                textfont=dict(color="#c0392b",size=12,family="Orbitron"),
+                marker=dict(size=14,color="#c0392b",opacity=1.0,
                     symbol="diamond",
                     line=dict(color="#ffffff",width=2)),
                 name="Mutation Hotspots",showlegend=True,
@@ -707,7 +825,7 @@ with T1:
                 zaxis=dict(showgrid=False,zeroline=False,showticklabels=False,backgroundcolor="rgba(2,10,16,0.9)"),
                 bgcolor="rgba(2,10,16,0.95)",
             ),
-            legend=dict(font=dict(color="#00e5ff",size=10),bgcolor="rgba(4,24,32,0.9)",bordercolor="rgba(0,229,255,0.2)",borderwidth=1),
+            legend=dict(font=dict(color="#0d7c6e",size=10),bgcolor="rgba(4,24,32,0.9)",bordercolor="rgba(0,229,255,0.2)",borderwidth=1),
             title=dict(text=f"<b>{query}</b> · PDB {pdb} · {sum(len(d['x']) for d in chains.values())} residues · Drag=Rotate · Scroll=Zoom",font=dict(size=12,color="#4a9aaa")),
             height=580,
         ))
@@ -717,8 +835,8 @@ with T1:
     col_a,col_b,col_c,col_d = st.columns(4)
     with col_a: view_style = st.selectbox("Visualization Style",["NGL-style (Cartoon)","PyMOL-style (Thick)","Py3Dmol (Ball+Stick)","VMD-style (Thin)"],key="vstyle")
     with col_b: color_by = st.selectbox("Color By",["Chain","B-Factor","Residue Index"],key="vcol")
-    with col_c: st.markdown(f'<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:10px;font-size:.6rem;color:#4a9aaa;margin-top:4px;"><b style="color:#00e5ff;">{query}</b><br>PDB: {pdb}<br>Source: RCSB REST API<br>Atoms: C-alpha backbone</div>',unsafe_allow_html=True)
-    with col_d: st.markdown(f'<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:10px;font-size:.6rem;color:#4a9aaa;margin-top:4px;">{badge("Real PDB Coords","#00ff9d")}<br><br>🔴 Red diamonds = mutation hotspots</div>',unsafe_allow_html=True)
+    with col_c: st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(59,125,216,0.12);border-radius:6px;padding:10px;font-size:.6rem;color:#1c6b5f;margin-top:4px;"><b style="color:#0d7c6e;">{query}</b><br>PDB: {pdb}<br>Source: RCSB REST API<br>Atoms: C-alpha backbone</div>',unsafe_allow_html=True)
+    with col_d: st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(59,125,216,0.12);border-radius:6px;padding:10px;font-size:.6rem;color:#1c6b5f;margin-top:4px;">{badge("Real PDB Coords","#0d7c6e")}<br><br>🔴 Red diamonds = mutation hotspots</div>',unsafe_allow_html=True)
 
     style_map = {"NGL-style (Cartoon)":"cartoon","PyMOL-style (Thick)":"thick","Py3Dmol (Ball+Stick)":"ball","VMD-style (Thin)":"thin"}
     col_map = {"Chain":"chain","B-Factor":"bfactor","Residue Index":"index"}
@@ -733,13 +851,13 @@ with T1:
         n_chains = len(chains_data)
         n_res = sum(len(d['x']) for d in chains_data.values())
         m1,m2,m3,m4 = st.columns(4)
-        with m1: st.markdown(card("CHAINS",n_chains,"","#00e5ff"),unsafe_allow_html=True)
-        with m2: st.markdown(card("RESIDUES",n_res,"","#00ff9d"),unsafe_allow_html=True)
-        with m3: st.markdown(card("HOTSPOTS",len(hot_coords),"","#ff3d5a"),unsafe_allow_html=True)
-        with m4: st.markdown(card("PDB ID",pdb,"","#ffc107"),unsafe_allow_html=True)
+        with m1: st.markdown(card("CHAINS",n_chains,"","#0d7c6e"),unsafe_allow_html=True)
+        with m2: st.markdown(card("RESIDUES",n_res,"","#0d7c6e"),unsafe_allow_html=True)
+        with m3: st.markdown(card("HOTSPOTS",len(hot_coords),"","#c0392b"),unsafe_allow_html=True)
+        with m4: st.markdown(card("PDB ID",pdb,"","#d4681a"),unsafe_allow_html=True)
         fig3d = build_3d_cartoon(chains_data, hot_coords, chosen_style, chosen_col)
         st.plotly_chart(fig3d, use_container_width=True, key="pc01")
-        st.markdown(f'<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.1);border-radius:6px;padding:8px 14px;font-size:.64rem;color:#4a9aaa;">{badge("Plotly 3D")} {badge("RCSB REST API","#00ff9d")} {badge(pdb,"#ffc107")} · C-alpha backbone trace · Drag=Rotate · Scroll=Zoom · Double-click=Reset</div>',unsafe_allow_html=True)
+        st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(59,125,216,0.12);border-radius:6px;padding:8px 14px;font-size:.64rem;color:#1c6b5f;">{badge("Plotly 3D")} {badge("RCSB REST API","#0d7c6e")} {badge(pdb,"#d4681a")} · C-alpha backbone trace · Drag=Rotate · Scroll=Zoom · Double-click=Reset</div>',unsafe_allow_html=True)
     else:
         st.warning(f"Could not load PDB {pdb} from RCSB. Check your internet connection.")
 
@@ -748,9 +866,9 @@ with T1:
         st.markdown(sec("Mutation Hotspot Frequency","COSMIC · ClinVar data"),unsafe_allow_html=True)
         fig_hs=go.Figure(go.Bar(
             x=[h["aa"] for h in hs],y=[h["freq"]*100 for h in hs],
-            marker_color=["#ff3d5a" if h["freq"]>0.2 else ("#ffc107" if h["freq"]>0.08 else "#00ff9d") for h in hs],
+            marker_color=["#c0392b" if h["freq"]>0.2 else ("#d4681a" if h["freq"]>0.08 else "#0d7c6e") for h in hs],
             text=[f'{round(h["freq"]*100)}%' for h in hs],textposition="outside",
-            textfont=dict(color="#00e5ff",size=12),
+            textfont=dict(color="#0d7c6e",size=12),
         ))
         fig_hs.update_layout(**DK(xaxis=dict(title="Mutation",color="#4a9aaa"),yaxis=dict(title="Frequency %",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Mutation Hotspot Frequencies · COSMIC",font=dict(size=12,color="#4a9aaa")),height=300))
         st.plotly_chart(fig_hs,use_container_width=True, key="pc02")
@@ -776,15 +894,15 @@ with T2:
         fig_cy,G_cy=net2d(pcy,query)
         st.plotly_chart(fig_cy,use_container_width=True, key="pc04")
         m1,m2,m3,m4=st.columns(4)
-        with m1: st.markdown(card("NODES",G_cy.number_of_nodes(),"","#00e5ff"),unsafe_allow_html=True)
-        with m2: st.markdown(card("EDGES",G_cy.number_of_edges(),"","#00ff9d"),unsafe_allow_html=True)
-        with m3: st.markdown(card("AVG SCORE",round(float(np.mean([s for a,b,s in pcy])),3),"","#ffc107"),unsafe_allow_html=True)
+        with m1: st.markdown(card("NODES",G_cy.number_of_nodes(),"","#0d7c6e"),unsafe_allow_html=True)
+        with m2: st.markdown(card("EDGES",G_cy.number_of_edges(),"","#0d7c6e"),unsafe_allow_html=True)
+        with m3: st.markdown(card("AVG SCORE",round(float(np.mean([s for a,b,s in pcy])),3),"","#d4681a"),unsafe_allow_html=True)
         tpw=max(set([PWY.get(b,"?") for a,b,s in pcy]),key=lambda x:sum(1 for a,b,s in pcy if PWY.get(b,"?")==x))
-        with m4: st.markdown(card("TOP PATHWAY",tpw,"",PCLR.get(tpw,"#b44fff")),unsafe_allow_html=True)
+        with m4: st.markdown(card("TOP PATHWAY",tpw,"",PCLR.get(tpw,"#6c3483")),unsafe_allow_html=True)
         st.dataframe(pd.DataFrame([(b,PWY.get(b,"?"),round(s,3)) for a,b,s in pcy],columns=["Partner","Pathway","STRING Score"]),use_container_width=True,hide_index=True)
     with N3:
         vls=list(expr.values());cts=list(expr.keys())
-        fig_bar=go.Figure(go.Bar(x=cts,y=vls,marker=dict(color=vls,colorscale=[[0,"#002535"],[0.4,"#005566"],[0.7,"#00e5ff"],[1,"#ff3d5a"]],colorbar=dict(title="log2(TPM)",thickness=12,tickfont=dict(color="#00e5ff",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(0,229,255,0.4)",width=0.8)),text=[str(round(v,1)) for v in vls],textposition="outside",textfont=dict(color="#00e5ff",size=12)))
+        fig_bar=go.Figure(go.Bar(x=cts,y=vls,marker=dict(color=vls,colorscale=[[0,"#002535"],[0.4,"#a8d8d0"],[0.7,"#0d7c6e"],[1,"#c0392b"]],colorbar=dict(title="log2(TPM)",thickness=12,tickfont=dict(color="#0d7c6e",size=9),outlinecolor="rgba(0,229,255,0.13)"),line=dict(color="rgba(0,229,255,0.4)",width=0.8)),text=[str(round(v,1)) for v in vls],textposition="outside",textfont=dict(color="#0d7c6e",size=12)))
         fig_bar.update_layout(**DK(xaxis=dict(title="Cancer Type",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),yaxis=dict(title="log2(TPM)",color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text=f"<b>{query}</b> Expression Across Cancer Types",font=dict(size=13,color="#4a9aaa")),height=400))
         st.plotly_chart(fig_bar,use_container_width=True, key="pc05")
         # ── GENE EXPRESSION DATABASE — real biology, unique per gene ──
@@ -837,13 +955,13 @@ with T2:
         display_expr = get_expr_for_gene(query)
         in_db = query in FULL_EXPR
         src_label = "Known gene database" if in_db else "Generated (gene not in DB)"
-        src_color2 = "#00ff9d" if in_db else "#ffc107"
+        src_color2 = "#0d7c6e" if in_db else "#d4681a"
 
         st.markdown(
-            f'<div style="background:#252d3d;border-left:3px solid #00ff9d;'
-            f'border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:.65rem;color:#4a9aaa;">'
-            f'Data source: <b style="color:#00ff9d;">{src_label}</b> · '
-            f'<b style="color:#00e5ff;">{query}</b> · {len(display_expr)} cancer types</div>',
+            f'<div style="background:#ffffff;border-left:3px solid #00ff9d;'
+            f'border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:.65rem;color:#1c6b5f;">'
+            f'Data source: <b style="color:#0d7c6e;">{src_label}</b> · '
+            f'<b style="color:#0d7c6e;">{query}</b> · {len(display_expr)} cancer types</div>',
             unsafe_allow_html=True
         )
 
@@ -860,9 +978,9 @@ with T2:
             hm_z.append(row)
 
         custom_cs = [
-            [0.0,  "#020c10"],
-            [0.25, "#003344"],
-            [0.49, "#005566"],
+            [0.0,  "#f8fffe"],
+            [0.25, "#d4ede9"],
+            [0.49, "#a8d8d0"],
             [0.50, "#cc0000"],
             [0.75, "#ff6600"],
             [1.0,  "#ffff00"],
@@ -894,10 +1012,10 @@ with T2:
 
         top3 = sorted(display_expr.items(), key=lambda x: x[1], reverse=True)[:3]
         st.markdown(
-            '<div style="background:#252d3d;border:1px solid rgba(255,61,90,0.3);'
+            '<div style="background:#ffffff;border:1px solid rgba(255,61,90,0.3);'
             'border-left:4px solid #ff3d5a;border-radius:8px;padding:10px 16px;'
-            'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
-            f'<b style="color:#ff3d5a;">► {query}</b> most expressed in: '
+            'margin-top:8px;font-size:.68rem;color:#1c6b5f;">'
+            f'<b style="color:#c0392b;">► {query}</b> most expressed in: '
             + " · ".join([f'<b style="color:#ffff00;">{ct}</b> ({val})' for ct,val in top3])
             + '</div>',
             unsafe_allow_html=True
@@ -928,8 +1046,8 @@ with T2:
 
         # Custom colorscale: 0-10=dim blue, 10-20=bright red/yellow (searched gene)
         custom_cs = [
-            [0.0,  "#020c10"],
-            [0.25, "#003344"],
+            [0.0,  "#f8fffe"],
+            [0.25, "#d4ede9"],
             [0.49, "#006677"],
             [0.50, "#cc0000"],
             [0.75, "#ff6600"],
@@ -963,11 +1081,11 @@ with T2:
         # Summary below
         top3 = sorted(display_expr.items(), key=lambda x: x[1], reverse=True)[:3]
         st.markdown(
-            '<div style="background:#252d3d;border:1px solid rgba(255,61,90,0.3);'
+            '<div style="background:#ffffff;border:1px solid rgba(255,61,90,0.3);'
             'border-left:4px solid #ff3d5a;border-radius:8px;padding:10px 16px;'
-            'margin-top:8px;font-size:.68rem;color:#4a9aaa;">'
-            f'<b style="color:#ff3d5a;">► {query}</b> · Highest in: '
-            + " · ".join([f'<b style="color:#ffff00;">{ct}</b> <span style="color:#c8f0f8;">({val})</span>' for ct,val in top3])
+            'margin-top:8px;font-size:.68rem;color:#1c6b5f;">'
+            f'<b style="color:#c0392b;">► {query}</b> · Highest in: '
+            + " · ".join([f'<b style="color:#ffff00;">{ct}</b> <span style="color:#1c2b3a;">({val})</span>' for ct,val in top3])
             + '</div>',
             unsafe_allow_html=True
         )
@@ -975,7 +1093,7 @@ with T2:
 # ══ TAB 3 — CRISPR ENGINE ═════════════════════════════════════════════
 with T3:
     st.markdown(sec("CRISPR Therapeutic Targeting Engine","CHOPCHOP-equivalent · SpCas9 · SaCas9 · Cas12a · Cas13d"),unsafe_allow_html=True)
-    st.markdown('<div style="background:#252d3d;border:1px solid rgba(0,255,157,0.2);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.68rem;color:#c8f0f8;"><b style="color:#00ff9d;">Algorithm:</b> <b style="color:#00e5ff;">CHOPCHOP-equivalent Doench 2016 scoring</b> — GC content optimization (40-70%), PAM identification, off-target prediction.</div>',unsafe_allow_html=True)
+    st.markdown('<div style="background:#ffffff;border:1px solid rgba(0,255,157,0.2);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.68rem;color:#1c2b3a;"><b style="color:#0d7c6e;">Algorithm:</b> <b style="color:#0d7c6e;">CHOPCHOP-equivalent Doench 2016 scoring</b> — GC content optimization (40-70%), PAM identification, off-target prediction.</div>',unsafe_allow_html=True)
 
     crispr_mode = st.radio("",["Design Engine","Tools Comparison"],horizontal=True,key="crispr_mode")
 
@@ -996,7 +1114,7 @@ with T3:
             "CasRx (RNA)":     ("N/A","RNA-only","30-nt · High efficiency knockdown"),
         }
         pi = PM.get(cas,("NGG","3-prime","Standard Cas9"))
-        st.markdown(f'<div style="background:#252d3d;border:1px solid rgba(180,79,255,0.2);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#4a9aaa;margin-bottom:14px;">PAM: <b style="color:#00e5ff;">{pi[0]}</b> · {pi[2]}</div>',unsafe_allow_html=True)
+        st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(180,79,255,0.2);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#1c6b5f;margin-bottom:14px;">PAM: <b style="color:#0d7c6e;">{pi[0]}</b> · {pi[2]}</div>',unsafe_allow_html=True)
 
         if st.button("▶ RUN CRISPR ANALYSIS",key="cgo"):
             seq = dna.upper().replace(" ","")
@@ -1140,12 +1258,12 @@ with T3:
                         gcc = st.columns(n_cards)
                         for gi in range(n_cards):
                             g = guides[gi]
-                            c2 = "#00ff9d" if g["Doench Score"]>=0.80 else ("#ffc107" if g["Doench Score"]>=0.60 else "#ff3d5a")
-                            oc = "#00ff9d" if g["Off-targets"]==0 else ("#ffc107" if g["Off-targets"]<=3 else "#ff3d5a")
+                            c2 = "#0d7c6e" if g["Doench Score"]>=0.80 else ("#d4681a" if g["Doench Score"]>=0.60 else "#c0392b")
+                            oc = "#0d7c6e" if g["Off-targets"]==0 else ("#d4681a" if g["Off-targets"]<=3 else "#c0392b")
                             with gcc[gi]:
                                 st.markdown(
-                                    f'<div style="background:#252d3d;border-left:3px solid {c2};border-radius:6px;padding:12px;margin-bottom:8px;">'
-                                    f'<div style="color:#4a9aaa;font-size:.5rem;">{g["Guide"]} · pos {g["Position"]}</div>'
+                                    f'<div style="background:#ffffff;border-left:3px solid {c2};border-radius:6px;padding:12px;margin-bottom:8px;">'
+                                    f'<div style="color:#1c6b5f;font-size:.5rem;">{g["Guide"]} · pos {g["Position"]}</div>'
                                     f'<div style="font-family:Space Mono;font-size:.58rem;color:#88ddee;word-break:break-all;margin:4px 0;">{g["Sequence"]}</div>'
                                     f'<div style="margin-top:4px;font-size:.6rem;color:{c2};">Doench: {g["Doench Score"]}</div>'
                                     f'<div style="font-size:.58rem;color:{oc};">Off-targets: {g["Off-targets"]} &nbsp; GC: {g["GC%"]}%</div>'
@@ -1165,12 +1283,12 @@ with T3:
                             mode="markers+text",
                             text=[g["Guide"] for g in guides],
                             textposition="top center",
-                            textfont=dict(color="#00e5ff",size=9),
+                            textfont=dict(color="#0d7c6e",size=9),
                             marker=dict(
                                 size=15,
                                 color=[g["Doench Score"] for g in guides],
-                                colorscale=[[0,"#ff3d5a"],[0.5,"#ffc107"],[1,"#00ff9d"]],
-                                colorbar=dict(title="Score",thickness=8,tickfont=dict(color="#00e5ff",size=8)),
+                                colorscale=[[0,"#c0392b"],[0.5,"#d4681a"],[1,"#0d7c6e"]],
+                                colorbar=dict(title="Score",thickness=8,tickfont=dict(color="#0d7c6e",size=8)),
                             )
                         ))
                         fp.update_layout(**DK(
@@ -1184,9 +1302,9 @@ with T3:
                         ov = [g["Off-targets"] for g in guides]
                         fo = go.Figure(go.Bar(
                             x=[g["Guide"] for g in guides], y=ov,
-                            marker_color=["#ff3d5a" if v>3 else ("#ffc107" if v>0 else "#00ff9d") for v in ov],
+                            marker_color=["#c0392b" if v>3 else ("#d4681a" if v>0 else "#0d7c6e") for v in ov],
                             text=ov, textposition="outside",
-                            textfont=dict(color="#00e5ff",size=11)
+                            textfont=dict(color="#0d7c6e",size=11)
                         ))
                         fo.update_layout(**DK(
                             xaxis=dict(title="Guide",color="#4a9aaa"),
@@ -1199,7 +1317,7 @@ with T3:
                 except Exception as e:
                     st.error(f"CRISPR analysis error: {str(e)}")
         else:
-            st.markdown('<div style="text-align:center;padding:30px;background:#252d3d;border:1px solid rgba(0,229,255,0.1);border-radius:8px;"><div style="font-family:Orbitron,sans-serif;font-size:1rem;color:#00e5ff;letter-spacing:4px;">CRISPR ENGINE READY</div><div style="color:#4a9aaa;font-size:.7rem;margin-top:8px;">Select Cas system · strategy · paste DNA · click RUN</div></div>',unsafe_allow_html=True)
+            st.markdown('<div style="text-align:center;padding:30px;background:#ffffff;border:1px solid rgba(59,125,216,0.12);border-radius:8px;"><div style="font-family:Orbitron,sans-serif;font-size:1rem;color:#0d7c6e;letter-spacing:4px;">CRISPR ENGINE READY</div><div style="color:#1c6b5f;font-size:.7rem;margin-top:8px;">Select Cas system · strategy · paste DNA · click RUN</div></div>',unsafe_allow_html=True)
 
     else:  # Tools Comparison
         st.markdown(sec("CRISPR Tools Comparison","G-FUSION vs CHOPCHOP vs CasFinder vs Benchling vs CRISPOR"),unsafe_allow_html=True)
@@ -1216,7 +1334,7 @@ with T3:
             st.dataframe(df_tools, use_container_width=True, hide_index=True)
         except Exception as e:
             st.error(f"Tools table error: {str(e)}")
-        st.markdown('<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.15);border-radius:8px;padding:14px;margin-top:12px;font-size:.68rem;color:#c8f0f8;line-height:2;">🔗 <a href="https://chopchop.cbu.uib.no/" target="_blank" style="color:#00ff9d;">CHOPCHOP</a> &nbsp;·&nbsp; <a href="http://crispor.tefor.net/" target="_blank" style="color:#00e5ff;">CRISPOR</a> &nbsp;·&nbsp; <a href="https://www.crisprscan.org/" target="_blank" style="color:#ffc107;">CRISPRscan</a> &nbsp;·&nbsp; <a href="https://benchling.com/" target="_blank" style="color:#b44fff;">Benchling</a> &nbsp;·&nbsp; <a href="http://casfinder.ibcp.fr/" target="_blank" style="color:#ff9933;">CasFinder</a></div>',unsafe_allow_html=True)
+        st.markdown('<div style="background:#ffffff;border:1px solid rgba(59,125,216,0.15);border-radius:8px;padding:14px;margin-top:12px;font-size:.68rem;color:#1c2b3a;line-height:2;">🔗 <a href="https://chopchop.cbu.uib.no/" target="_blank" style="color:#0d7c6e;">CHOPCHOP</a> &nbsp;·&nbsp; <a href="http://crispor.tefor.net/" target="_blank" style="color:#0d7c6e;">CRISPOR</a> &nbsp;·&nbsp; <a href="https://www.crisprscan.org/" target="_blank" style="color:#d4681a;">CRISPRscan</a> &nbsp;·&nbsp; <a href="https://benchling.com/" target="_blank" style="color:#6c3483;">Benchling</a> &nbsp;·&nbsp; <a href="http://casfinder.ibcp.fr/" target="_blank" style="color:#d4681a;">CasFinder</a></div>',unsafe_allow_html=True)
 
 # ══ TAB 4 — LIGAND / RDKIT ════════════════════════════════════════════
 with T4:
@@ -1336,41 +1454,41 @@ with T4:
 
     with R1:
         st.markdown(sec("Live Drug Search by Gene Target","Fetching from ChEMBL in real-time for ANY gene"),unsafe_allow_html=True)
-        st.markdown('<div style="background:#252d3d;border-left:4px solid #00ff9d;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:.72rem;color:#c8f0f8;">🔴 LIVE · Fetching real approved drugs from <b style="color:#00e5ff;">ChEMBL Database</b> — works for any human gene</div>', unsafe_allow_html=True)
+        st.markdown('<div style="background:#ffffff;border-left:4px solid #00ff9d;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:.72rem;color:#1c2b3a;">🔴 LIVE · Fetching real approved drugs from <b style="color:#0d7c6e;">ChEMBL Database</b> — works for any human gene</div>', unsafe_allow_html=True)
         with st.spinner("Searching ChEMBL for drugs targeting "+query+"..."):
             live_drugs, drug_source = get_drugs_for_gene(query)
-        src_color = "#00ff9d" if "Live" in drug_source else "#ffc107"
-        st.markdown('<div style="background:#252d3d;border-left:4px solid '+src_color+';border-radius:6px;padding:8px 14px;margin-bottom:14px;font-size:.68rem;color:#4a9aaa;">Source: <b style="color:'+src_color+';">'+drug_source+'</b> · Found <b style="color:#00e5ff;">'+str(len(live_drugs))+'</b> compounds for <b>'+query+'</b></div>', unsafe_allow_html=True)
+        src_color = "#0d7c6e" if "Live" in drug_source else "#d4681a"
+        st.markdown('<div style="background:#ffffff;border-left:4px solid '+src_color+';border-radius:6px;padding:8px 14px;margin-bottom:14px;font-size:.68rem;color:#1c6b5f;">Source: <b style="color:'+src_color+';">'+drug_source+'</b> · Found <b style="color:#0d7c6e;">'+str(len(live_drugs))+'</b> compounds for <b>'+query+'</b></div>', unsafe_allow_html=True)
         if live_drugs:
             for d in live_drugs:
-                ro5c = "#00ff9d" if d["Ro5"] else "#ff3d5a"
+                ro5c = "#0d7c6e" if d["Ro5"] else "#c0392b"
                 phase_txt = ("Phase "+str(d.get("phase","?"))) if d.get("phase") else "Preclinical"
                 # Fetch FDA info for this drug
                 fda = fetch_openfda_info(d["name"])
-                fda_badge = '<span style="background:rgba(0,255,157,0.15);color:#00ff9d;padding:2px 8px;border-radius:10px;font-size:.6rem;margin-left:6px;">🏛 FDA</span>' if fda.get("brand_name","N/A")!="N/A" else ""
+                fda_badge = '<span style="background:rgba(0,255,157,0.15);color:#0d7c6e;padding:2px 8px;border-radius:10px;font-size:.6rem;margin-left:6px;">🏛 FDA</span>' if fda.get("brand_name","N/A")!="N/A" else ""
                 indications = fda.get("indications","")[:200] if fda else ""
                 manufacturer = fda.get("manufacturer","") if fda else ""
                 route = fda.get("route","") if fda else ""
                 st.markdown(
-                    '<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.13);border-left:3px solid '+ro5c+';border-radius:8px;padding:12px 16px;margin-bottom:8px;">'
+                    '<div style="background:#ffffff;border:1px solid rgba(13,124,110,0.15);border-left:3px solid '+ro5c+';border-radius:8px;padding:12px 16px;margin-bottom:8px;">'
                     '<div style="display:flex;justify-content:space-between;align-items:center;">'
-                    '<div><span style="font-family:Orbitron,sans-serif;font-size:.85rem;color:#00e5ff;font-weight:700;">'+d["name"]+'</span>'
+                    '<div><span style="font-family:Orbitron,sans-serif;font-size:.85rem;color:#0d7c6e;font-weight:700;">'+d["name"]+'</span>'
                     +fda_badge+
-                    '<span style="margin-left:10px;font-size:.6rem;color:#4a9aaa;">'+d.get("chembl","")+'</span></div>'
+                    '<span style="margin-left:10px;font-size:.6rem;color:#1c6b5f;">'+d.get("chembl","")+'</span></div>'
                     '<div style="display:flex;gap:8px;">'
-                    '<span style="background:rgba(0,229,255,0.1);color:#00e5ff;padding:2px 8px;border-radius:10px;font-size:.6rem;">'+phase_txt+'</span>'
+                    '<span style="background:rgba(0,229,255,0.1);color:#0d7c6e;padding:2px 8px;border-radius:10px;font-size:.6rem;">'+phase_txt+'</span>'
                     '<span style="background:rgba(0,255,157,0.1);color:'+ro5c+';padding:2px 8px;border-radius:10px;font-size:.6rem;">'+("Ro5 ✓" if d["Ro5"] else "Ro5 ✗")+'</span>'
                     '</div></div>'
-                    '<div style="margin-top:8px;display:flex;gap:16px;font-size:.65rem;color:#4a9aaa;">'
-                    '<span>MW: <b style="color:#c8f0f8;">'+str(d.get("MW","?"))+'</b></span>'
-                    '<span>LogP: <b style="color:#c8f0f8;">'+str(d.get("LogP","?"))+'</b></span>'
-                    '<span>TPSA: <b style="color:#c8f0f8;">'+str(d.get("TPSA","?"))+'</b></span>'
-                    '<span>HBD: <b style="color:#c8f0f8;">'+str(d.get("HBD","?"))+'</b></span>'
-                    '<span>HBA: <b style="color:#c8f0f8;">'+str(d.get("HBA","?"))+'</b></span>'
-                    +(('<span style="color:#4a9aaa;">Route: <b style="color:#c8f0f8;">'+route+'</b></span>') if route and route!="N/A" else "")
-                    +(('<span style="color:#4a9aaa;">By: <b style="color:#c8f0f8;">'+manufacturer[:30]+'</b></span>') if manufacturer and manufacturer!="N/A" else "")
+                    '<div style="margin-top:8px;display:flex;gap:16px;font-size:.65rem;color:#1c6b5f;">'
+                    '<span>MW: <b style="color:#1c2b3a;">'+str(d.get("MW","?"))+'</b></span>'
+                    '<span>LogP: <b style="color:#1c2b3a;">'+str(d.get("LogP","?"))+'</b></span>'
+                    '<span>TPSA: <b style="color:#1c2b3a;">'+str(d.get("TPSA","?"))+'</b></span>'
+                    '<span>HBD: <b style="color:#1c2b3a;">'+str(d.get("HBD","?"))+'</b></span>'
+                    '<span>HBA: <b style="color:#1c2b3a;">'+str(d.get("HBA","?"))+'</b></span>'
+                    +(('<span style="color:#1c6b5f;">Route: <b style="color:#1c2b3a;">'+route+'</b></span>') if route and route!="N/A" else "")
+                    +(('<span style="color:#1c6b5f;">By: <b style="color:#1c2b3a;">'+manufacturer[:30]+'</b></span>') if manufacturer and manufacturer!="N/A" else "")
                     +'</div>'
-                    +(('<div style="margin-top:6px;font-size:.62rem;color:#4a9aaa;border-top:1px solid rgba(0,229,255,0.07);padding-top:6px;"><b style="color:#00ff9d;">FDA Indication:</b> '+indications+'...</div>') if indications and indications!="N/A" else "")
+                    +(('<div style="margin-top:6px;font-size:.62rem;color:#1c6b5f;border-top:1px solid rgba(0,229,255,0.07);padding-top:6px;"><b style="color:#0d7c6e;">FDA Indication:</b> '+indications+'...</div>') if indications and indications!="N/A" else "")
                     +'</div>', unsafe_allow_html=True)
             # Radar for top drug
             st.markdown(sec("Lipinski Ro5 Radar","Top compound from ChEMBL"),unsafe_allow_html=True)
@@ -1380,8 +1498,8 @@ with T4:
                     min(float(td.get("HBD",0))/5,1),min(float(td.get("HBA",0))/10,1),
                     min(float(td.get("RotB",0))/10,1),min(float(td.get("TPSA",0))/140,1)]
             fr=go.Figure(go.Scatterpolar(r=vals+[vals[0]],theta=cats+[cats[0]],fill="toself",
-                fillcolor="rgba(0,229,255,0.09)",line=dict(color="#00e5ff",width=2),name=td["name"]))
-            fr.update_layout(paper_bgcolor="rgba(0,0,0,0)",
+                fillcolor="rgba(0,229,255,0.09)",line=dict(color="#0d7c6e",width=2),name=td["name"]))
+            fr.update_layout(paper_bgcolor="rgba(255,255,255,0)",
                 polar=dict(bgcolor="rgba(4,24,32,0.8)",
                 radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),
                 angularaxis=dict(color="#4a9aaa",gridcolor="rgba(0,229,255,0.08)")),
@@ -1389,7 +1507,7 @@ with T4:
                 font=dict(family="Orbitron,sans-serif",color="#4a9aaa"))
             cr_,ci_=st.columns([1,1])
             with cr_: st.plotly_chart(fr,use_container_width=True,key="pc09")
-            with ci_: st.markdown('<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.13);border-radius:8px;padding:14px;margin-top:20px;font-size:.68rem;color:#4a9aaa;line-height:2.0;"><b style="color:#00e5ff;font-size:.8rem;">'+td["name"]+'</b><br>MW: '+str(td.get("MW","?"))+' Da<br>LogP: '+str(td.get("LogP","?"))+'<br>TPSA: '+str(td.get("TPSA","?"))+' Å²<br>Ro5: '+("✅ Pass" if td["Ro5"] else "❌ Fail")+'<br>Source: <span style="color:#00ff9d;">ChEMBL Live</span></div>', unsafe_allow_html=True)
+            with ci_: st.markdown('<div style="background:#ffffff;border:1px solid rgba(13,124,110,0.15);border-radius:8px;padding:14px;margin-top:20px;font-size:.68rem;color:#1c6b5f;line-height:2.0;"><b style="color:#0d7c6e;font-size:.8rem;">'+td["name"]+'</b><br>MW: '+str(td.get("MW","?"))+' Da<br>LogP: '+str(td.get("LogP","?"))+'<br>TPSA: '+str(td.get("TPSA","?"))+' Å²<br>Ro5: '+("✅ Pass" if td["Ro5"] else "❌ Fail")+'<br>Source: <span style="color:#0d7c6e;">ChEMBL Live</span></div>', unsafe_allow_html=True)
         else:
             st.warning("No compounds found for "+query+" in ChEMBL. Try EGFR, KRAS, BRCA1, ALK.")
 
@@ -1402,21 +1520,21 @@ with T4:
             sel_d=[cmp_data[n] for n in sel_drugs if n in cmp_data]
             limit_map={"MW":500,"LogP":5,"TPSA":140,"HBD":5,"HBA":10,"RotB":10,"AROM":99}
             lim=limit_map.get(prop,999)
-            bar_colors=["#00ff9d" if d[prop]<=lim else "#ff3d5a" for d in sel_d]
+            bar_colors=["#0d7c6e" if d[prop]<=lim else "#c0392b" for d in sel_d]
             fc=go.Figure(go.Bar(x=[d["name"] for d in sel_d],y=[d[prop] for d in sel_d],marker_color=bar_colors,marker_line_color="rgba(0,229,255,0.3)",marker_line_width=1))
-            if lim<999: fc.add_hline(y=lim,line_dash="dash",line_color="#ffc107",annotation_text="Ro5 limit ("+str(lim)+")",annotation_font_color="#ffc107")
+            if lim<999: fc.add_hline(y=lim,line_dash="dash",line_color="#d4681a",annotation_text="Ro5 limit ("+str(lim)+")",annotation_font_color="#d4681a")
             fc.update_layout(**DK(xaxis=dict(title="Drug",color="#4a9aaa"),yaxis=dict(title=prop,color="#4a9aaa",gridcolor="rgba(0,229,255,0.06)"),title=dict(text="<b>"+prop+"</b> Comparison · Ro5 Limit Shown",font=dict(size=13,color="#4a9aaa")),height=400))
             st.plotly_chart(fc,use_container_width=True,key="pc10")
             st.markdown(sec("Radar Overlay Comparison"),unsafe_allow_html=True)
             fig_multi=go.Figure()
-            colors_r=["#00e5ff","#ff3d5a","#00ff9d","#ffc107","#b44fff","#ff9933","#ff66cc"]
+            colors_r=["#0d7c6e","#c0392b","#0d7c6e","#d4681a","#6c3483","#ff9933","#ff66cc"]
             cats2=["MW/500","LogP/5","HBD/5","HBA/10","RotB/10","TPSA/140"]
-            hex_to_rgba={"#00e5ff":"rgba(0,229,255,0.09)","#ff3d5a":"rgba(255,61,90,0.09)","#00ff9d":"rgba(0,255,157,0.09)","#ffc107":"rgba(255,193,7,0.09)","#b44fff":"rgba(180,79,255,0.09)","#ff9933":"rgba(255,153,51,0.09)","#ff66cc":"rgba(255,102,204,0.09)"}
+            hex_to_rgba={"#0d7c6e":"rgba(0,229,255,0.09)","#c0392b":"rgba(255,61,90,0.09)","#0d7c6e":"rgba(0,255,157,0.09)","#d4681a":"rgba(255,193,7,0.09)","#6c3483":"rgba(180,79,255,0.09)","#ff9933":"rgba(255,153,51,0.09)","#ff66cc":"rgba(255,102,204,0.09)"}
             for idx,d in enumerate(sel_d[:7]):
                 v=[min(d["MW"]/500,1),min(max(d["LogP"],0)/5,1),min(d["HBD"]/5,1),min(d["HBA"]/10,1),min(d["RotB"]/10,1),min(d["TPSA"]/140,1)]
                 fc2=hex_to_rgba.get(colors_r[idx%7],"rgba(0,229,255,0.09)")
                 fig_multi.add_trace(go.Scatterpolar(r=v+[v[0]],theta=cats2+[cats2[0]],fill="toself",fillcolor=fc2,line=dict(color=colors_r[idx%7],width=2),name=d["name"]))
-            fig_multi.update_layout(paper_bgcolor="rgba(0,0,0,0)",polar=dict(bgcolor="rgba(4,24,32,0.8)",radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),angularaxis=dict(color="#4a9aaa",gridcolor="rgba(0,229,255,0.08)")),height=420,margin=dict(l=40,r=40,t=40,b=40),font=dict(family="Orbitron,sans-serif",color="#4a9aaa"),legend=dict(bgcolor="rgba(4,24,32,0.8)",bordercolor="rgba(0,229,255,0.2)",font=dict(color="#4a9aaa")))
+            fig_multi.update_layout(paper_bgcolor="rgba(255,255,255,0)",polar=dict(bgcolor="rgba(4,24,32,0.8)",radialaxis=dict(visible=True,range=[0,1],color="#4a9aaa",gridcolor="rgba(0,229,255,0.1)"),angularaxis=dict(color="#4a9aaa",gridcolor="rgba(0,229,255,0.08)")),height=420,margin=dict(l=40,r=40,t=40,b=40),font=dict(family="Orbitron,sans-serif",color="#4a9aaa"),legend=dict(bgcolor="rgba(4,24,32,0.8)",bordercolor="rgba(0,229,255,0.2)",font=dict(color="#4a9aaa")))
             st.plotly_chart(fig_multi,use_container_width=True,key="pc11")
         else:
             st.info("Select at least one drug above")
@@ -1522,7 +1640,7 @@ with T5:
             # Mark hotspot residues
             hot_res_set = {h["pos"] for h in hs}
 
-            colors = ["#ff3d5a" if r in hot_res_set else "#00e5ff" for r in res_nums]
+            colors = ["#c0392b" if r in hot_res_set else "#0d7c6e" for r in res_nums]
 
             frf = go.Figure()
             frf.add_trace(go.Bar(
@@ -1534,8 +1652,8 @@ with T5:
             # Mark hotspots
             for h in hs[:5]:
                 if h["pos"] in res_nums:
-                    frf.add_vline(x=h["pos"], line_dash="dash", line_color="#ff3d5a",
-                        annotation_text=h["aa"], annotation_font_color="#ff3d5a", annotation_font_size=9)
+                    frf.add_vline(x=h["pos"], line_dash="dash", line_color="#c0392b",
+                        annotation_text=h["aa"], annotation_font_color="#c0392b", annotation_font_size=9)
 
             frf.update_layout(**DK(
                 xaxis=dict(title="Residue Number", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
@@ -1548,12 +1666,12 @@ with T5:
 
             # Stats
             c1,c2,c3,c4 = st.columns(4)
-            with c1: st.markdown(card("RESIDUES", str(len(res_nums)), "", "#00e5ff"), unsafe_allow_html=True)
-            with c2: st.markdown(card("MEAN RMSF", str(round(float(_np2.mean(rmsf_real)),3)), "Å", "#00ff9d"), unsafe_allow_html=True)
-            with c3: st.markdown(card("MAX RMSF",  str(round(float(_np2.max(rmsf_real)),3)),  "Å", "#ff3d5a"), unsafe_allow_html=True)
-            with c4: st.markdown(card("MIN RMSF",  str(round(float(_np2.min(rmsf_real)),3)),  "Å", "#ffc107"), unsafe_allow_html=True)
+            with c1: st.markdown(card("RESIDUES", str(len(res_nums)), "", "#0d7c6e"), unsafe_allow_html=True)
+            with c2: st.markdown(card("MEAN RMSF", str(round(float(_np2.mean(rmsf_real)),3)), "Å", "#0d7c6e"), unsafe_allow_html=True)
+            with c3: st.markdown(card("MAX RMSF",  str(round(float(_np2.max(rmsf_real)),3)),  "Å", "#c0392b"), unsafe_allow_html=True)
+            with c4: st.markdown(card("MIN RMSF",  str(round(float(_np2.min(rmsf_real)),3)),  "Å", "#d4681a"), unsafe_allow_html=True)
 
-            st.markdown('<div style="background:#252d3d;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-top:10px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · B-factors extracted directly from RCSB PDB file · B-factor→RMSF: √(3B/8π²) · Red bars = known mutation hotspot residues</div>', unsafe_allow_html=True)
+            st.markdown('<div style="background:#ffffff;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-top:10px;font-size:.65rem;color:#1c6b5f;">✅ <b style="color:#0d7c6e;">REAL DATA</b> · B-factors extracted directly from RCSB PDB file · B-factor→RMSF: √(3B/8π²) · Red bars = known mutation hotspot residues</div>', unsafe_allow_html=True)
         else:
             st.warning("Could not extract B-factors from PDB. Try a different gene.")
 
@@ -1581,16 +1699,16 @@ with T5:
                 rfactor    = rcsb_data.get("refine", [{}])[0].get("ls_r_factor_r_work")
             except: pass
 
-            st.markdown(f'<div style="background:#252d3d;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · PDBe Validation API · PDB: <b style="color:#00e5ff;">{pdb}</b> · Gene: <b style="color:#00e5ff;">{query}</b></div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="background:#ffffff;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#1c6b5f;">✅ <b style="color:#0d7c6e;">REAL DATA</b> · PDBe Validation API · PDB: <b style="color:#0d7c6e;">{pdb}</b> · Gene: <b style="color:#0d7c6e;">{query}</b></div>', unsafe_allow_html=True)
 
             # Display real metrics as cards
             cols = st.columns(3)
             metrics = [
-                ("CLASHSCORE",      str(round(clashscore,2)) if clashscore else "N/A",   "",    "#ff3d5a"),
-                ("BOND RMSD",       str(round(bond_rmsd,4))  if bond_rmsd  else "N/A",   "Å",   "#00e5ff"),
-                ("ANGLE RMSD",      str(round(angle_rmsd,3)) if angle_rmsd else "N/A",   "°",   "#ffc107"),
-                ("RESOLUTION",      str(round(resolution,2)) if resolution else "N/A",   "Å",   "#00ff9d"),
-                ("R-FACTOR",        str(round(rfactor,4))    if rfactor    else "N/A",   "",    "#b44fff"),
+                ("CLASHSCORE",      str(round(clashscore,2)) if clashscore else "N/A",   "",    "#c0392b"),
+                ("BOND RMSD",       str(round(bond_rmsd,4))  if bond_rmsd  else "N/A",   "Å",   "#0d7c6e"),
+                ("ANGLE RMSD",      str(round(angle_rmsd,3)) if angle_rmsd else "N/A",   "°",   "#d4681a"),
+                ("RESOLUTION",      str(round(resolution,2)) if resolution else "N/A",   "Å",   "#0d7c6e"),
+                ("R-FACTOR",        str(round(rfactor,4))    if rfactor    else "N/A",   "",    "#6c3483"),
                 ("RAMA OUTLIERS",   str(round(rama_favored,2)) if rama_favored else "N/A", "%", "#ff9933"),
             ]
             for i, (label, val, unit, color) in enumerate(metrics):
@@ -1610,7 +1728,7 @@ with T5:
             fq = go.Figure(go.Bar(
                 x=list(quality_metrics.keys()),
                 y=list(quality_metrics.values()),
-                marker=dict(color=["#ff3d5a","#00e5ff","#ffc107","#ff9933","#b44fff"]),
+                marker=dict(color=["#c0392b","#0d7c6e","#d4681a","#ff9933","#6c3483"]),
                 hovertemplate="%{x}: %{y:.3f}<extra></extra>"
             ))
             fq.update_layout(**DK(
@@ -1657,13 +1775,13 @@ with T5:
                 nchains    = rcsb_data2.get("rcsb_entry_info",{}).get("polymer_entity_count")
             except: pass
 
-            st.markdown(f'<div style="background:#252d3d;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · Rg calculated from {len(coords)} Cα coordinates from RCSB PDB · Formula: √(Σ|ri-rcm|²/N)</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="background:#ffffff;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#1c6b5f;">✅ <b style="color:#0d7c6e;">REAL DATA</b> · Rg calculated from {len(coords)} Cα coordinates from RCSB PDB · Formula: √(Σ|ri-rcm|²/N)</div>', unsafe_allow_html=True)
 
             c1,c2,c3,c4 = st.columns(4)
-            with c1: st.markdown(card("Rg (Cα)",      str(round(rg_real,2)),               "Å",   "#00ff9d"), unsafe_allow_html=True)
-            with c2: st.markdown(card("RESIDUES",      str(len(coords)),                    "",    "#00e5ff"), unsafe_allow_html=True)
-            with c3: st.markdown(card("MW",            str(round(mw/1000,1))+"k" if mw else "N/A","Da","#ffc107"), unsafe_allow_html=True)
-            with c4: st.markdown(card("RESOLUTION",    str(round(resolution,2)) if resolution else "N/A","Å","#b44fff"), unsafe_allow_html=True)
+            with c1: st.markdown(card("Rg (Cα)",      str(round(rg_real,2)),               "Å",   "#0d7c6e"), unsafe_allow_html=True)
+            with c2: st.markdown(card("RESIDUES",      str(len(coords)),                    "",    "#0d7c6e"), unsafe_allow_html=True)
+            with c3: st.markdown(card("MW",            str(round(mw/1000,1))+"k" if mw else "N/A","Da","#d4681a"), unsafe_allow_html=True)
+            with c4: st.markdown(card("RESOLUTION",    str(round(resolution,2)) if resolution else "N/A","Å","#6c3483"), unsafe_allow_html=True)
 
             # Plot Rg per chain segment
             segment_size = max(1, len(coords)//20)
@@ -1677,14 +1795,14 @@ with T5:
                     seg_idx.append(i)
 
             frg = go.Figure(go.Scatter(x=seg_idx, y=seg_rg, mode="lines+markers",
-                line=dict(color="#00ff9d", width=2.5),
-                marker=dict(size=5, color="#00ff9d"),
+                line=dict(color="#0d7c6e", width=2.5),
+                marker=dict(size=5, color="#0d7c6e"),
                 fill="tozeroy", fillcolor="rgba(0,255,157,0.05)",
                 hovertemplate="Residue segment %{x}<br>Local Rg: %{y:.2f}Å<extra></extra>"
             ))
-            frg.add_hline(y=rg_real, line_dash="dash", line_color="#ffc107",
+            frg.add_hline(y=rg_real, line_dash="dash", line_color="#d4681a",
                 annotation_text=f"Overall Rg: {round(rg_real,2)}Å",
-                annotation_font_color="#ffc107", annotation_font_size=10)
+                annotation_font_color="#d4681a", annotation_font_size=10)
             frg.update_layout(**DK(
                 xaxis=dict(title="Residue Index", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
                 yaxis=dict(title="Local Radius of Gyration (Å)", color="#4a9aaa", gridcolor="rgba(0,229,255,0.06)"),
@@ -1725,20 +1843,20 @@ with T5:
             # H-bonds estimated: each helix residue ~1 H-bond, each strand ~0.5
             hbond_estimate = helix_res * 1 + strand_res * 0.5
 
-            st.markdown(f'<div style="background:#252d3d;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#4a9aaa;">✅ <b style="color:#00ff9d;">REAL DATA</b> · PDBe Secondary Structure API · {n_helices} helices · {n_strands} β-strands · Est. {int(hbond_estimate)} backbone H-bonds</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="background:#ffffff;border-left:3px solid #00ff9d;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-size:.65rem;color:#1c6b5f;">✅ <b style="color:#0d7c6e;">REAL DATA</b> · PDBe Secondary Structure API · {n_helices} helices · {n_strands} β-strands · Est. {int(hbond_estimate)} backbone H-bonds</div>', unsafe_allow_html=True)
 
             c1,c2,c3,c4 = st.columns(4)
-            with c1: st.markdown(card("α-HELICES",   str(n_helices),          "",  "#00e5ff"), unsafe_allow_html=True)
-            with c2: st.markdown(card("β-STRANDS",   str(n_strands),          "",  "#b44fff"), unsafe_allow_html=True)
-            with c3: st.markdown(card("HELIX RES",   str(helix_res),          "",  "#00ff9d"), unsafe_allow_html=True)
-            with c4: st.markdown(card("EST. H-BONDS",str(int(hbond_estimate)),"",  "#ffc107"), unsafe_allow_html=True)
+            with c1: st.markdown(card("α-HELICES",   str(n_helices),          "",  "#0d7c6e"), unsafe_allow_html=True)
+            with c2: st.markdown(card("β-STRANDS",   str(n_strands),          "",  "#6c3483"), unsafe_allow_html=True)
+            with c3: st.markdown(card("HELIX RES",   str(helix_res),          "",  "#0d7c6e"), unsafe_allow_html=True)
+            with c4: st.markdown(card("EST. H-BONDS",str(int(hbond_estimate)),"",  "#d4681a"), unsafe_allow_html=True)
 
             # Bar chart of helix/strand lengths
             if helices or strands:
                 labels = ([f"Helix {i+1}" for i in range(len(helices))] +
                           [f"Strand {i+1}" for i in range(len(strands))])
                 values = [h["length"] for h in helices] + [s["length"] for s in strands]
-                colors = (["#00e5ff"]*len(helices)) + (["#b44fff"]*len(strands))
+                colors = (["#0d7c6e"]*len(helices)) + (["#6c3483"]*len(strands))
                 fss = go.Figure(go.Bar(x=labels, y=values,
                     marker=dict(color=colors),
                     hovertemplate="%{x}<br>Length: %{y} residues<extra></extra>"))
@@ -1782,7 +1900,7 @@ with T5:
             hovertext=[f"{r['Cancer']}<br>Mut:{r['Mut']:.1f} Expr:{r['Expr']:.1f} TI:{r['TI']:.1f}" for _,r in df5.iterrows()],
             hoverinfo="text",
             marker=dict(size=df5["Size"], color=df5[cv[dim5]], colorscale=cscl,
-                       colorbar=dict(title=dim5, tickfont=dict(color="#00e5ff",size=8)),
+                       colorbar=dict(title=dim5, tickfont=dict(color="#0d7c6e",size=8)),
                        opacity=0.85, line=dict(color="rgba(255,255,255,0.1)",width=0.5))
         ))
         f5.update_layout(**DK(
@@ -1796,7 +1914,7 @@ with T5:
             height=520
         ))
         st.plotly_chart(f5, use_container_width=True, key="pc12")
-        st.markdown('<div style="background:#252d3d;border-left:3px solid #ffc107;border-radius:6px;padding:8px 14px;margin-top:8px;font-size:.65rem;color:#4a9aaa;">⚠️ <b style="color:#ffc107;">Simulated manifold</b> · Point distribution centered on real gene stats (oncoscore, druggability, mutation_freq) · For real UMAP projection, connect to cBioPortal bulk data</div>', unsafe_allow_html=True)
+        st.markdown('<div style="background:#ffffff;border-left:3px solid #ffc107;border-radius:6px;padding:8px 14px;margin-top:8px;font-size:.65rem;color:#1c6b5f;">⚠️ <b style="color:#d4681a;">Simulated manifold</b> · Point distribution centered on real gene stats (oncoscore, druggability, mutation_freq) · For real UMAP projection, connect to cBioPortal bulk data</div>', unsafe_allow_html=True)
 
     # ── Structure Views ─────────────────────────────────────────────────
     elif v5mode == "Structure Views":
@@ -1825,7 +1943,7 @@ with T5:
 # ══ TAB 6 — DATABASES ════════════════════════════════════════════════
 with T6:
     st.markdown(sec("Cancer Genomics Database Panel","GDC · ICGC · cBioPortal · OpenTargets · ClinVar · COSMIC · STRING · UniProt · OMIM"),unsafe_allow_html=True)
-    st.markdown(f'<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.15);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#4a9aaa;margin-bottom:16px;">Databases pre-queried for <b style="color:#00e5ff;">{query}</b> · Click any button to open in new tab</div>',unsafe_allow_html=True)
+    st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(59,125,216,0.15);border-radius:6px;padding:10px 16px;font-size:.68rem;color:#1c6b5f;margin-bottom:16px;">Databases pre-queried for <b style="color:#0d7c6e;">{query}</b> · Click any button to open in new tab</div>',unsafe_allow_html=True)
     gene_url_map = {
         "GDC": f"https://portal.gdc.cancer.gov/genes/{query}",
         "ICGC": f"https://dcc.icgc.org/genes/{query}",
@@ -1844,10 +1962,10 @@ with T6:
             url = gene_url_map.get(db["name"], db["url"])
             with cols[ci]:
                 st.markdown(
-                    f'<div style="background:#252d3d;border:1px solid {db["color"]}22;border-top:3px solid {db["color"]};border-radius:8px;padding:14px;margin-bottom:12px;">' +
+                    f'<div style="background:#ffffff;border:1px solid {db["color"]}22;border-top:3px solid {db["color"]};border-radius:8px;padding:14px;margin-bottom:12px;">' +
                     f'<div style="font-family:Orbitron,sans-serif;color:{db["color"]};font-size:.75rem;margin-bottom:4px;">{db["name"]}</div>' +
-                    f'<div style="color:#4a9aaa;font-size:.55rem;margin-bottom:4px;">{db["full"]}</div>' +
-                    f'<div style="color:#c8f0f8;font-size:.62rem;line-height:1.7;margin-bottom:10px;">{db["desc"]}</div>' +
+                    f'<div style="color:#1c6b5f;font-size:.55rem;margin-bottom:4px;">{db["full"]}</div>' +
+                    f'<div style="color:#1c2b3a;font-size:.62rem;line-height:1.7;margin-bottom:10px;">{db["desc"]}</div>' +
                     f'<a href="{url}" target="_blank" style="background:{db["color"]}18;border:1px solid {db["color"]};color:{db["color"]};padding:5px 12px;border-radius:4px;font-size:.55rem;font-family:Orbitron,sans-serif;letter-spacing:2px;text-decoration:none;">OPEN {query} →</a>' +
                     '</div>',
                     unsafe_allow_html=True
@@ -1858,12 +1976,12 @@ with T7:
     st.markdown(sec("Integrated Pipeline Report & Export"),unsafe_allow_html=True)
     rp=get_ppi(query,limit=8)
     rr=[("TARGET GENE",query),("PDB STRUCTURE",pdb),("ONCO SCORE",str(sc.get("oncoscore","N/A"))+"/100"),("DRUGGABILITY",str(sc.get("druggability","N/A"))+"/100"),("MUTATION FREQ",str(sc.get("mutation_freq","N/A"))+"%"),("CLINICAL TRIALS",str(sc.get("clinical_trials","N/A"))+" active"),("TOP CANCER",topc+" "+str(expr.get(topc,"N/A"))+" log2(TPM)"),("HOTSPOTS",", ".join([h["aa"] for h in hs]) if hs else "None"),("TARGET DRUGS",", ".join([d["name"] for d in GENE_DRUGS.get(query,[])][:4]) or "None indexed"),("TOP INTERACTORS",", ".join([b for a,b,s in rp[:5]])),("PIPELINE","G-FUSION v12 COMPLETE")]
-    rh="".join([f'<tr style="border-bottom:1px solid rgba(0,229,255,0.04);"><td style="color:#4a9aaa;padding:8px 4px;width:200px;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;">{k}</td><td style="color:#c8f0f8;font-size:.72rem;padding:8px 4px;">{v}</td></tr>' for k,v in rr])
-    st.markdown(f'<div style="background:#252d3d;border:1px solid rgba(0,229,255,0.13);border-radius:8px;padding:18px 20px;"><div style="font-family:Orbitron,sans-serif;font-size:.88rem;color:#00e5ff;letter-spacing:3px;margin-bottom:14px;">IN SILICO PIPELINE REPORT · {query}</div><table style="width:100%;border-collapse:collapse;">{rh}</table></div>',unsafe_allow_html=True)
-    mds=[("3D Structure · Plotly PDB","NGL · PyMOL · Py3Dmol · VMD presets · RCSB PDB","#00e5ff"),("Pathway Network","STRING DB · NetworkX 3D · Cytoscape 2D · Heatmap","#00aaff"),("CRISPR Engine","CHOPCHOP-equiv · SpCas9/Cas12a/Cas13d · PAM map · Off-target","#b44fff"),("Ligand Pharmacophore","18 drugs · Gene search · Comparison chart · Radar","#ffc107"),("5D Visualization","RMSD/RMSF/Rg/H-Bonds · 5D Manifold","#00ff9d"),("Database Panel","GDC · ICGC · cBioPortal · OpenTargets · ClinVar · COSMIC","#ff9933"),("Molecular Intelligence","Real-time Anthropic API annotation","#ff3d5a")]
+    rh="".join([f'<tr style="border-bottom:1px solid rgba(0,229,255,0.04);"><td style="color:#1c6b5f;padding:8px 4px;width:200px;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;">{k}</td><td style="color:#1c2b3a;font-size:.72rem;padding:8px 4px;">{v}</td></tr>' for k,v in rr])
+    st.markdown(f'<div style="background:#ffffff;border:1px solid rgba(13,124,110,0.15);border-radius:8px;padding:18px 20px;"><div style="font-family:Orbitron,sans-serif;font-size:.88rem;color:#0d7c6e;letter-spacing:3px;margin-bottom:14px;">IN SILICO PIPELINE REPORT · {query}</div><table style="width:100%;border-collapse:collapse;">{rh}</table></div>',unsafe_allow_html=True)
+    mds=[("3D Structure · Plotly PDB","NGL · PyMOL · Py3Dmol · VMD presets · RCSB PDB","#0d7c6e"),("Pathway Network","STRING DB · NetworkX 3D · Cytoscape 2D · Heatmap","#00aaff"),("CRISPR Engine","CHOPCHOP-equiv · SpCas9/Cas12a/Cas13d · PAM map · Off-target","#6c3483"),("Ligand Pharmacophore","18 drugs · Gene search · Comparison chart · Radar","#d4681a"),("5D Visualization","RMSD/RMSF/Rg/H-Bonds · 5D Manifold","#0d7c6e"),("Database Panel","GDC · ICGC · cBioPortal · OpenTargets · ClinVar · COSMIC","#ff9933"),("Molecular Intelligence","Real-time Anthropic API annotation","#c0392b")]
     mc=st.columns(2)
     for i,(nm,desc,c2) in enumerate(mds):
-        with mc[i%2]: st.markdown(f'<div style="background:#252d3d;border-left:3px solid {c2};border-radius:6px;padding:10px 14px;margin:5px 0;display:flex;justify-content:space-between;align-items:center;"><div><div style="color:{c2};font-family:Orbitron,sans-serif;font-size:.68rem;">{nm}</div><div style="color:#4a9aaa;font-size:.54rem;margin-top:3px;">{desc}</div></div>{badge("ACTIVE",c2)}</div>',unsafe_allow_html=True)
+        with mc[i%2]: st.markdown(f'<div style="background:#ffffff;border-left:3px solid {c2};border-radius:6px;padding:10px 14px;margin:5px 0;display:flex;justify-content:space-between;align-items:center;"><div><div style="color:{c2};font-family:Orbitron,sans-serif;font-size:.68rem;">{nm}</div><div style="color:#1c6b5f;font-size:.54rem;margin-top:3px;">{desc}</div></div>{badge("ACTIVE",c2)}</div>',unsafe_allow_html=True)
     st.markdown(sec("Download"),unsafe_allow_html=True)
     LL=["G-FUSION v12 REPORT","="*65]
     for k,v in rr: LL.append(f"  {k:<25}: {v}")
